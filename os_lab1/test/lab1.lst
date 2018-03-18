@@ -1,0 +1,144 @@
+     1                                  ; 李新锐 2018-3
+     2                                  
+     3                                  org 07c00h					;告知编译器代码将被加载到07c00h处
+     4                                  
+     5 00000000 EB27                    jmp main
+     6                                  
+     7                                  ;数据段
+     8                                  data:
+     9 00000002 7017                        count   dw delay
+    10 00000004 E803                        dcount  dw ddelay
+    11 00000006 0700                        x       dw 7
+    12 00000008 0000                        y       dw 0
+    13 0000000A 1900                        xmax    dw 25
+    14 0000000C FFFF                        xmin    dw -1
+    15 0000000E 5000                        ymax    dw 80
+    16 00000010 FFFF                        ymin    dw -1
+    17 00000012 0100                        vx      dw 1
+    18 00000014 0100                        vy      dw 1
+    19 00000016 41                          char    db 'A'
+    20 00000017 01                          color   db 01h
+    21 00000018 4C6978696E72756920-         myid db 'Lixinrui 15323032'
+    21 00000021 3135333233303332   
+    22                                      delay equ 6000					
+    23                                      ddelay equ 1000					
+    24                                  
+    25                                  main:
+    26 00000029 E82000                      call cls                    ; 清除BIOS显示的信息
+    27 0000002C 8CC8                        mov ax,cs
+    28 0000002E 8EC0                    	mov es,ax					; ES = 0
+    29 00000030 8ED8                    	mov ds,ax					; DS = CS
+    30 00000032 8EC0                    	mov es,ax					; ES = CS
+    31 00000034 B800B8                  	mov	ax,0B800h				; 文本窗口显存起始地址
+    32 00000037 8EE8                    	mov	gs,ax					; GS = B800h
+    33 00000039 C606[1600]41                mov byte[char],'A'
+    34                                  loop:
+    35 0000003E E81E00                      call sleep
+    36 00000041 E82900                      call show
+    37 00000044 E86500                      call move
+    38 00000047 E88500                      call change_speed
+    39 0000004A EBF2                        jmp loop
+    40                                  
+    41                                  cls:
+    42 0000004C 60                          pusha           ;保存寄存器的值
+    43 0000004D B406                        mov ah,0x06     ;调用10号BIOS中断的6号功能
+    44 0000004F B000                        mov al,0        ;al=0代表清屏
+    45 00000051 B707                        mov bh,0x07     ;设置将屏幕置为黑底白字
+    46 00000053 B500                        mov ch,0        ;从(0,0)到(24,79)
+    47 00000055 B100                        mov cl,0   
+    48 00000057 B618                        mov dh,24  
+    49 00000059 B24F                        mov dl,79  
+    50 0000005B CD10                        int 0x10        ;调用中断
+    51 0000005D 61                          popa            ;恢复寄存器的值
+    52 0000005E C3                          ret             ;返回
+    53                                  
+    54                                  sleep:
+    55 0000005F 60                          pusha
+    56 00000060 B9E803                      mov cx, ddelay      
+    57                                      OUTER:
+    58 00000063 BB7017                          mov bx, delay
+    59                                          INNER:
+    60 00000066 4B                                  dec bx
+    61 00000067 7FFD                                jg INNER
+    62 00000069 E2F8                        loop OUTER
+    63 0000006B 61                          popa
+    64 0000006C C3                          ret
+    65                                  
+    66                                  show:	
+    67 0000006D 60                          pusha
+    68 0000006E 31C0                        xor ax,ax                 ; 计算显存地址
+    69 00000070 A1[0600]                    mov ax,word[x]
+    70 00000073 BB5000                  	mov bx,80
+    71 00000076 F7E3                    	mul bx
+    72 00000078 0306[0800]              	add ax,word[y]
+    73 0000007C BB0200                  	mov bx,2
+    74 0000007F F7E3                    	mul bx
+    75 00000081 89C5                    	mov bp,ax
+    76 00000083 8A26[1700]              	mov ah,byte[color]			;  0000：黑底、1111：亮白字（默认值为07h）
+    77 00000087 A0[1600]                	mov al,byte[char]			;  AL = 显示字符值（默认值为20h=空格符）
+    78 0000008A E8BFFF                      call cls
+    79 0000008D 65894600                	mov word[gs:bp],ax  		;  显示字符的ASCII码值
+    80 00000091 E80200                      call print_id
+    81 00000094 61                          popa
+    82 00000095 C3                          ret
+    83                                  
+    84                                  print_id:
+    85 00000096 60                          pusha
+    86 00000097 B8[1800]                    mov ax, myid 
+    87 0000009A 89C5                        mov bp, ax      ;es:bp: 字符串首地址
+    88 0000009C B91100                      mov cx, 17      ;字符串长度
+    89 0000009F B80013                      mov ax, 01300h  ;调用Write string功能
+    90 000000A2 BBF100                      mov bx, 00F1h   ;白底蓝字，闪烁
+    91 000000A5 BA2009                      mov dx, 00920h  ;显示在屏幕中央
+    92 000000A8 CD10                        int 10h
+    93 000000AA 61                          popa
+    94 000000AB C3                          ret
+    95                                  
+    96                                  move:
+    97 000000AC 60                          pusha
+    98 000000AD A1[1200]                    mov ax, word[vx]
+    99 000000B0 8B1E[1400]                  mov bx, word[vy]
+   100 000000B4 0106[0600]                  add word[x], ax
+   101 000000B8 011E[0800]                  add word[y], bx
+   102 000000BC 61                          popa
+   103 000000BD C3                          ret
+   104                                  
+   105                                  change_color:
+   106 000000BE 803E[1700]0F                cmp byte[color],0Fh ;当前字符颜色是否为最后一种
+   107 000000C3 7505                        jnz no_rst          ;如果不是，选择下一种
+   108 000000C5 C606[1700]00                mov byte[color],0   ;如果是，重置
+   109                                  no_rst:
+   110 000000CA FE06[1700]                  inc byte[color]     ;选择下一种
+   111 000000CE C3                          ret
+   112                                  
+   113                                  change_speed:
+   114 000000CF 60                          pusha
+   115                                  check_x:
+   116 000000D0 A1[0600]                    mov ax, word[x]
+   117 000000D3 3B06[0C00]                  cmp ax, word[xmin]
+   118 000000D7 7408                        jz  reverse_vx
+   119 000000D9 3B06[0A00]                  cmp ax, word[xmax]
+   120 000000DD 7402                        jz  reverse_vx
+   121 000000DF EB07                        jmp check_y
+   122                                  reverse_vx:
+   123 000000E1 E8DAFF                      call change_color
+   124 000000E4 F71E[1200]                  neg word[vx]
+   125                                  check_y:
+   126 000000E8 8B1E[0800]                  mov bx, word[y]
+   127 000000EC 3B1E[1000]                  cmp bx, word[ymin]
+   128 000000F0 7408                        jz reverse_vy
+   129 000000F2 3B1E[0E00]                  cmp bx, word[ymax]
+   130 000000F6 7402                        jz reverse_vy
+   131 000000F8 61                          popa
+   132 000000F9 C3                          ret
+   133                                  reverse_vy:
+   134 000000FA E8C1FF                      call change_color
+   135 000000FD F71E[1400]                  neg word[vy]
+   136 00000101 61                          popa
+   137 00000102 C3                          ret
+   138                                      
+   139                                  end:
+   140 00000103 EBFE                        jmp $                   ; 停止画框，无限循环 
+   141                                  	
+   142 00000105 00<rept>                times 510 - ($ -$$)     db  0
+   143 000001FE 55AA                    dw    0xaa55
