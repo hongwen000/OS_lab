@@ -1,0 +1,3 @@
+$(build_dir)/kernel/%.o: kernel/%.cpp
+	@mkdir -p $(@D)
+	$(CXX) $(CXXFLAGS) -I basic_lib -c $< -o $@

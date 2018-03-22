@@ -1,0 +1,7 @@
+$(build_dir)/basic_lib/%.o: basic_lib/%.asm
+	@mkdir -p $(@D)
+	$(AS) $(ASFLAGS) -f elf32 $< -o $@
+
+$(build_dir)/basic_lib/%.o: basic_lib/%.c
+	@mkdir -p $(@D)
+	$(CC) $(CFLAGS) -I basic_lib -c $< -o $@
