@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "os_lab3/test"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"base_lib.h": "c",
+			"defines.h": "c"
+		}
+	}
+}

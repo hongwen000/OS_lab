@@ -1,4 +1,4 @@
-include gmsl
+include mkinc/gmsl
 disk_index = 1
 SHELL=/bin/bash
 AS = nasm
@@ -49,8 +49,9 @@ qemu-nox: write_all_progs
 	$(QEMU) -nographic $(QEMUOPTS)
 
 #生成gdb启动脚本
-.gdbinit: .gdbinit.tmpl
-	sed "s/localhost:1234/localhost:$(GDBPORT)/" < $^ > $@
+.gdbinit: gdbinit.part gdbdash
+	cat gdbdash > $@
+	sed "s/localhost:1234/localhost:$(GDBPORT)/" < gdbinit.part >> $@
 
 #qemu连接gdb
 qemu-gdb: .gdbinit write_all_progs
