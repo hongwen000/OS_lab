@@ -395,7 +395,8 @@ Disassembly of section .debug_info:
   90:	04 77                	add    $0x77,%al
   92:	00 00                	add    %al,(%eax)
   94:	00 03                	add    %al,(%ebx)
-  96:	13 fc                	adc    %esp,%edi
+  96:	17                   	pop    %ss
+  97:	fc                   	cld    
   98:	00 00                	add    %al,(%eax)
   9a:	00 07                	add    %al,(%edi)
   9c:	76 01                	jbe    9f <_text-0x7d61>
