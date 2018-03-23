@@ -10,7 +10,8 @@
                 "/usr/include",
                 "${workspaceFolder:test}/include",
                 "${workspaceFolder:test}/basic_lib",
-                "${workspaceRoot}"
+                "${workspaceRoot}",
+                "${workspaceRoot}/include"
             ],
             "defines": [],
             "intelliSenseMode": "clang-x64",
@@ -23,6 +24,7 @@
                     "/usr/include",
                     "${workspaceFolder:test}/include",
                     "${workspaceFolder:test}/basic_lib",
+                    "${workspaceRoot}/include",
                     "${workspaceRoot}"
                 ],
                 "limitSymbolsToIncludedHeaders": true,

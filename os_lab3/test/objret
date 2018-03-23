@@ -1,0 +1,2274 @@
+
+build/kernel/kernel.bin:     file format elf32-i386
+
+
+Disassembly of section .text:
+
+00007e00 <deregister_tm_clones>:
+    7e00:	b8 94 82 00 00       	mov    $0x8294,%eax
+    7e05:	3d 94 82 00 00       	cmp    $0x8294,%eax
+    7e0a:	74 1c                	je     7e28 <deregister_tm_clones+0x28>
+    7e0c:	b8 00 00 00 00       	mov    $0x0,%eax
+    7e11:	85 c0                	test   %eax,%eax
+    7e13:	74 13                	je     7e28 <deregister_tm_clones+0x28>
+    7e15:	55                   	push   %ebp
+    7e16:	89 e5                	mov    %esp,%ebp
+    7e18:	83 ec 14             	sub    $0x14,%esp
+    7e1b:	68 94 82 00 00       	push   $0x8294
+    7e20:	ff d0                	call   *%eax
+    7e22:	83 c4 10             	add    $0x10,%esp
+    7e25:	c9                   	leave  
+    7e26:	c3                   	ret    
+    7e27:	90                   	nop
+    7e28:	c3                   	ret    
+    7e29:	8d 76 00             	lea    0x0(%esi),%esi
+
+00007e2c <register_tm_clones>:
+    7e2c:	b8 94 82 00 00       	mov    $0x8294,%eax
+    7e31:	2d 94 82 00 00       	sub    $0x8294,%eax
+    7e36:	c1 f8 02             	sar    $0x2,%eax
+    7e39:	89 c2                	mov    %eax,%edx
+    7e3b:	c1 ea 1f             	shr    $0x1f,%edx
+    7e3e:	01 d0                	add    %edx,%eax
+    7e40:	d1 f8                	sar    %eax
+    7e42:	74 1c                	je     7e60 <register_tm_clones+0x34>
+    7e44:	ba 00 00 00 00       	mov    $0x0,%edx
+    7e49:	85 d2                	test   %edx,%edx
+    7e4b:	74 13                	je     7e60 <register_tm_clones+0x34>
+    7e4d:	55                   	push   %ebp
+    7e4e:	89 e5                	mov    %esp,%ebp
+    7e50:	83 ec 10             	sub    $0x10,%esp
+    7e53:	50                   	push   %eax
+    7e54:	68 94 82 00 00       	push   $0x8294
+    7e59:	ff d2                	call   *%edx
+    7e5b:	83 c4 10             	add    $0x10,%esp
+    7e5e:	c9                   	leave  
+    7e5f:	c3                   	ret    
+    7e60:	c3                   	ret    
+    7e61:	8d 76 00             	lea    0x0(%esi),%esi
+
+00007e64 <__do_global_dtors_aux>:
+    7e64:	80 3d 4c 82 00 00 00 	cmpb   $0x0,0x824c
+    7e6b:	75 63                	jne    7ed0 <__do_global_dtors_aux+0x6c>
+    7e6d:	55                   	push   %ebp
+    7e6e:	89 e5                	mov    %esp,%ebp
+    7e70:	56                   	push   %esi
+    7e71:	53                   	push   %ebx
+    7e72:	bb 90 82 00 00       	mov    $0x8290,%ebx
+    7e77:	81 eb 8c 82 00 00    	sub    $0x828c,%ebx
+    7e7d:	c1 fb 02             	sar    $0x2,%ebx
+    7e80:	4b                   	dec    %ebx
+    7e81:	be 8c 82 00 00       	mov    $0x828c,%esi
+    7e86:	a1 50 82 00 00       	mov    0x8250,%eax
+    7e8b:	39 d8                	cmp    %ebx,%eax
+    7e8d:	73 13                	jae    7ea2 <__do_global_dtors_aux+0x3e>
+    7e8f:	90                   	nop
+    7e90:	40                   	inc    %eax
+    7e91:	a3 50 82 00 00       	mov    %eax,0x8250
+    7e96:	ff 14 86             	call   *(%esi,%eax,4)
+    7e99:	a1 50 82 00 00       	mov    0x8250,%eax
+    7e9e:	39 d8                	cmp    %ebx,%eax
+    7ea0:	72 ee                	jb     7e90 <__do_global_dtors_aux+0x2c>
+    7ea2:	e8 59 ff ff ff       	call   7e00 <deregister_tm_clones>
+    7ea7:	b8 00 00 00 00       	mov    $0x0,%eax
+    7eac:	85 c0                	test   %eax,%eax
+    7eae:	74 10                	je     7ec0 <__do_global_dtors_aux+0x5c>
+    7eb0:	83 ec 0c             	sub    $0xc,%esp
+    7eb3:	68 64 81 00 00       	push   $0x8164
+    7eb8:	e8 43 81 ff ff       	call   0 <deregister_tm_clones-0x7e00>
+    7ebd:	83 c4 10             	add    $0x10,%esp
+    7ec0:	c6 05 4c 82 00 00 01 	movb   $0x1,0x824c
+    7ec7:	8d 65 f8             	lea    -0x8(%ebp),%esp
+    7eca:	5b                   	pop    %ebx
+    7ecb:	5e                   	pop    %esi
+    7ecc:	5d                   	pop    %ebp
+    7ecd:	c3                   	ret    
+    7ece:	66 90                	xchg   %ax,%ax
+    7ed0:	c3                   	ret    
+    7ed1:	8d 76 00             	lea    0x0(%esi),%esi
+
+00007ed4 <frame_dummy>:
+    7ed4:	b8 00 00 00 00       	mov    $0x0,%eax
+    7ed9:	85 c0                	test   %eax,%eax
+    7edb:	74 1f                	je     7efc <frame_dummy+0x28>
+    7edd:	55                   	push   %ebp
+    7ede:	89 e5                	mov    %esp,%ebp
+    7ee0:	83 ec 10             	sub    $0x10,%esp
+    7ee3:	68 54 82 00 00       	push   $0x8254
+    7ee8:	68 64 81 00 00       	push   $0x8164
+    7eed:	e8 0e 81 ff ff       	call   0 <deregister_tm_clones-0x7e00>
+    7ef2:	83 c4 10             	add    $0x10,%esp
+    7ef5:	c9                   	leave  
+    7ef6:	e9 31 ff ff ff       	jmp    7e2c <register_tm_clones>
+    7efb:	90                   	nop
+    7efc:	e9 2b ff ff ff       	jmp    7e2c <register_tm_clones>
+
+00007f01 <kernel_start>:
+    7f01:	66 55                	push   %bp
+    7f03:	66 89 e5             	mov    %sp,%bp
+    7f06:	66 57                	push   %di
+    7f08:	66 56                	push   %si
+    7f0a:	66 53                	push   %bx
+    7f0c:	66 83 ec 10          	sub    $0x10,%sp
+    7f10:	66 e8 ba 00          	callw  7fce <sys_bios_print_string+0x1e>
+    7f14:	00 00                	add    %al,(%eax)
+    7f16:	66 68 00 01          	pushw  $0x100
+    7f1a:	00 00                	add    %al,(%eax)
+    7f1c:	66 6a 07             	pushw  $0x7
+    7f1f:	66 68 ce 07          	pushw  $0x7ce
+    7f23:	00 00                	add    %al,(%eax)
+    7f25:	66 e8 bd 00          	callw  7fe6 <sys_bios_getchar+0x3>
+    7f29:	00 00                	add    %al,(%eax)
+    7f2b:	66 83 c4 0c          	add    $0xc,%sp
+    7f2f:	66 68 00 02          	pushw  $0x200
+    7f33:	00 00                	add    %al,(%eax)
+    7f35:	66 6a 07             	pushw  $0x7
+    7f38:	66 68 6d 1a          	pushw  $0x1a6d
+    7f3c:	00 00                	add    %al,(%eax)
+    7f3e:	66 e8 a4 00          	callw  7fe6 <sys_bios_getchar+0x3>
+    7f42:	00 00                	add    %al,(%eax)
+    7f44:	67 66 8d 7d e7       	lea    -0x19(%di),%di
+    7f49:	66 be 74 82          	mov    $0x8274,%si
+    7f4d:	00 00                	add    %al,(%eax)
+    7f4f:	66 b9 0d 00          	mov    $0xd,%cx
+    7f53:	00 00                	add    %al,(%eax)
+    7f55:	f3 a4                	rep movsb %ds:(%esi),%es:(%edi)
+    7f57:	66 83 c4 0c          	add    $0xc,%sp
+    7f5b:	66 6a 00             	pushw  $0x0
+    7f5e:	66 6a 0e             	pushw  $0xe
+    7f61:	66 6a 0c             	pushw  $0xc
+    7f64:	67 66 8d 45 e7       	lea    -0x19(%di),%ax
+    7f69:	66 50                	push   %ax
+    7f6b:	66 e8 3f 00          	callw  7fae <kernel_start+0xad>
+    7f6f:	00 00                	add    %al,(%eax)
+    7f71:	66 83 c4 10          	add    $0x10,%sp
+    7f75:	66 bb 00 07          	mov    $0x700,%bx
+    7f79:	00 00                	add    %al,(%eax)
+    7f7b:	66 e8 92 01          	callw  8111 <sys_inb+0xd>
+    7f7f:	00 00                	add    %al,(%eax)
+    7f81:	66 89 da             	mov    %bx,%dx
+    7f84:	66 83 ca 05          	or     $0x5,%dx
+    7f88:	66 52                	push   %dx
+    7f8a:	66 6a 07             	pushw  $0x7
+    7f8d:	66 0f be c0          	movsbw %al,%ax
+    7f91:	66 50                	push   %ax
+    7f93:	66 e8 4f 00          	callw  7fe6 <sys_bios_getchar+0x3>
+    7f97:	00 00                	add    %al,(%eax)
+    7f99:	66 81 c3 00 01       	add    $0x100,%bx
+    7f9e:	00 00                	add    %al,(%eax)
+    7fa0:	66 83 c4 0c          	add    $0xc,%sp
+    7fa4:	eb d5                	jmp    7f7b <kernel_start+0x7a>
+    7fa6:	66 90                	xchg   %ax,%ax
+    7fa8:	66 90                	xchg   %ax,%ax
+    7faa:	66 90                	xchg   %ax,%ax
+    7fac:	66 90                	xchg   %ax,%ax
+    7fae:	66 90                	xchg   %ax,%ax
+
+00007fb0 <sys_bios_print_string>:
+    7fb0:	55                   	push   %ebp
+    7fb1:	89 e5                	mov    %esp,%ebp
+    7fb3:	8b 4e 0a             	mov    0xa(%esi),%ecx
+    7fb6:	8b 5e 0e             	mov    0xe(%esi),%ebx
+    7fb9:	b7 00                	mov    $0x0,%bh
+    7fbb:	8b 56 12             	mov    0x12(%esi),%edx
+    7fbe:	8c d8                	mov    %ds,%eax
+    7fc0:	8e c0                	mov    %eax,%es
+    7fc2:	b8 01 13 8e ed       	mov    $0xed8e1301,%eax
+    7fc7:	8b 6e 06             	mov    0x6(%esi),%ebp
+    7fca:	cd 10                	int    $0x10
+    7fcc:	8c ed                	mov    %gs,%ebp
+    7fce:	5d                   	pop    %ebp
+    7fcf:	c3                   	ret    
+
+00007fd0 <sys_bios_clear_screen>:
+    7fd0:	60                   	pusha  
+    7fd1:	b4 06                	mov    $0x6,%ah
+    7fd3:	b0 00                	mov    $0x0,%al
+    7fd5:	b7 07                	mov    $0x7,%bh
+    7fd7:	b5 00                	mov    $0x0,%ch
+    7fd9:	b1 00                	mov    $0x0,%cl
+    7fdb:	b6 18                	mov    $0x18,%dh
+    7fdd:	b2 4f                	mov    $0x4f,%dl
+    7fdf:	cd 10                	int    $0x10
+    7fe1:	61                   	popa   
+    7fe2:	c3                   	ret    
+
+00007fe3 <sys_bios_getchar>:
+    7fe3:	b4 00                	mov    $0x0,%ah
+    7fe5:	cd 16                	int    $0x16
+    7fe7:	c3                   	ret    
+
+00007fe8 <sys_bios_print_int>:
+    7fe8:	66 55                	push   %bp
+    7fea:	66 89 e5             	mov    %sp,%bp
+    7fed:	66 57                	push   %di
+    7fef:	66 56                	push   %si
+    7ff1:	66 53                	push   %bx
+    7ff3:	66 50                	push   %ax
+    7ff5:	67 66 8b 45 08       	mov    0x8(%di),%ax
+    7ffa:	66 b9 01 00          	mov    $0x1,%cx
+    7ffe:	00 00                	add    %al,(%eax)
+    8000:	66 bb 0a 00          	mov    $0xa,%bx
+    8004:	00 00                	add    %al,(%eax)
+    8006:	66 99                	cwtd   
+    8008:	66 f7 fb             	idiv   %bx
+    800b:	67 66 8d 51 01       	lea    0x1(%bx,%di),%dx
+    8010:	66 85 c0             	test   %ax,%ax
+    8013:	74 05                	je     801a <sys_bios_print_int+0x32>
+    8015:	66 89 d1             	mov    %dx,%cx
+    8018:	eb ec                	jmp    8006 <sys_bios_print_int+0x1e>
+    801a:	67 66 8d 41 04       	lea    0x4(%bx,%di),%ax
+    801f:	66 83 e0 fc          	and    $0xfffc,%ax
+    8023:	66 29 c4             	sub    %ax,%sp
+    8026:	66 89 e7             	mov    %sp,%di
+    8029:	67 66 8d 1c          	lea    (%si),%bx
+    802d:	0c 67                	or     $0x67,%al
+    802f:	66 c7 45 f0 01 00    	movw   $0x1,-0x10(%ebp)
+    8035:	00 00                	add    %al,(%eax)
+    8037:	67 66 8b 45 08       	mov    0x8(%di),%ax
+    803c:	66 99                	cwtd   
+    803e:	67 66 f7 7d f0       	idivw  -0x10(%di)
+    8043:	66 be 0a 00          	mov    $0xa,%si
+    8047:	00 00                	add    %al,(%eax)
+    8049:	66 99                	cwtd   
+    804b:	66 f7 fe             	idiv   %si
+    804e:	66 83 c2 30          	add    $0x30,%dx
+    8052:	67 88 53 ff          	mov    %dl,-0x1(%bp,%di)
+    8056:	67 66 6b 45 f0 0a    	imul   $0xa,-0x10(%di),%ax
+    805c:	67 66 89 45 f0       	mov    %ax,-0x10(%di)
+    8061:	66 4b                	dec    %bx
+    8063:	66 39 df             	cmp    %bx,%di
+    8066:	75 cf                	jne    8037 <sys_bios_print_int+0x4f>
+    8068:	67 c6 04 0f          	movb   $0xf,(%si)
+    806c:	00 67 66             	add    %ah,0x66(%edi)
+    806f:	ff 75 10             	pushl  0x10(%ebp)
+    8072:	67 66 ff 75 0c       	pushw  0xc(%di)
+    8077:	66 51                	push   %cx
+    8079:	66 57                	push   %di
+    807b:	66 e8 2f ff          	callw  7fae <kernel_start+0xad>
+    807f:	ff                   	(bad)  
+    8080:	ff 66 83             	jmp    *-0x7d(%esi)
+    8083:	c4 10                	les    (%eax),%edx
+    8085:	67 66 8d 65 f4       	lea    -0xc(%di),%sp
+    808a:	66 5b                	pop    %bx
+    808c:	66 5e                	pop    %si
+    808e:	66 5f                	pop    %di
+    8090:	66 5d                	pop    %bp
+    8092:	66 c3                	retw   
+
+00008094 <sys_putchar>:
+    8094:	66 55                	push   %bp
+    8096:	66 89 e5             	mov    %sp,%bp
+    8099:	67 66 6b 45 14 50    	imul   $0x50,0x14(%di),%ax
+    809f:	67 66 03 45 10       	add    0x10(%di),%ax
+    80a4:	66 01 c0             	add    %ax,%ax
+    80a7:	67 66 8b 4d 0c       	mov    0xc(%di),%cx
+    80ac:	66 c1 e1 08          	shl    $0x8,%cx
+    80b0:	67 0f be 55 08       	movsbl 0x8(%di),%edx
+    80b5:	66 09 ca             	or     %cx,%dx
+    80b8:	67 89 90 00 80       	mov    %edx,-0x8000(%bx,%si)
+    80bd:	0b 00                	or     (%eax),%eax
+    80bf:	66 5d                	pop    %bp
+    80c1:	66 c3                	retw   
+
+000080c3 <sys_bios_putchar>:
+    80c3:	66 55                	push   %bp
+    80c5:	66 89 e5             	mov    %sp,%bp
+    80c8:	66 50                	push   %ax
+    80ca:	67 66 8b 45 08       	mov    0x8(%di),%ax
+    80cf:	67 88 45 fc          	mov    %al,-0x4(%di)
+    80d3:	67 66 8b 45 10       	mov    0x10(%di),%ax
+    80d8:	66 c1 e0 08          	shl    $0x8,%ax
+    80dc:	67 66 0f b6 55 14    	movzbw 0x14(%di),%dx
+    80e2:	66 09 d0             	or     %dx,%ax
+    80e5:	66 50                	push   %ax
+    80e7:	67 66 ff 75 0c       	pushw  0xc(%di)
+    80ec:	66 6a 01             	pushw  $0x1
+    80ef:	67 66 8d 45 fc       	lea    -0x4(%di),%ax
+    80f4:	66 50                	push   %ax
+    80f6:	66 e8 b4 fe          	callw  7fae <kernel_start+0xad>
+    80fa:	ff                   	(bad)  
+    80fb:	ff 66 83             	jmp    *-0x7d(%esi)
+    80fe:	c4 10                	les    (%eax),%edx
+    8100:	66 c9                	leavew 
+    8102:	66 c3                	retw   
+
+00008104 <sys_inb>:
+    8104:	66 55                	push   %bp
+    8106:	66 89 e5             	mov    %sp,%bp
+    8109:	67 66 8b 55 08       	mov    0x8(%di),%dx
+    810e:	ec                   	in     (%dx),%al
+    810f:	66 5d                	pop    %bp
+    8111:	66 c3                	retw   
+
+00008113 <sys_get_scancode>:
+    8113:	66 55                	push   %bp
+    8115:	66 89 e5             	mov    %sp,%bp
+    8118:	e4 64                	in     $0x64,%al
+    811a:	a8 01                	test   $0x1,%al
+    811c:	74 fa                	je     8118 <sys_get_scancode+0x5>
+    811e:	e4 60                	in     $0x60,%al
+    8120:	66 5d                	pop    %bp
+    8122:	66 c3                	retw   
+
+00008124 <__do_global_ctors_aux>:
+    8124:	a1 84 82 00 00       	mov    0x8284,%eax
+    8129:	83 f8 ff             	cmp    $0xffffffff,%eax
+    812c:	74 1a                	je     8148 <__do_global_ctors_aux+0x24>
+    812e:	55                   	push   %ebp
+    812f:	89 e5                	mov    %esp,%ebp
+    8131:	53                   	push   %ebx
+    8132:	52                   	push   %edx
+    8133:	bb 84 82 00 00       	mov    $0x8284,%ebx
+    8138:	ff d0                	call   *%eax
+    813a:	83 eb 04             	sub    $0x4,%ebx
+    813d:	8b 03                	mov    (%ebx),%eax
+    813f:	83 f8 ff             	cmp    $0xffffffff,%eax
+    8142:	75 f4                	jne    8138 <__do_global_ctors_aux+0x14>
+    8144:	58                   	pop    %eax
+    8145:	5b                   	pop    %ebx
+    8146:	5d                   	pop    %ebp
+    8147:	c3                   	ret    
+    8148:	c3                   	ret    
+
+Disassembly of section .init:
+
+00008149 <_init>:
+    8149:	55                   	push   %ebp
+    814a:	89 e5                	mov    %esp,%ebp
+    814c:	e8 83 fd ff ff       	call   7ed4 <frame_dummy>
+    8151:	e8 ce ff ff ff       	call   8124 <__do_global_ctors_aux>
+    8156:	5d                   	pop    %ebp
+    8157:	c3                   	ret    
+
+Disassembly of section .fini:
+
+00008158 <_fini>:
+    8158:	55                   	push   %ebp
+    8159:	89 e5                	mov    %esp,%ebp
+    815b:	e8 04 fd ff ff       	call   7e64 <__do_global_dtors_aux>
+    8160:	5d                   	pop    %ebp
+    8161:	c3                   	ret    
+
+Disassembly of section .eh_frame:
+
+00008164 <__EH_FRAME_BEGIN__>:
+    8164:	14 00                	adc    $0x0,%al
+    8166:	00 00                	add    %al,(%eax)
+    8168:	00 00                	add    %al,(%eax)
+    816a:	00 00                	add    %al,(%eax)
+    816c:	01 7a 52             	add    %edi,0x52(%edx)
+    816f:	00 01                	add    %al,(%ecx)
+    8171:	7c 08                	jl     817b <__EH_FRAME_BEGIN__+0x17>
+    8173:	01 1b                	add    %ebx,(%ebx)
+    8175:	0c 04                	or     $0x4,%al
+    8177:	04 88                	add    $0x88,%al
+    8179:	01 00                	add    %eax,(%eax)
+    817b:	00 1c 00             	add    %bl,(%eax,%eax,1)
+    817e:	00 00                	add    %al,(%eax)
+    8180:	1c 00                	sbb    $0x0,%al
+    8182:	00 00                	add    %al,(%eax)
+    8184:	7d fd                	jge    8183 <__EH_FRAME_BEGIN__+0x1f>
+    8186:	ff                   	(bad)  
+    8187:	ff a5 00 00 00 00    	jmp    *0x0(%ebp)
+    818d:	42                   	inc    %edx
+    818e:	0e                   	push   %cs
+    818f:	08 85 02 43 0d 05    	or     %al,0x50d4302(%ebp)
+    8195:	4a                   	dec    %edx
+    8196:	87 03                	xchg   %eax,(%ebx)
+    8198:	86 04 83             	xchg   %al,(%ebx,%eax,4)
+    819b:	05 28 00 00 00       	add    $0x28,%eax
+    81a0:	3c 00                	cmp    $0x0,%al
+    81a2:	00 00                	add    %al,(%eax)
+    81a4:	44                   	inc    %esp
+    81a5:	fe                   	(bad)  
+    81a6:	ff                   	(bad)  
+    81a7:	ff ac 00 00 00 00 42 	ljmp   *0x42000000(%eax,%eax,1)
+    81ae:	0e                   	push   %cs
+    81af:	08 85 02 43 0d 05    	or     %al,0x50d4302(%ebp)
+    81b5:	48                   	dec    %eax
+    81b6:	87 03                	xchg   %eax,(%ebx)
+    81b8:	86 04 83             	xchg   %al,(%ebx,%eax,4)
+    81bb:	05 02 97 c3 42       	add    $0x42c39702,%eax
+    81c0:	c6 42 c7 42          	movb   $0x42,-0x39(%edx)
+    81c4:	c5 0c 04             	lds    (%esp,%eax,1),%ecx
+    81c7:	04 1c                	add    $0x1c,%al
+    81c9:	00 00                	add    %al,(%eax)
+    81cb:	00 68 00             	add    %ch,0x0(%eax)
+    81ce:	00 00                	add    %al,(%eax)
+    81d0:	c4                   	(bad)  
+    81d1:	fe                   	(bad)  
+    81d2:	ff                   	(bad)  
+    81d3:	ff 2f                	ljmp   *(%edi)
+    81d5:	00 00                	add    %al,(%eax)
+    81d7:	00 00                	add    %al,(%eax)
+    81d9:	42                   	inc    %edx
+    81da:	0e                   	push   %cs
+    81db:	08 85 02 43 0d 05    	or     %al,0x50d4302(%ebp)
+    81e1:	68 c5 0c 04 04       	push   $0x4040cc5
+    81e6:	00 00                	add    %al,(%eax)
+    81e8:	1c 00                	sbb    $0x0,%al
+    81ea:	00 00                	add    %al,(%eax)
+    81ec:	88 00                	mov    %al,(%eax)
+    81ee:	00 00                	add    %al,(%eax)
+    81f0:	d3 fe                	sar    %cl,%esi
+    81f2:	ff                   	(bad)  
+    81f3:	ff 41 00             	incl   0x0(%ecx)
+    81f6:	00 00                	add    %al,(%eax)
+    81f8:	00 42 0e             	add    %al,0xe(%edx)
+    81fb:	08 85 02 43 0d 05    	or     %al,0x50d4302(%ebp)
+    8201:	7a c5                	jp     81c8 <__EH_FRAME_BEGIN__+0x64>
+    8203:	0c 04                	or     $0x4,%al
+    8205:	04 00                	add    $0x0,%al
+    8207:	00 1c 00             	add    %bl,(%eax,%eax,1)
+    820a:	00 00                	add    %al,(%eax)
+    820c:	a8 00                	test   $0x0,%al
+    820e:	00 00                	add    %al,(%eax)
+    8210:	f4                   	hlt    
+    8211:	fe                   	(bad)  
+    8212:	ff                   	(bad)  
+    8213:	ff 0f                	decl   (%edi)
+    8215:	00 00                	add    %al,(%eax)
+    8217:	00 00                	add    %al,(%eax)
+    8219:	42                   	inc    %edx
+    821a:	0e                   	push   %cs
+    821b:	08 85 02 43 0d 05    	or     %al,0x50d4302(%ebp)
+    8221:	48                   	dec    %eax
+    8222:	c5 0c 04             	lds    (%esp,%eax,1),%ecx
+    8225:	04 00                	add    $0x0,%al
+    8227:	00 1c 00             	add    %bl,(%eax,%eax,1)
+    822a:	00 00                	add    %al,(%eax)
+    822c:	c8 00 00 00          	enter  $0x0,$0x0
+    8230:	e3 fe                	jecxz  8230 <__EH_FRAME_BEGIN__+0xcc>
+    8232:	ff                   	(bad)  
+    8233:	ff 11                	call   *(%ecx)
+    8235:	00 00                	add    %al,(%eax)
+    8237:	00 00                	add    %al,(%eax)
+    8239:	42                   	inc    %edx
+    823a:	0e                   	push   %cs
+    823b:	08 85 02 43 0d 05    	or     %al,0x50d4302(%ebp)
+    8241:	4a                   	dec    %edx
+    8242:	c5 0c 04             	lds    (%esp,%eax,1),%ecx
+    8245:	04 00                	add    $0x0,%al
+	...
+
+00008248 <__FRAME_END__>:
+    8248:	00 00                	add    %al,(%eax)
+	...
+
+Disassembly of section .data:
+
+0000824c <_data>:
+    824c:	00 00                	add    %al,(%eax)
+	...
+
+00008250 <dtor_idx.3863>:
+    8250:	00 00                	add    %al,(%eax)
+	...
+
+00008254 <object.3873>:
+	...
+
+0000826c <__dso_handle>:
+    826c:	00 00                	add    %al,(%eax)
+	...
+
+00008270 <arr>:
+    8270:	74 82                	je     81f4 <__EH_FRAME_BEGIN__+0x90>
+    8272:	00 00                	add    %al,(%eax)
+    8274:	48                   	dec    %eax
+    8275:	65 6c                	gs insb (%dx),%es:(%edi)
+    8277:	6c                   	insb   (%dx),%es:(%edi)
+    8278:	6f                   	outsl  %ds:(%esi),(%dx)
+    8279:	2c 20                	sub    $0x20,%al
+    827b:	77 6f                	ja     82ec <__TMC_END__+0x58>
+    827d:	72 6c                	jb     82eb <__TMC_END__+0x57>
+    827f:	64                   	fs
+	...
+
+Disassembly of section .ctors:
+
+00008284 <_GLOBAL_OFFSET_TABLE_>:
+    8284:	ff                   	(bad)  
+    8285:	ff                   	(bad)  
+    8286:	ff                   	(bad)  
+    8287:	ff                 	incl   (%eax)
+
+00008288 <__CTOR_END__>:
+    8288:	00 00                	add    %al,(%eax)
+	...
+
+Disassembly of section .dtors:
+
+0000828c <__DTOR_LIST__>:
+    828c:	ff                   	(bad)  
+    828d:	ff                   	(bad)  
+    828e:	ff                   	(bad)  
+    828f:	ff                 	incl   (%eax)
+
+00008290 <__DTOR_END__>:
+    8290:	00 00                	add    %al,(%eax)
+	...
+
+Disassembly of section .debug_line:
+
+00000000 <.debug_line>:
+   0:	48                   	dec    %eax
+   1:	00 00                	add    %al,(%eax)
+   3:	00 02                	add    %al,(%edx)
+   5:	00 24 00             	add    %ah,(%eax,%eax,1)
+   8:	00 00                	add    %al,(%eax)
+   a:	01 01                	add    %eax,(%ecx)
+   c:	fb                   	sti    
+   d:	0e                   	push   %cs
+   e:	0d 00 01 01 01       	or     $0x1010100,%eax
+  13:	01 00                	add    %eax,(%eax)
+  15:	00 00                	add    %al,(%eax)
+  17:	01 00                	add    %eax,(%eax)
+  19:	00 01                	add    %al,(%ecx)
+  1b:	6b 65 72 6e          	imul   $0x6e,0x72(%ebp),%esp
+  1f:	65 6c                	gs insb (%dx),%es:(%edi)
+  21:	00 00                	add    %al,(%eax)
+  23:	63 72 74             	arpl   %si,0x74(%edx)
+  26:	69 2e 53 00 01 00    	imul   $0x10053,(%esi),%ebp
+  2c:	00 00                	add    %al,(%eax)
+  2e:	00 05 02 49 81 00    	add    %al,0x814902
+  34:	00 16                	add    %dl,(%esi)
+  36:	21 02                	and    %eax,(%edx)
+  38:	02 00                	add    (%eax),%al
+  3a:	01 01                	add    %eax,(%ecx)
+  3c:	00 05 02 58 81 00    	add    %al,0x815802
+  42:	00 03                	add    %al,(%ebx)
+  44:	0c 01                	or     $0x1,%al
+  46:	21 02                	and    %eax,(%edx)
+  48:	02 00                	add    (%eax),%al
+  4a:	01 01                	add    %eax,(%ecx)
+  4c:	78 00                	js     4e <deregister_tm_clones-0x7db2>
+  4e:	00 00                	add    %al,(%eax)
+  50:	02 00                	add    (%eax),%al
+  52:	55                   	push   %ebp
+  53:	00 00                	add    %al,(%eax)
+  55:	00 01                	add    %al,(%ecx)
+  57:	01 fb                	add    %edi,%ebx
+  59:	0e                   	push   %cs
+  5a:	0d 00 01 01 01       	or     $0x1010100,%eax
+  5f:	01 00                	add    %eax,(%eax)
+  61:	00 00                	add    %al,(%eax)
+  63:	01 00                	add    %eax,(%eax)
+  65:	00 01                	add    %al,(%ecx)
+  67:	6b 65 72 6e          	imul   $0x6e,0x72(%ebp),%esp
+  6b:	65 6c                	gs insb (%dx),%es:(%edi)
+  6d:	00 62 61             	add    %ah,0x61(%edx)
+  70:	73 69                	jae    db <deregister_tm_clones-0x7d25>
+  72:	63 5f 6c             	arpl   %bx,0x6c(%edi)
+  75:	69 62 00 69 6e 63 6c 	imul   $0x6c636e69,0x0(%edx),%esp
+  7c:	75 64                	jne    e2 <deregister_tm_clones-0x7d1e>
+  7e:	65 00 00             	add    %al,%gs:(%eax)
+  81:	6b 65 72 6e          	imul   $0x6e,0x72(%ebp),%esp
+  85:	65 6c                	gs insb (%dx),%es:(%edi)
+  87:	2e 63 70 70          	arpl   %si,%cs:0x70(%eax)
+  8b:	00 01                	add    %al,(%ecx)
+  8d:	00 00                	add    %al,(%eax)
+  8f:	62 61 73             	bound  %esp,0x73(%ecx)
+  92:	65 5f                	gs pop %edi
+  94:	6c                   	insb   (%dx),%es:(%edi)
+  95:	69 62 2e 68 00 02 00 	imul   $0x20068,0x2e(%edx),%esp
+  9c:	00 64 65 66          	add    %ah,0x66(%ebp,%eiz,2)
+  a0:	69 6e 65 73 2e 68 00 	imul   $0x682e73,0x65(%esi),%ebp
+  a7:	03 00                	add    (%eax),%eax
+  a9:	00 00                	add    %al,(%eax)
+  ab:	00 05 02 01 7f 00    	add    %al,0x7f0102
+  b1:	00 03                	add    %al,(%ebx)
+  b3:	0e                   	push   %cs
+  b4:	01 e5                	add    %esp,%ebp
+  b6:	68 08 4c 08 83       	push   $0x83084c08
+  bb:	08 2f                	or     %ch,(%edi)
+  bd:	02 24 15 67 b9 4b 02 	add    0x24bb967(,%edx,1),%ah
+  c4:	15 00 01 01 cf       	adc    $0xcf010100,%eax
+  c9:	00 00                	add    %al,(%eax)
+  cb:	00 02                	add    %al,(%edx)
+  cd:	00 79 00             	add    %bh,0x0(%ecx)
+  d0:	00 00                	add    %al,(%eax)
+  d2:	01 01                	add    %eax,(%ecx)
+  d4:	fb                   	sti    
+  d5:	0e                   	push   %cs
+  d6:	0d 00 01 01 01       	or     $0x1010100,%eax
+  db:	01 00                	add    %eax,(%eax)
+  dd:	00 00                	add    %al,(%eax)
+  df:	01 00                	add    %eax,(%eax)
+  e1:	00 01                	add    %al,(%ecx)
+  e3:	62 61 73             	bound  %esp,0x73(%ecx)
+  e6:	69 63 5f 6c 69 62 00 	imul   $0x62696c,0x5f(%ebx),%esp
+  ed:	2f                   	das    
+  ee:	6f                   	outsl  %ds:(%esi),(%dx)
+  ef:	70 74                	jo     165 <deregister_tm_clones-0x7c9b>
+  f1:	2f                   	das    
+  f2:	63 72 6f             	arpl   %si,0x6f(%edx)
+  f5:	73 73                	jae    16a <deregister_tm_clones-0x7c96>
+  f7:	2f                   	das    
+  f8:	67 63 63 2d          	arpl   %sp,0x2d(%bp,%di)
+  fc:	69 33 38 36 2f 6c    	imul   $0x6c2f3638,(%ebx),%esi
+ 102:	69 62 2f 67 63 63 2f 	imul   $0x2f636367,0x2f(%edx),%esp
+ 109:	69 33 38 36 2d 65    	imul   $0x652d3638,(%ebx),%esi
+ 10f:	6c                   	insb   (%dx),%es:(%edi)
+ 110:	66 2f                	data16 das 
+ 112:	37                   	aaa    
+ 113:	2e 33 2e             	xor    %cs:(%esi),%ebp
+ 116:	30 2f                	xor    %ch,(%edi)
+ 118:	69 6e 63 6c 75 64 65 	imul   $0x6564756c,0x63(%esi),%ebp
+ 11f:	00 00                	add    %al,(%eax)
+ 121:	63 5f 6c             	arpl   %bx,0x6c(%edi)
+ 124:	69 62 2e 63 00 01 00 	imul   $0x10063,0x2e(%edx),%esp
+ 12b:	00 73 74             	add    %dh,0x74(%ebx)
+ 12e:	64 69 6e 74 2d 67 63 	imul   $0x6363672d,%fs:0x74(%esi),%ebp
+ 135:	63 
+ 136:	2e 68 00 02 00 00    	cs push $0x200
+ 13c:	62 61 73             	bound  %esp,0x73(%ecx)
+ 13f:	65 5f                	gs pop %edi
+ 141:	6c                   	insb   (%dx),%es:(%edi)
+ 142:	69 62 2e 68 00 01 00 	imul   $0x10068,0x2e(%edx),%esp
+ 149:	00 00                	add    %al,(%eax)
+ 14b:	00 05 02 e8 7f 00    	add    %al,0x7fe802
+ 151:	00 14 c9             	add    %dl,(%ecx,%ecx,8)
+ 154:	59                   	pop    %ecx
+ 155:	67 00 02             	add    %al,(%bp,%si)
+ 158:	04 01                	add    $0x1,%al
+ 15a:	06                   	push   %es
+ 15b:	66 06                	pushw  %es
+ 15d:	08 3d 08 3d 00 02    	or     %bh,0x2003d08
+ 163:	04 03                	add    $0x3,%al
+ 165:	92                   	xchg   %eax,%edx
+ 166:	00 02                	add    %al,(%edx)
+ 168:	04 03                	add    $0x3,%al
+ 16a:	08 d5                	or     %dl,%ch
+ 16c:	08 22                	or     %ah,(%edx)
+ 16e:	59                   	pop    %ecx
+ 16f:	08 3d 08 31 5a d7    	or     %bh,0xd75a3108
+ 175:	08 75 4d             	or     %dh,0x4d(%ebp)
+ 178:	f3 02 29             	repz add (%ecx),%ch
+ 17b:	13 85 5a 6a 03 0c    	adc    0xc036a5a(%ebp),%eax
+ 181:	4a                   	dec    %edx
+ 182:	00 02                	add    %al,(%edx)
+ 184:	04 01                	add    $0x1,%al
+ 186:	03 70 58             	add    0x58(%eax),%esi
+ 189:	00 02                	add    %al,(%edx)
+ 18b:	04 01                	add    $0x1,%al
+ 18d:	03 11                	add    (%ecx),%edx
+ 18f:	2e 03 6f 4a          	add    %cs:0x4a(%edi),%ebp
+ 193:	03 13                	add    (%ebx),%edx
+ 195:	2e 02 04 00          	add    %cs:(%eax,%eax,1),%al
+ 199:	01 01                	add    %eax,(%ecx)
+ 19b:	46                   	inc    %esi
+ 19c:	00 00                	add    %al,(%eax)
+ 19e:	00 02                	add    %al,(%edx)
+ 1a0:	00 24 00             	add    %ah,(%eax,%eax,1)
+ 1a3:	00 00                	add    %al,(%eax)
+ 1a5:	01 01                	add    %eax,(%ecx)
+ 1a7:	fb                   	sti    
+ 1a8:	0e                   	push   %cs
+ 1a9:	0d 00 01 01 01       	or     $0x1010100,%eax
+ 1ae:	01 00                	add    %eax,(%eax)
+ 1b0:	00 00                	add    %al,(%eax)
+ 1b2:	01 00                	add    %eax,(%eax)
+ 1b4:	00 01                	add    %al,(%ecx)
+ 1b6:	6b 65 72 6e          	imul   $0x6e,0x72(%ebp),%esp
+ 1ba:	65 6c                	gs insb (%dx),%es:(%edi)
+ 1bc:	00 00                	add    %al,(%eax)
+ 1be:	63 72 74             	arpl   %si,0x74(%edx)
+ 1c1:	6e                   	outsb  %ds:(%esi),(%dx)
+ 1c2:	2e 53                	cs push %ebx
+ 1c4:	00 01                	add    %al,(%ecx)
+ 1c6:	00 00                	add    %al,(%eax)
+ 1c8:	00 00                	add    %al,(%eax)
+ 1ca:	05 02 56 81 00       	add    $0x815602,%eax
+ 1cf:	00 14 21             	add    %dl,(%ecx,%eiz,1)
+ 1d2:	02 01                	add    (%ecx),%al
+ 1d4:	00 01                	add    %al,(%ecx)
+ 1d6:	01 00                	add    %eax,(%eax)
+ 1d8:	05 02 60 81 00       	add    $0x816002,%eax
+ 1dd:	00 19                	add    %bl,(%ecx)
+ 1df:	21 02                	and    %eax,(%edx)
+ 1e1:	01 00                	add    %eax,(%eax)
+ 1e3:	01 01                	add    %eax,(%ecx)
+
+Disassembly of section .debug_info:
+
+00000000 <.debug_info>:
+   0:	1e                   	push   %ds
+   1:	00 00                	add    %al,(%eax)
+   3:	00 02                	add    %al,(%edx)
+   5:	00 00                	add    %al,(%eax)
+   7:	00 00                	add    %al,(%eax)
+   9:	00 04 01             	add    %al,(%ecx,%eax,1)
+	...
+  18:	0e                   	push   %cs
+  19:	00 00                	add    %al,(%eax)
+  1b:	00 62 00             	add    %ah,0x0(%edx)
+  1e:	00 00                	add    %al,(%eax)
+  20:	01 80 e6 01 00 00    	add    %eax,0x1e6(%eax)
+  26:	04 00                	add    $0x0,%al
+  28:	12 00                	adc    (%eax),%al
+  2a:	00 00                	add    %al,(%eax)
+  2c:	04 01                	add    $0x1,%al
+  2e:	2d 01 00 00 04       	sub    $0x4000001,%eax
+  33:	72 02                	jb     37 <deregister_tm_clones-0x7dc9>
+  35:	00 00                	add    %al,(%eax)
+  37:	0e                   	push   %cs
+  38:	00 00                	add    %al,(%eax)
+  3a:	00 01                	add    %al,(%ecx)
+  3c:	7f 00                	jg     3e <deregister_tm_clones-0x7dc2>
+  3e:	00 a5 00 00 00 4c    	add    %ah,0x4c000000(%ebp)
+  44:	00 00                	add    %al,(%eax)
+  46:	00 02                	add    %al,(%edx)
+  48:	04 05                	add    $0x5,%al
+  4a:	73 00                	jae    4c <deregister_tm_clones-0x7db4>
+  4c:	00 00                	add    %al,(%eax)
+  4e:	02 04 07             	add    (%edi,%eax,1),%al
+  51:	0c 02                	or     $0x2,%al
+  53:	00 00                	add    %al,(%eax)
+  55:	02 08                	add    (%eax),%cl
+  57:	05 6e 00 00 00       	add    $0x6e,%eax
+  5c:	02 0c 04             	add    (%esp,%eax,1),%cl
+  5f:	b5 02                	mov    $0x2,%ch
+  61:	00 00                	add    %al,(%eax)
+  63:	02 10                	add    (%eax),%dl
+  65:	04 fc                	add    $0xfc,%al
+  67:	01 00                	add    %eax,(%eax)
+  69:	00 03                	add    %al,(%ebx)
+  6b:	bc 00 00 00 02       	mov    $0x2000000,%esp
+  70:	01 06                	add    %eax,(%esi)
+  72:	fd                   	std    
+  73:	00 00                	add    %al,(%eax)
+  75:	00 02                	add    %al,(%edx)
+  77:	02 05 ab 02 00 00    	add    0x2ab,%al
+  7d:	02 01                	add    (%ecx),%al
+  7f:	08 fb                	or     %bh,%bl
+  81:	00 00                	add    %al,(%eax)
+  83:	00 02                	add    %al,(%edx)
+  85:	02 07                	add    (%edi),%al
+  87:	a9 00 00 00 02       	test   $0x2000000,%eax
+  8c:	08 07                	or     %al,(%edi)
+  8e:	07                   	pop    %es
+  8f:	02 00                	add    (%eax),%al
+  91:	00 04 04             	add    %al,(%esp,%eax,1)
+  94:	05 69 6e 74 00       	add    $0x746e69,%eax
+  99:	02 04 07             	add    (%edi,%eax,1),%al
+  9c:	11 02                	adc    %eax,(%edx)
+  9e:	00 00                	add    %al,(%eax)
+  a0:	02 01                	add    (%ecx),%al
+  a2:	06                   	push   %es
+  a3:	04 01                	add    $0x1,%al
+  a5:	00 00                	add    %al,(%eax)
+  a7:	05 7e 00 00 00       	add    $0x7e,%eax
+  ac:	06                   	push   %es
+  ad:	de 00                	fiadds (%eax)
+  af:	00 00                	add    %al,(%eax)
+  b1:	07                   	pop    %es
+  b2:	04 77                	add    $0x77,%al
+  b4:	00 00                	add    %al,(%eax)
+  b6:	00 03                	add    %al,(%ebx)
+  b8:	13 fc                	adc    %esp,%edi
+  ba:	00 00                	add    %al,(%eax)
+  bc:	00 07                	add    %al,(%edi)
+  be:	f2 01 00             	repnz add %eax,(%eax)
+  c1:	00 00                	add    %al,(%eax)
+  c3:	07                   	pop    %es
+  c4:	87 00                	xchg   %eax,(%eax)
+  c6:	00 00                	add    %al,(%eax)
+  c8:	01 07                	add    %eax,(%edi)
+  ca:	95                   	xchg   %eax,%ebp
+  cb:	00 00                	add    %al,(%eax)
+  cd:	00 02                	add    %al,(%edx)
+  cf:	07                   	pop    %es
+  d0:	e8 00 00 00 03       	call   30000d5 <__TMC_END__+0x2ff7e41>
+  d5:	07                   	pop    %es
+  d6:	84 02                	test   %al,(%edx)
+  d8:	00 00                	add    %al,(%eax)
+  da:	04 07                	add    $0x7,%al
+  dc:	e6 01                	out    %al,$0x1
+  de:	00 00                	add    %al,(%eax)
+  e0:	05 07 f1 00 00       	add    $0xf107,%eax
+  e5:	00 06                	add    %al,(%esi)
+  e7:	07                   	pop    %es
+  e8:	9f                   	lahf   
+  e9:	00 00                	add    %al,(%eax)
+  eb:	00 07                	add    %al,(%edi)
+  ed:	07                   	pop    %es
+  ee:	8c 02                	mov    %es,(%edx)
+  f0:	00 00                	add    %al,(%eax)
+  f2:	08 07                	or     %al,(%edi)
+  f4:	c1 02 00             	roll   $0x0,(%edx)
+  f7:	00 09                	add    %cl,(%ecx)
+  f9:	07                   	pop    %es
+  fa:	2d 02 00 00 0a       	sub    $0xa000002,%eax
+  ff:	07                   	pop    %es
+ 100:	ce                   	into   
+ 101:	00 00                	add    %al,(%eax)
+ 103:	00 0b                	add    %cl,(%ebx)
+ 105:	07                   	pop    %es
+ 106:	1e                   	push   %ds
+ 107:	02 00                	add    (%eax),%al
+ 109:	00 0c 07             	add    %cl,(%edi,%eax,1)
+ 10c:	09 01                	or     %eax,(%ecx)
+ 10e:	00 00                	add    %al,(%eax)
+ 110:	0d 07 7c 00 00       	or     $0x7c07,%eax
+ 115:	00 0e                	add    %cl,(%esi)
+ 117:	07                   	pop    %es
+ 118:	3e 02 00             	add    %ds:(%eax),%al
+ 11b:	00 0f                	add    %cl,(%edi)
+ 11d:	00 08                	add    %cl,(%eax)
+ 11f:	61                   	popa   
+ 120:	72 72                	jb     194 <deregister_tm_clones-0x7c6c>
+ 122:	00 01                	add    %al,(%ecx)
+ 124:	0c 0d                	or     $0xd,%al
+ 126:	01 00                	add    %eax,(%eax)
+ 128:	00 05 03 70 82 00    	add    %al,0x827003
+ 12e:	00 09                	add    %cl,(%ecx)
+ 130:	04 85                	add    $0x85,%al
+ 132:	00 00                	add    %al,(%eax)
+ 134:	00 0a                	add    %cl,(%edx)
+ 136:	4f                   	dec    %edi
+ 137:	02 00                	add    (%eax),%al
+ 139:	00 01                	add    %al,(%ecx)
+ 13b:	0e                   	push   %cs
+ 13c:	01 7f 00             	add    %edi,0x0(%edi)
+ 13f:	00 a5 00 00 00 01    	add    %ah,0x1000000(%ebp)
+ 145:	9c                   	pushf  
+ 146:	ad                   	lods   %ds:(%esi),%eax
+ 147:	01 00                	add    %eax,(%eax)
+ 149:	00 0b                	add    %cl,(%ebx)
+ 14b:	90                   	nop
+ 14c:	00 00                	add    %al,(%eax)
+ 14e:	00 01                	add    %al,(%ecx)
+ 150:	11 70 00             	adc    %esi,0x0(%eax)
+ 153:	00 00                	add    %al,(%eax)
+ 155:	ce                   	into   
+ 156:	07                   	pop    %es
+ 157:	0c 66                	or     $0x66,%al
+ 159:	69 62 00 01 13 70 00 	imul   $0x701301,0x0(%edx),%esp
+ 160:	00 00                	add    %al,(%eax)
+ 162:	6d                   	insl   (%dx),%es:(%edi)
+ 163:	1a 0d 61 72 72 00    	sbb    0x727261,%cl
+ 169:	01 15 ad 01 00 00    	add    %edx,0x1ad
+ 16f:	02 91 5f 0e 69 00    	add    0x690e5f(%ecx),%dl
+ 175:	01 17                	add    %edx,(%edi)
+ 177:	70 00                	jo     179 <deregister_tm_clones-0x7c87>
+ 179:	00 00                	add    %al,(%eax)
+ 17b:	0f 7b                	(bad)  
+ 17d:	7f 00                	jg     17f <deregister_tm_clones-0x7c81>
+ 17f:	00 2b                	add    %ch,(%ebx)
+ 181:	00 00                	add    %al,(%eax)
+ 183:	00 88 01 00 00 10    	add    %cl,0x10000001(%eax)
+ 189:	6e                   	outsb  %ds:(%esi),(%dx)
+ 18a:	75 6d                	jne    1f9 <deregister_tm_clones-0x7c07>
+ 18c:	00 01                	add    %al,(%ecx)
+ 18e:	19 70 00             	sbb    %esi,0x0(%eax)
+ 191:	00 00                	add    %al,(%eax)
+ 193:	00 00                	add    %al,(%eax)
+ 195:	00 00                	add    %al,(%eax)
+ 197:	11 81 7f 00 00 bd    	adc    %eax,-0x42ffff81(%ecx)
+ 19d:	01 00                	add    %eax,(%eax)
+ 19f:	00 11                	add    %dl,(%ecx)
+ 1a1:	99                   	cltd   
+ 1a2:	7f 00                	jg     1a4 <deregister_tm_clones-0x7c5c>
+ 1a4:	00 c8                	add    %cl,%al
+ 1a6:	01 00                	add    %eax,(%eax)
+ 1a8:	00 00                	add    %al,(%eax)
+ 1aa:	11 16                	adc    %edx,(%esi)
+ 1ac:	7f 00                	jg     1ae <deregister_tm_clones-0x7c52>
+ 1ae:	00 d3                	add    %dl,%bl
+ 1b0:	01 00                	add    %eax,(%eax)
+ 1b2:	00 11                	add    %dl,(%ecx)
+ 1b4:	2b 7f 00             	sub    0x0(%edi),%edi
+ 1b7:	00 c8                	add    %cl,%al
+ 1b9:	01 00                	add    %eax,(%eax)
+ 1bb:	00 11                	add    %dl,(%ecx)
+ 1bd:	44                   	inc    %esp
+ 1be:	7f 00                	jg     1c0 <deregister_tm_clones-0x7c40>
+ 1c0:	00 c8                	add    %cl,%al
+ 1c2:	01 00                	add    %eax,(%eax)
+ 1c4:	00 11                	add    %dl,(%ecx)
+ 1c6:	71 7f                	jno    247 <deregister_tm_clones-0x7bb9>
+ 1c8:	00 00                	add    %al,(%eax)
+ 1ca:	de 01                	fiadds (%ecx)
+ 1cc:	00 00                	add    %al,(%eax)
+ 1ce:	00 12                	add    %dl,(%edx)
+ 1d0:	7e 00                	jle    1d2 <deregister_tm_clones-0x7c2e>
+ 1d2:	00 00                	add    %al,(%eax)
+ 1d4:	bd 01 00 00 13       	mov    $0x13000001,%ebp
+ 1d9:	2c 00                	sub    $0x0,%al
+ 1db:	00 00                	add    %al,(%eax)
+ 1dd:	0c 00                	or     $0x0,%al
+ 1df:	14 1c                	adc    $0x1c,%al
+ 1e1:	01 00                	add    %eax,(%eax)
+ 1e3:	00 1c 01             	add    %bl,(%ecx,%eax,1)
+ 1e6:	00 00                	add    %al,(%eax)
+ 1e8:	02 0f                	add    (%edi),%cl
+ 1ea:	14 d3                	adc    $0xd3,%al
+ 1ec:	01 00                	add    %eax,(%eax)
+ 1ee:	00 d3                	add    %dl,%bl
+ 1f0:	01 00                	add    %eax,(%eax)
+ 1f2:	00 02                	add    %al,(%edx)
+ 1f4:	08 14 5c             	or     %dl,(%esp,%ebx,2)
+ 1f7:	02 00                	add    (%eax),%al
+ 1f9:	00 5c 02 00          	add    %bl,0x0(%edx,%eax,1)
+ 1fd:	00 02                	add    %al,(%edx)
+ 1ff:	09 14 95 02 00 00 95 	or     %edx,-0x6afffffe(,%edx,4)
+ 206:	02 00                	add    (%eax),%al
+ 208:	00 02                	add    %al,(%edx)
+ 20a:	07                   	pop    %es
+ 20b:	00 bf 02 00 00 04    	add    %bh,0x4000002(%edi)
+ 211:	00 1a                	add    %bl,(%edx)
+ 213:	01 00                	add    %eax,(%eax)
+ 215:	00 04 01             	add    %al,(%ecx,%eax,1)
+ 218:	0a 03                	or     (%ebx),%al
+ 21a:	00 00                	add    %al,(%eax)
+ 21c:	0c e7                	or     $0xe7,%al
+ 21e:	02 00                	add    (%eax),%al
+ 220:	00 0e                	add    %cl,(%esi)
+ 222:	00 00                	add    %al,(%eax)
+ 224:	00 e8                	add    %ch,%al
+ 226:	7f 00                	jg     228 <deregister_tm_clones-0x7bd8>
+ 228:	00 3c 01             	add    %bh,(%ecx,%eax,1)
+ 22b:	00 00                	add    %al,(%eax)
+ 22d:	c8 00 00 00          	enter  $0x0,$0x0
+ 231:	02 04 05 73 00 00 00 	add    0x73(,%eax,1),%al
+ 238:	02 04 07             	add    (%edi,%eax,1),%al
+ 23b:	0c 02                	or     $0x2,%al
+ 23d:	00 00                	add    %al,(%eax)
+ 23f:	03 04 05 69 6e 74 00 	add    0x746e69(,%eax,1),%eax
+ 246:	02 08                	add    (%eax),%cl
+ 248:	05 6e 00 00 00       	add    $0x6e,%eax
+ 24d:	02 0c 04             	add    (%esp,%eax,1),%cl
+ 250:	b5 02                	mov    $0x2,%ch
+ 252:	00 00                	add    %al,(%eax)
+ 254:	02 10                	add    (%eax),%dl
+ 256:	04 d1                	add    $0xd1,%al
+ 258:	02 00                	add    (%eax),%al
+ 25a:	00 02                	add    %al,(%edx)
+ 25c:	01 06                	add    %eax,(%esi)
+ 25e:	fd                   	std    
+ 25f:	00 00                	add    %al,(%eax)
+ 261:	00 02                	add    %al,(%edx)
+ 263:	02 05 ab 02 00 00    	add    0x2ab,%al
+ 269:	04 b4                	add    $0xb4,%al
+ 26b:	03 00                	add    (%eax),%eax
+ 26d:	00 02                	add    %al,(%edx)
+ 26f:	2e 68 00 00 00 02    	cs push $0x2000000
+ 275:	01 08                	add    %ecx,(%eax)
+ 277:	fb                   	sti    
+ 278:	00 00                	add    %al,(%eax)
+ 27a:	00 04 c6             	add    %al,(%esi,%eax,8)
+ 27d:	03 00                	add    (%eax),%eax
+ 27f:	00 02                	add    %al,(%edx)
+ 281:	31 7f 00             	xor    %edi,0x0(%edi)
+ 284:	00 00                	add    %al,(%eax)
+ 286:	05 6f 00 00 00       	add    $0x6f,%eax
+ 28b:	02 02                	add    (%edx),%al
+ 28d:	07                   	pop    %es
+ 28e:	a9 00 00 00 02       	test   $0x2000000,%eax
+ 293:	08 07                	or     %al,(%edi)
+ 295:	07                   	pop    %es
+ 296:	02 00                	add    (%eax),%al
+ 298:	00 02                	add    %al,(%edx)
+ 29a:	04 07                	add    $0x7,%al
+ 29c:	11 02                	adc    %eax,(%edx)
+ 29e:	00 00                	add    %al,(%eax)
+ 2a0:	02 01                	add    (%ecx),%al
+ 2a2:	06                   	push   %es
+ 2a3:	04 01                	add    $0x1,%al
+ 2a5:	00 00                	add    %al,(%eax)
+ 2a7:	06                   	push   %es
+ 2a8:	1c 01                	sbb    $0x1,%al
+ 2aa:	00 00                	add    %al,(%eax)
+ 2ac:	01 2d 94 00 00 00    	add    %ebp,0x94
+ 2b2:	13 81 00 00 11 00    	adc    0x110000(%ecx),%eax
+ 2b8:	00 00                	add    %al,(%eax)
+ 2ba:	01 9c 09 01 00 00 07 	add    %ebx,0x7000001(%ecx,%ecx,1)
+ 2c1:	09 01                	or     %eax,(%ecx)
+ 2c3:	00 00                	add    %al,(%eax)
+ 2c5:	18 81 00 00 02 00    	sbb    %al,0x20000(%ecx)
+ 2cb:	00 00                	add    %al,(%eax)
+ 2cd:	01 2f                	add    %ebp,(%edi)
+ 2cf:	e0 00                	loopne 2d1 <deregister_tm_clones-0x7b2f>
+ 2d1:	00 00                	add    %al,(%eax)
+ 2d3:	08 19                	or     %bl,(%ecx)
+ 2d5:	01 00                	add    %eax,(%eax)
+ 2d7:	00 24 00             	add    %ah,(%eax,%eax,1)
+ 2da:	00 00                	add    %al,(%eax)
+ 2dc:	09 18                	or     %ebx,(%eax)
+ 2de:	81 00 00 02 00 00    	addl   $0x200,(%eax)
+ 2e4:	00 0a                	add    %cl,(%edx)
+ 2e6:	af                   	scas   %es:(%edi),%eax
+ 2e7:	02 00                	add    (%eax),%al
+ 2e9:	00 00                	add    %al,(%eax)
+ 2eb:	00 0b                	add    %cl,(%ebx)
+ 2ed:	09 01                	or     %eax,(%ecx)
+ 2ef:	00 00                	add    %al,(%eax)
+ 2f1:	1e                   	push   %ds
+ 2f2:	81 00 00 02 00 00    	addl   $0x200,(%eax)
+ 2f8:	00 01                	add    %al,(%ecx)
+ 2fa:	30 08                	xor    %cl,(%eax)
+ 2fc:	19 01                	sbb    %eax,(%ecx)
+ 2fe:	00 00                	add    %al,(%eax)
+ 300:	39 00                	cmp    %eax,(%eax)
+ 302:	00 00                	add    %al,(%eax)
+ 304:	09 1e                	or     %ebx,(%esi)
+ 306:	81 00 00 02 00 00    	addl   $0x200,(%eax)
+ 30c:	00 0a                	add    %cl,(%edx)
+ 30e:	af                   	scas   %es:(%edi),%eax
+ 30f:	02 00                	add    (%eax),%al
+ 311:	00 00                	add    %al,(%eax)
+ 313:	00 00                	add    %al,(%eax)
+ 315:	0c db                	or     $0xdb,%al
+ 317:	03 00                	add    (%eax),%eax
+ 319:	00 01                	add    %al,(%ecx)
+ 31b:	1b 5d 00             	sbb    0x0(%ebp),%ebx
+ 31e:	00 00                	add    %al,(%eax)
+ 320:	03 30                	add    (%eax),%esi
+ 322:	01 00                	add    %eax,(%eax)
+ 324:	00 0d c1 03 00 00    	add    %cl,0x3c1
+ 32a:	01 1b                	add    %ebx,(%ebx)
+ 32c:	6f                   	outsl  %ds:(%esi),(%dx)
+ 32d:	00 00                	add    %al,(%eax)
+ 32f:	00 0e                	add    %cl,(%esi)
+ 331:	72 65                	jb     398 <deregister_tm_clones-0x7a68>
+ 333:	74 00                	je     335 <deregister_tm_clones-0x7acb>
+ 335:	01 1d 5d 00 00 00    	add    %ebx,0x5d
+ 33b:	00 0f                	add    %cl,(%edi)
+ 33d:	f9                   	stc    
+ 33e:	02 00                	add    (%eax),%al
+ 340:	00 01                	add    %al,(%ecx)
+ 342:	16                   	push   %ss
+ 343:	c3                   	ret    
+ 344:	80 00 00             	addb   $0x0,(%eax)
+ 347:	41                   	inc    %ecx
+ 348:	00 00                	add    %al,(%eax)
+ 34a:	00 01                	add    %al,(%ecx)
+ 34c:	9c                   	pushf  
+ 34d:	82 01 00             	addb   $0x0,(%ecx)
+ 350:	00 10                	add    %dl,(%eax)
+ 352:	63 00                	arpl   %ax,(%eax)
+ 354:	01 16                	add    %edx,(%esi)
+ 356:	94                   	xchg   %eax,%esp
+ 357:	00 00                	add    %al,(%eax)
+ 359:	00 4e 00             	add    %cl,0x0(%esi)
+ 35c:	00 00                	add    %al,(%eax)
+ 35e:	11 ae 03 00 00 01    	adc    %ebp,0x1000003(%esi)
+ 364:	16                   	push   %ss
+ 365:	33 00                	xor    (%eax),%eax
+ 367:	00 00                	add    %al,(%eax)
+ 369:	02 91 04 12 78 00    	add    0x781204(%ecx),%dl
+ 36f:	01 16                	add    %edx,(%esi)
+ 371:	33 00                	xor    (%eax),%eax
+ 373:	00 00                	add    %al,(%eax)
+ 375:	02 91 08 12 79 00    	add    0x791208(%ecx),%dl
+ 37b:	01 16                	add    %edx,(%esi)
+ 37d:	33 00                	xor    (%eax),%eax
+ 37f:	00 00                	add    %al,(%eax)
+ 381:	02 91 0c 13 fc 80    	add    -0x7f03ecf4(%ecx),%dl
+ 387:	00 00                	add    %al,(%eax)
+ 389:	b7 02                	mov    $0x2,%bh
+ 38b:	00 00                	add    %al,(%eax)
+ 38d:	00 0f                	add    %cl,(%edi)
+ 38f:	cf                   	iret   
+ 390:	03 00                	add    (%eax),%eax
+ 392:	00 01                	add    %al,(%ecx)
+ 394:	0f 94 80 00 00 2f 00 	sete   0x2f0000(%eax)
+ 39b:	00 00                	add    %al,(%eax)
+ 39d:	01 9c d9 01 00 00 12 	add    %ebx,0x12000001(%ecx,%ebx,8)
+ 3a4:	63 00                	arpl   %ax,(%eax)
+ 3a6:	01 0f                	add    %ecx,(%edi)
+ 3a8:	94                   	xchg   %eax,%esp
+ 3a9:	00 00                	add    %al,(%eax)
+ 3ab:	00 02                	add    %al,(%edx)
+ 3ad:	91                   	xchg   %eax,%ecx
+ 3ae:	00 11                	add    %dl,(%ecx)
+ 3b0:	ae                   	scas   %es:(%edi),%al
+ 3b1:	03 00                	add    (%eax),%eax
+ 3b3:	00 01                	add    %al,(%ecx)
+ 3b5:	0f 33                	rdpmc  
+ 3b7:	00 00                	add    %al,(%eax)
+ 3b9:	00 02                	add    %al,(%edx)
+ 3bb:	91                   	xchg   %eax,%ecx
+ 3bc:	04 12                	add    $0x12,%al
+ 3be:	78 00                	js     3c0 <deregister_tm_clones-0x7a40>
+ 3c0:	01 0f                	add    %ecx,(%edi)
+ 3c2:	33 00                	xor    (%eax),%eax
+ 3c4:	00 00                	add    %al,(%eax)
+ 3c6:	02 91 08 12 79 00    	add    0x791208(%ecx),%dl
+ 3cc:	01 0f                	add    %ecx,(%edi)
+ 3ce:	33 00                	xor    (%eax),%eax
+ 3d0:	00 00                	add    %al,(%eax)
+ 3d2:	02 91 0c 14 db 02    	add    0x2db140c(%ecx),%dl
+ 3d8:	00 00                	add    %al,(%eax)
+ 3da:	01 11                	add    %edx,(%ecx)
+ 3dc:	d9 01                	flds   (%ecx)
+ 3de:	00 00                	add    %al,(%eax)
+ 3e0:	62 00                	bound  %eax,(%eax)
+ 3e2:	00 00                	add    %al,(%eax)
+ 3e4:	00 15 04 7a 00 00    	add    %dl,0x7a04
+ 3ea:	00 0f                	add    %cl,(%edi)
+ 3ec:	d3 01                	roll   %cl,(%ecx)
+ 3ee:	00 00                	add    %al,(%eax)
+ 3f0:	01 02                	add    %eax,(%edx)
+ 3f2:	e8 7f 00 00 ac       	call   ac000476 <__TMC_END__+0xabff81e2>
+ 3f7:	00 00                	add    %al,(%eax)
+ 3f9:	00 01                	add    %al,(%ecx)
+ 3fb:	9c                   	pushf  
+ 3fc:	82 02 00             	addb   $0x0,(%edx)
+ 3ff:	00 10                	add    %dl,(%eax)
+ 401:	6e                   	outsb  %ds:(%esi),(%dx)
+ 402:	75 6d                	jne    471 <deregister_tm_clones-0x798f>
+ 404:	00 01                	add    %al,(%ecx)
+ 406:	02 33                	add    (%ebx),%dh
+ 408:	00 00                	add    %al,(%eax)
+ 40a:	00 87 00 00 00 16    	add    %al,0x16000000(%edi)
+ 410:	ae                   	scas   %es:(%edi),%al
+ 411:	03 00                	add    (%eax),%eax
+ 413:	00 01                	add    %al,(%ecx)
+ 415:	02 33                	add    (%ebx),%dh
+ 417:	00 00                	add    %al,(%eax)
+ 419:	00 9b 00 00 00 10    	add    %bl,0x10000000(%ebx)
+ 41f:	70 6f                	jo     490 <deregister_tm_clones-0x7970>
+ 421:	73 00                	jae    423 <deregister_tm_clones-0x79dd>
+ 423:	01 02                	add    %eax,(%edx)
+ 425:	33 00                	xor    (%eax),%eax
+ 427:	00 00                	add    %al,(%eax)
+ 429:	af                   	scas   %es:(%edi),%eax
+ 42a:	00 00                	add    %al,(%eax)
+ 42c:	00 14 bc             	add    %dl,(%esp,%edi,4)
+ 42f:	03 00                	add    (%eax),%eax
+ 431:	00 01                	add    %al,(%ecx)
+ 433:	04 33                	add    $0x33,%al
+ 435:	00 00                	add    %al,(%eax)
+ 437:	00 c3                	add    %al,%bl
+ 439:	00 00                	add    %al,(%eax)
+ 43b:	00 17                	add    %dl,(%edi)
+ 43d:	6c                   	insb   (%dx),%es:(%edi)
+ 43e:	65 6e                	outsb  %gs:(%esi),(%dx)
+ 440:	00 01                	add    %al,(%ecx)
+ 442:	05 33 00 00 00       	add    $0x33,%eax
+ 447:	e2 00                	loop   449 <deregister_tm_clones-0x79b7>
+ 449:	00 00                	add    %al,(%eax)
+ 44b:	17                   	pop    %ss
+ 44c:	61                   	popa   
+ 44d:	72 72                	jb     4c1 <deregister_tm_clones-0x793f>
+ 44f:	00 01                	add    %al,(%ecx)
+ 451:	07                   	pop    %es
+ 452:	82 02 00             	addb   $0x0,(%edx)
+ 455:	00 19                	add    %bl,(%ecx)
+ 457:	01 00                	add    %eax,(%eax)
+ 459:	00 14 e1             	add    %dl,(%ecx,%eiz,8)
+ 45c:	02 00                	add    (%eax),%al
+ 45e:	00 01                	add    %al,(%ecx)
+ 460:	08 33                	or     %dh,(%ebx)
+ 462:	00 00                	add    %al,(%eax)
+ 464:	00 2d 01 00 00 18    	add    %ch,0x18000001
+ 46a:	37                   	aaa    
+ 46b:	80 00 00             	addb   $0x0,(%eax)
+ 46e:	31 00                	xor    %eax,(%eax)
+ 470:	00 00                	add    %al,(%eax)
+ 472:	78 02                	js     476 <deregister_tm_clones-0x798a>
+ 474:	00 00                	add    %al,(%eax)
+ 476:	17                   	pop    %ss
+ 477:	69 00 01 09 33 00    	imul   $0x330901,(%eax),%eax
+ 47d:	00 00                	add    %al,(%eax)
+ 47f:	64 01 00             	add    %eax,%fs:(%eax)
+ 482:	00 00                	add    %al,(%eax)
+ 484:	13 81 80 00 00 b7    	adc    -0x48ffff80(%ecx),%eax
+ 48a:	02 00                	add    (%eax),%al
+ 48c:	00 00                	add    %al,(%eax)
+ 48e:	19 94 00 00 00 94 02 	sbb    %edx,0x2940000(%eax,%eax,1)
+ 495:	00 00                	add    %al,(%eax)
+ 497:	1a 2c 00             	sbb    (%eax,%eax,1),%ch
+ 49a:	00 00                	add    %al,(%eax)
+ 49c:	02 71 00             	add    0x0(%ecx),%dh
+ 49f:	00 1b                	add    %bl,(%ebx)
+ 4a1:	09 01                	or     %eax,(%ecx)
+ 4a3:	00 00                	add    %al,(%eax)
+ 4a5:	04 81                	add    $0x81,%al
+ 4a7:	00 00                	add    %al,(%eax)
+ 4a9:	0f 00 00             	sldt   (%eax)
+ 4ac:	00 01                	add    %al,(%ecx)
+ 4ae:	9c                   	pushf  
+ 4af:	b7 02                	mov    $0x2,%bh
+ 4b1:	00 00                	add    %al,(%eax)
+ 4b3:	1c 19                	sbb    $0x19,%al
+ 4b5:	01 00                	add    %eax,(%eax)
+ 4b7:	00 02                	add    %al,(%edx)
+ 4b9:	91                   	xchg   %eax,%ecx
+ 4ba:	00 1d 24 01 00 00    	add    %bl,0x124
+ 4c0:	01 50 00             	add    %edx,0x0(%eax)
+ 4c3:	1e                   	push   %ds
+ 4c4:	95                   	xchg   %eax,%ebp
+ 4c5:	02 00                	add    (%eax),%al
+ 4c7:	00 95 02 00 00 03    	add    %dl,0x3000002(%ebp)
+ 4cd:	07                   	pop    %es
+ 4ce:	00 1e                	add    %bl,(%esi)
+ 4d0:	00 00                	add    %al,(%eax)
+ 4d2:	00 02                	add    %al,(%edx)
+ 4d4:	00 b4 02 00 00 04 01 	add    %dh,0x1040000(%edx,%eax,1)
+ 4db:	9b                   	fwait
+ 4dc:	01 00                	add    %eax,(%eax)
+ 4de:	00 20                	add    %ah,(%eax)
+ 4e0:	00 00                	add    %al,(%eax)
+ 4e2:	00 e3                	add    %ah,%bl
+ 4e4:	03 00                	add    (%eax),%eax
+ 4e6:	00 0e                	add    %cl,(%esi)
+ 4e8:	00 00                	add    %al,(%eax)
+ 4ea:	00 62 00             	add    %ah,0x0(%edx)
+ 4ed:	00 00                	add    %al,(%eax)
+ 4ef:	01                   	.byte 0x1
+ 4f0:	80                   	.byte 0x80
+
+Disassembly of section .debug_abbrev:
+
+00000000 <.debug_abbrev>:
+   0:	01 11                	add    %edx,(%ecx)
+   2:	00 10                	add    %dl,(%eax)
+   4:	06                   	push   %es
+   5:	55                   	push   %ebp
+   6:	06                   	push   %es
+   7:	03 0e                	add    (%esi),%ecx
+   9:	1b 0e                	sbb    (%esi),%ecx
+   b:	25 0e 13 05 00       	and    $0x5130e,%eax
+  10:	00 00                	add    %al,(%eax)
+  12:	01 11                	add    %edx,(%ecx)
+  14:	01 25 0e 13 0b 03    	add    %esp,0x30b130e
+  1a:	0e                   	push   %cs
+  1b:	1b 0e                	sbb    (%esi),%ecx
+  1d:	11 01                	adc    %eax,(%ecx)
+  1f:	12 06                	adc    (%esi),%al
+  21:	10 17                	adc    %dl,(%edi)
+  23:	00 00                	add    %al,(%eax)
+  25:	02 24 00             	add    (%eax,%eax,1),%ah
+  28:	0b 0b                	or     (%ebx),%ecx
+  2a:	3e 0b 03             	or     %ds:(%ebx),%eax
+  2d:	0e                   	push   %cs
+  2e:	00 00                	add    %al,(%eax)
+  30:	03 3b                	add    (%ebx),%edi
+  32:	00 03                	add    %al,(%ebx)
+  34:	0e                   	push   %cs
+  35:	00 00                	add    %al,(%eax)
+  37:	04 24                	add    $0x24,%al
+  39:	00 0b                	add    %cl,(%ebx)
+  3b:	0b 3e                	or     (%esi),%edi
+  3d:	0b 03                	or     (%ebx),%eax
+  3f:	08 00                	or     %al,(%eax)
+  41:	00 05 26 00 49 13    	add    %al,0x13490026
+  47:	00 00                	add    %al,(%eax)
+  49:	06                   	push   %es
+  4a:	04 01                	add    $0x1,%al
+  4c:	03 0e                	add    (%esi),%ecx
+  4e:	3e 0b 0b             	or     %ds:(%ebx),%ecx
+  51:	0b 49 13             	or     0x13(%ecx),%ecx
+  54:	3a 0b                	cmp    (%ebx),%cl
+  56:	3b 0b                	cmp    (%ebx),%ecx
+  58:	01 13                	add    %edx,(%ebx)
+  5a:	00 00                	add    %al,(%eax)
+  5c:	07                   	pop    %es
+  5d:	28 00                	sub    %al,(%eax)
+  5f:	03 0e                	add    (%esi),%ecx
+  61:	1c 0b                	sbb    $0xb,%al
+  63:	00 00                	add    %al,(%eax)
+  65:	08 34 00             	or     %dh,(%eax,%eax,1)
+  68:	03 08                	add    (%eax),%ecx
+  6a:	3a 0b                	cmp    (%ebx),%cl
+  6c:	3b 0b                	cmp    (%ebx),%ecx
+  6e:	49                   	dec    %ecx
+  6f:	13 3f                	adc    (%edi),%edi
+  71:	19 02                	sbb    %eax,(%edx)
+  73:	18 00                	sbb    %al,(%eax)
+  75:	00 09                	add    %cl,(%ecx)
+  77:	0f 00 0b             	str    (%ebx)
+  7a:	0b 49 13             	or     0x13(%ecx),%ecx
+  7d:	00 00                	add    %al,(%eax)
+  7f:	0a 2e                	or     (%esi),%ch
+  81:	01 3f                	add    %edi,(%edi)
+  83:	19 03                	sbb    %eax,(%ebx)
+  85:	0e                   	push   %cs
+  86:	3a 0b                	cmp    (%ebx),%cl
+  88:	3b 0b                	cmp    (%ebx),%ecx
+  8a:	11 01                	adc    %eax,(%ecx)
+  8c:	12 06                	adc    (%esi),%al
+  8e:	40                   	inc    %eax
+  8f:	18 97 42 19 01 13    	sbb    %dl,0x13011942(%edi)
+  95:	00 00                	add    %al,(%eax)
+  97:	0b 34 00             	or     (%eax,%eax,1),%esi
+  9a:	03 0e                	add    (%esi),%ecx
+  9c:	3a 0b                	cmp    (%ebx),%cl
+  9e:	3b 0b                	cmp    (%ebx),%ecx
+  a0:	49                   	dec    %ecx
+  a1:	13 1c 05 00 00 0c 34 	adc    0x340c0000(,%eax,1),%ebx
+  a8:	00 03                	add    %al,(%ebx)
+  aa:	08 3a                	or     %bh,(%edx)
+  ac:	0b 3b                	or     (%ebx),%edi
+  ae:	0b 49 13             	or     0x13(%ecx),%ecx
+  b1:	1c 05                	sbb    $0x5,%al
+  b3:	00 00                	add    %al,(%eax)
+  b5:	0d 34 00 03 08       	or     $0x8030034,%eax
+  ba:	3a 0b                	cmp    (%ebx),%cl
+  bc:	3b 0b                	cmp    (%ebx),%ecx
+  be:	49                   	dec    %ecx
+  bf:	13 02                	adc    (%edx),%eax
+  c1:	18 00                	sbb    %al,(%eax)
+  c3:	00 0e                	add    %cl,(%esi)
+  c5:	34 00                	xor    $0x0,%al
+  c7:	03 08                	add    (%eax),%ecx
+  c9:	3a 0b                	cmp    (%ebx),%cl
+  cb:	3b 0b                	cmp    (%ebx),%ecx
+  cd:	49                   	dec    %ecx
+  ce:	13 00                	adc    (%eax),%eax
+  d0:	00 0f                	add    %cl,(%edi)
+  d2:	0b 01                	or     (%ecx),%eax
+  d4:	11 01                	adc    %eax,(%ecx)
+  d6:	12 06                	adc    (%esi),%al
+  d8:	01 13                	add    %edx,(%ebx)
+  da:	00 00                	add    %al,(%eax)
+  dc:	10 34 00             	adc    %dh,(%eax,%eax,1)
+  df:	03 08                	add    (%eax),%ecx
+  e1:	3a 0b                	cmp    (%ebx),%cl
+  e3:	3b 0b                	cmp    (%ebx),%ecx
+  e5:	49                   	dec    %ecx
+  e6:	13 02                	adc    (%edx),%eax
+  e8:	17                   	pop    %ss
+  e9:	00 00                	add    %al,(%eax)
+  eb:	11 89 82 01 00 11    	adc    %ecx,0x11000182(%ecx)
+  f1:	01 31                	add    %esi,(%ecx)
+  f3:	13 00                	adc    (%eax),%eax
+  f5:	00 12                	add    %dl,(%edx)
+  f7:	01 01                	add    %eax,(%ecx)
+  f9:	49                   	dec    %ecx
+  fa:	13 01                	adc    (%ecx),%eax
+  fc:	13 00                	adc    (%eax),%eax
+  fe:	00 13                	add    %dl,(%ebx)
+ 100:	21 00                	and    %eax,(%eax)
+ 102:	49                   	dec    %ecx
+ 103:	13 2f                	adc    (%edi),%ebp
+ 105:	0b 00                	or     (%eax),%eax
+ 107:	00 14 2e             	add    %dl,(%esi,%ebp,1)
+ 10a:	00 3f                	add    %bh,(%edi)
+ 10c:	19 3c 19             	sbb    %edi,(%ecx,%ebx,1)
+ 10f:	6e                   	outsb  %ds:(%esi),(%dx)
+ 110:	0e                   	push   %cs
+ 111:	03 0e                	add    (%esi),%ecx
+ 113:	3a 0b                	cmp    (%ebx),%cl
+ 115:	3b 0b                	cmp    (%ebx),%ecx
+ 117:	00 00                	add    %al,(%eax)
+ 119:	00 01                	add    %al,(%ecx)
+ 11b:	11 01                	adc    %eax,(%ecx)
+ 11d:	25 0e 13 0b 03       	and    $0x30b130e,%eax
+ 122:	0e                   	push   %cs
+ 123:	1b 0e                	sbb    (%esi),%ecx
+ 125:	11 01                	adc    %eax,(%ecx)
+ 127:	12 06                	adc    (%esi),%al
+ 129:	10 17                	adc    %dl,(%edi)
+ 12b:	00 00                	add    %al,(%eax)
+ 12d:	02 24 00             	add    (%eax,%eax,1),%ah
+ 130:	0b 0b                	or     (%ebx),%ecx
+ 132:	3e 0b 03             	or     %ds:(%ebx),%eax
+ 135:	0e                   	push   %cs
+ 136:	00 00                	add    %al,(%eax)
+ 138:	03 24 00             	add    (%eax,%eax,1),%esp
+ 13b:	0b 0b                	or     (%ebx),%ecx
+ 13d:	3e 0b 03             	or     %ds:(%ebx),%eax
+ 140:	08 00                	or     %al,(%eax)
+ 142:	00 04 16             	add    %al,(%esi,%edx,1)
+ 145:	00 03                	add    %al,(%ebx)
+ 147:	0e                   	push   %cs
+ 148:	3a 0b                	cmp    (%ebx),%cl
+ 14a:	3b 0b                	cmp    (%ebx),%ecx
+ 14c:	49                   	dec    %ecx
+ 14d:	13 00                	adc    (%eax),%eax
+ 14f:	00 05 35 00 49 13    	add    %al,0x13490035
+ 155:	00 00                	add    %al,(%eax)
+ 157:	06                   	push   %es
+ 158:	2e 01 3f             	add    %edi,%cs:(%edi)
+ 15b:	19 03                	sbb    %eax,(%ebx)
+ 15d:	0e                   	push   %cs
+ 15e:	3a 0b                	cmp    (%ebx),%cl
+ 160:	3b 0b                	cmp    (%ebx),%ecx
+ 162:	49                   	dec    %ecx
+ 163:	13 11                	adc    (%ecx),%edx
+ 165:	01 12                	add    %edx,(%edx)
+ 167:	06                   	push   %es
+ 168:	40                   	inc    %eax
+ 169:	18 97 42 19 01 13    	sbb    %dl,0x13011942(%edi)
+ 16f:	00 00                	add    %al,(%eax)
+ 171:	07                   	pop    %es
+ 172:	1d 01 31 13 11       	sbb    $0x11133101,%eax
+ 177:	01 12                	add    %edx,(%edx)
+ 179:	06                   	push   %es
+ 17a:	58                   	pop    %eax
+ 17b:	0b 59 0b             	or     0xb(%ecx),%ebx
+ 17e:	01 13                	add    %edx,(%ebx)
+ 180:	00 00                	add    %al,(%eax)
+ 182:	08 05 00 31 13 02    	or     %al,0x2133100
+ 188:	17                   	pop    %ss
+ 189:	00 00                	add    %al,(%eax)
+ 18b:	09 0b                	or     %ecx,(%ebx)
+ 18d:	01 11                	add    %edx,(%ecx)
+ 18f:	01 12                	add    %edx,(%edx)
+ 191:	06                   	push   %es
+ 192:	00 00                	add    %al,(%eax)
+ 194:	0a 34 00             	or     (%eax,%eax,1),%dh
+ 197:	31 13                	xor    %edx,(%ebx)
+ 199:	00 00                	add    %al,(%eax)
+ 19b:	0b 1d 01 31 13 11    	or     0x11133101,%ebx
+ 1a1:	01 12                	add    %edx,(%edx)
+ 1a3:	06                   	push   %es
+ 1a4:	58                   	pop    %eax
+ 1a5:	0b 59 0b             	or     0xb(%ecx),%ebx
+ 1a8:	00 00                	add    %al,(%eax)
+ 1aa:	0c 2e                	or     $0x2e,%al
+ 1ac:	01 3f                	add    %edi,(%edi)
+ 1ae:	19 03                	sbb    %eax,(%ebx)
+ 1b0:	0e                   	push   %cs
+ 1b1:	3a 0b                	cmp    (%ebx),%cl
+ 1b3:	3b 0b                	cmp    (%ebx),%ecx
+ 1b5:	27                   	daa    
+ 1b6:	19 49 13             	sbb    %ecx,0x13(%ecx)
+ 1b9:	20 0b                	and    %cl,(%ebx)
+ 1bb:	01 13                	add    %edx,(%ebx)
+ 1bd:	00 00                	add    %al,(%eax)
+ 1bf:	0d 05 00 03 0e       	or     $0xe030005,%eax
+ 1c4:	3a 0b                	cmp    (%ebx),%cl
+ 1c6:	3b 0b                	cmp    (%ebx),%ecx
+ 1c8:	49                   	dec    %ecx
+ 1c9:	13 00                	adc    (%eax),%eax
+ 1cb:	00 0e                	add    %cl,(%esi)
+ 1cd:	34 00                	xor    $0x0,%al
+ 1cf:	03 08                	add    (%eax),%ecx
+ 1d1:	3a 0b                	cmp    (%ebx),%cl
+ 1d3:	3b 0b                	cmp    (%ebx),%ecx
+ 1d5:	49                   	dec    %ecx
+ 1d6:	13 00                	adc    (%eax),%eax
+ 1d8:	00 0f                	add    %cl,(%edi)
+ 1da:	2e 01 3f             	add    %edi,%cs:(%edi)
+ 1dd:	19 03                	sbb    %eax,(%ebx)
+ 1df:	0e                   	push   %cs
+ 1e0:	3a 0b                	cmp    (%ebx),%cl
+ 1e2:	3b 0b                	cmp    (%ebx),%ecx
+ 1e4:	27                   	daa    
+ 1e5:	19 11                	sbb    %edx,(%ecx)
+ 1e7:	01 12                	add    %edx,(%edx)
+ 1e9:	06                   	push   %es
+ 1ea:	40                   	inc    %eax
+ 1eb:	18 97 42 19 01 13    	sbb    %dl,0x13011942(%edi)
+ 1f1:	00 00                	add    %al,(%eax)
+ 1f3:	10 05 00 03 08 3a    	adc    %al,0x3a080300
+ 1f9:	0b 3b                	or     (%ebx),%edi
+ 1fb:	0b 49 13             	or     0x13(%ecx),%ecx
+ 1fe:	02 17                	add    (%edi),%dl
+ 200:	00 00                	add    %al,(%eax)
+ 202:	11 05 00 03 0e 3a    	adc    %eax,0x3a0e0300
+ 208:	0b 3b                	or     (%ebx),%edi
+ 20a:	0b 49 13             	or     0x13(%ecx),%ecx
+ 20d:	02 18                	add    (%eax),%bl
+ 20f:	00 00                	add    %al,(%eax)
+ 211:	12 05 00 03 08 3a    	adc    0x3a080300,%al
+ 217:	0b 3b                	or     (%ebx),%edi
+ 219:	0b 49 13             	or     0x13(%ecx),%ecx
+ 21c:	02 18                	add    (%eax),%bl
+ 21e:	00 00                	add    %al,(%eax)
+ 220:	13 89 82 01 00 11    	adc    0x11000182(%ecx),%ecx
+ 226:	01 31                	add    %esi,(%ecx)
+ 228:	13 00                	adc    (%eax),%eax
+ 22a:	00 14 34             	add    %dl,(%esp,%esi,1)
+ 22d:	00 03                	add    %al,(%ebx)
+ 22f:	0e                   	push   %cs
+ 230:	3a 0b                	cmp    (%ebx),%cl
+ 232:	3b 0b                	cmp    (%ebx),%ecx
+ 234:	49                   	dec    %ecx
+ 235:	13 02                	adc    (%edx),%eax
+ 237:	17                   	pop    %ss
+ 238:	00 00                	add    %al,(%eax)
+ 23a:	15 0f 00 0b 0b       	adc    $0xb0b000f,%eax
+ 23f:	49                   	dec    %ecx
+ 240:	13 00                	adc    (%eax),%eax
+ 242:	00 16                	add    %dl,(%esi)
+ 244:	05 00 03 0e 3a       	add    $0x3a0e0300,%eax
+ 249:	0b 3b                	or     (%ebx),%edi
+ 24b:	0b 49 13             	or     0x13(%ecx),%ecx
+ 24e:	02 17                	add    (%edi),%dl
+ 250:	00 00                	add    %al,(%eax)
+ 252:	17                   	pop    %ss
+ 253:	34 00                	xor    $0x0,%al
+ 255:	03 08                	add    (%eax),%ecx
+ 257:	3a 0b                	cmp    (%ebx),%cl
+ 259:	3b 0b                	cmp    (%ebx),%ecx
+ 25b:	49                   	dec    %ecx
+ 25c:	13 02                	adc    (%edx),%eax
+ 25e:	17                   	pop    %ss
+ 25f:	00 00                	add    %al,(%eax)
+ 261:	18 0b                	sbb    %cl,(%ebx)
+ 263:	01 11                	add    %edx,(%ecx)
+ 265:	01 12                	add    %edx,(%edx)
+ 267:	06                   	push   %es
+ 268:	01 13                	add    %edx,(%ebx)
+ 26a:	00 00                	add    %al,(%eax)
+ 26c:	19 01                	sbb    %eax,(%ecx)
+ 26e:	01 49 13             	add    %ecx,0x13(%ecx)
+ 271:	01 13                	add    %edx,(%ebx)
+ 273:	00 00                	add    %al,(%eax)
+ 275:	1a 21                	sbb    (%ecx),%ah
+ 277:	00 49 13             	add    %cl,0x13(%ecx)
+ 27a:	2f                   	das    
+ 27b:	18 00                	sbb    %al,(%eax)
+ 27d:	00 1b                	add    %bl,(%ebx)
+ 27f:	2e 01 31             	add    %esi,%cs:(%ecx)
+ 282:	13 11                	adc    (%ecx),%edx
+ 284:	01 12                	add    %edx,(%edx)
+ 286:	06                   	push   %es
+ 287:	40                   	inc    %eax
+ 288:	18 97 42 19 01 13    	sbb    %dl,0x13011942(%edi)
+ 28e:	00 00                	add    %al,(%eax)
+ 290:	1c 05                	sbb    $0x5,%al
+ 292:	00 31                	add    %dh,(%ecx)
+ 294:	13 02                	adc    (%edx),%eax
+ 296:	18 00                	sbb    %al,(%eax)
+ 298:	00 1d 34 00 31 13    	add    %bl,0x13310034
+ 29e:	02 18                	add    (%eax),%bl
+ 2a0:	00 00                	add    %al,(%eax)
+ 2a2:	1e                   	push   %ds
+ 2a3:	2e 00 3f             	add    %bh,%cs:(%edi)
+ 2a6:	19 3c 19             	sbb    %edi,(%ecx,%ebx,1)
+ 2a9:	6e                   	outsb  %ds:(%esi),(%dx)
+ 2aa:	0e                   	push   %cs
+ 2ab:	03 0e                	add    (%esi),%ecx
+ 2ad:	3a 0b                	cmp    (%ebx),%cl
+ 2af:	3b 0b                	cmp    (%ebx),%ecx
+ 2b1:	00 00                	add    %al,(%eax)
+ 2b3:	00 01                	add    %al,(%ecx)
+ 2b5:	11 00                	adc    %eax,(%eax)
+ 2b7:	10 06                	adc    %al,(%esi)
+ 2b9:	55                   	push   %ebp
+ 2ba:	06                   	push   %es
+ 2bb:	03 0e                	add    (%esi),%ecx
+ 2bd:	1b 0e                	sbb    (%esi),%ecx
+ 2bf:	25 0e 13 05 00       	and    $0x5130e,%eax
+	...
+
+Disassembly of section .debug_aranges:
+
+00000000 <.debug_aranges>:
+   0:	24 00                	and    $0x0,%al
+   2:	00 00                	add    %al,(%eax)
+   4:	02 00                	add    (%eax),%al
+   6:	00 00                	add    %al,(%eax)
+   8:	00 00                	add    %al,(%eax)
+   a:	04 00                	add    $0x0,%al
+   c:	00 00                	add    %al,(%eax)
+   e:	00 00                	add    %al,(%eax)
+  10:	49                   	dec    %ecx
+  11:	81 00 00 03 00 00    	addl   $0x300,(%eax)
+  17:	00 58 81             	add    %bl,-0x7f(%eax)
+  1a:	00 00                	add    %al,(%eax)
+  1c:	03 00                	add    (%eax),%eax
+	...
+  26:	00 00                	add    %al,(%eax)
+  28:	1c 00                	sbb    $0x0,%al
+  2a:	00 00                	add    %al,(%eax)
+  2c:	02 00                	add    (%eax),%al
+  2e:	22 00                	and    (%eax),%al
+  30:	00 00                	add    %al,(%eax)
+  32:	04 00                	add    $0x0,%al
+  34:	00 00                	add    %al,(%eax)
+  36:	00 00                	add    %al,(%eax)
+  38:	01 7f 00             	add    %edi,0x0(%edi)
+  3b:	00 a5 00 00 00 00    	add    %ah,0x0(%ebp)
+  41:	00 00                	add    %al,(%eax)
+  43:	00 00                	add    %al,(%eax)
+  45:	00 00                	add    %al,(%eax)
+  47:	00 1c 00             	add    %bl,(%eax,%eax,1)
+  4a:	00 00                	add    %al,(%eax)
+  4c:	02 00                	add    (%eax),%al
+  4e:	0c 02                	or     $0x2,%al
+  50:	00 00                	add    %al,(%eax)
+  52:	04 00                	add    $0x0,%al
+  54:	00 00                	add    %al,(%eax)
+  56:	00 00                	add    %al,(%eax)
+  58:	e8 7f 00 00 3c       	call   3c0000dc <__TMC_END__+0x3bff7e48>
+  5d:	01 00                	add    %eax,(%eax)
+	...
+  67:	00 24 00             	add    %ah,(%eax,%eax,1)
+  6a:	00 00                	add    %al,(%eax)
+  6c:	02 00                	add    (%eax),%al
+  6e:	cf                   	iret   
+  6f:	04 00                	add    $0x0,%al
+  71:	00 04 00             	add    %al,(%eax,%eax,1)
+  74:	00 00                	add    %al,(%eax)
+  76:	00 00                	add    %al,(%eax)
+  78:	56                   	push   %esi
+  79:	81 00 00 02 00 00    	addl   $0x200,(%eax)
+  7f:	00 60 81             	add    %ah,-0x7f(%eax)
+  82:	00 00                	add    %al,(%eax)
+  84:	02 00                	add    (%eax),%al
+	...
+
+Disassembly of section .debug_str:
+
+00000000 <.debug_str>:
+   0:	6b 65 72 6e          	imul   $0x6e,0x72(%ebp),%esp
+   4:	65 6c                	gs insb (%dx),%es:(%edi)
+   6:	2f                   	das    
+   7:	63 72 74             	arpl   %si,0x74(%edx)
+   a:	69 2e 53 00 2f 55    	imul   $0x552f0053,(%esi),%ebp
+  10:	73 65                	jae    77 <deregister_tm_clones-0x7d89>
+  12:	72 73                	jb     87 <deregister_tm_clones-0x7d79>
+  14:	2f                   	das    
+  15:	6c                   	insb   (%dx),%es:(%edi)
+  16:	69 78 69 6e 72 75 69 	imul   $0x6975726e,0x69(%eax),%edi
+  1d:	2f                   	das    
+  1e:	6f                   	outsl  %ds:(%esi),(%dx)
+  1f:	6e                   	outsb  %ds:(%esi),(%dx)
+  20:	65 64 72 69          	gs fs jb 8d <deregister_tm_clones-0x7d73>
+  24:	76 65                	jbe    8b <deregister_tm_clones-0x7d75>
+  26:	2f                   	das    
+  27:	44                   	inc    %esp
+  28:	6f                   	outsl  %ds:(%esi),(%dx)
+  29:	63 75 6d             	arpl   %si,0x6d(%ebp)
+  2c:	65 6e                	outsb  %gs:(%esi),(%dx)
+  2e:	74 73                	je     a3 <deregister_tm_clones-0x7d5d>
+  30:	2f                   	das    
+  31:	e5 a4                	in     $0xa4,%eax
+  33:	a7                   	cmpsl  %es:(%edi),%ds:(%esi)
+  34:	e5 ad                	in     $0xad,%eax
+  36:	a6                   	cmpsb  %es:(%edi),%ds:(%esi)
+  37:	e8 af be e7 a8       	call   a8e7beeb <__TMC_END__+0xa8e73c57>
+  3c:	8b 2f                	mov    (%edi),%ebp
+  3e:	32 30                	xor    (%eax),%dh
+  40:	31 38                	xor    %edi,(%eax)
+  42:	e6 93                	out    %al,$0x93
+  44:	8d                   	(bad)  
+  45:	e4 bd                	in     $0xbd,%al
+  47:	9c                   	pushf  
+  48:	e7 b3                	out    %eax,$0xb3
+  4a:	bb e7 bb 9f e5       	mov    $0xe59fbbe7,%ebx
+  4f:	ae                   	scas   %es:(%edi),%al
+  50:	9e                   	sahf   
+  51:	e9 aa 8c 2f 6f       	jmp    6f2f8d00 <__TMC_END__+0x6f2f0a6c>
+  56:	73 5f                	jae    b7 <deregister_tm_clones-0x7d49>
+  58:	6c                   	insb   (%dx),%es:(%edi)
+  59:	61                   	popa   
+  5a:	62 33                	bound  %esi,(%ebx)
+  5c:	2f                   	das    
+  5d:	74 65                	je     c4 <deregister_tm_clones-0x7d3c>
+  5f:	73 74                	jae    d5 <deregister_tm_clones-0x7d2b>
+  61:	00 47 4e             	add    %al,0x4e(%edi)
+  64:	55                   	push   %ebp
+  65:	20 41 53             	and    %al,0x53(%ecx)
+  68:	20 32                	and    %dh,(%edx)
+  6a:	2e 33 30             	xor    %cs:(%eax),%esi
+  6d:	00 6c 6f 6e          	add    %ch,0x6e(%edi,%ebp,2)
+  71:	67 20 6c 6f          	and    %ch,0x6f(%si)
+  75:	6e                   	outsb  %ds:(%esi),(%dx)
+  76:	67 20 69 6e          	and    %ch,0x6e(%bx,%di)
+  7a:	74 00                	je     7c <deregister_tm_clones-0x7d84>
+  7c:	56                   	push   %esi
+  7d:	47                   	inc    %edi
+  7e:	41                   	inc    %ecx
+  7f:	5f                   	pop    %edi
+  80:	59                   	pop    %ecx
+  81:	45                   	inc    %ebp
+  82:	4c                   	dec    %esp
+  83:	4c                   	dec    %esp
+  84:	4f                   	dec    %edi
+  85:	57                   	push   %edi
+  86:	00 56 47             	add    %dl,0x47(%esi)
+  89:	41                   	inc    %ecx
+  8a:	5f                   	pop    %edi
+  8b:	42                   	inc    %edx
+  8c:	4c                   	dec    %esp
+  8d:	55                   	push   %ebp
+  8e:	45                   	inc    %ebp
+  8f:	00 79 65             	add    %bh,0x65(%ecx)
+  92:	61                   	popa   
+  93:	72 00                	jb     95 <deregister_tm_clones-0x7d6b>
+  95:	56                   	push   %esi
+  96:	47                   	inc    %edi
+  97:	41                   	inc    %ecx
+  98:	5f                   	pop    %edi
+  99:	47                   	inc    %edi
+  9a:	52                   	push   %edx
+  9b:	45                   	inc    %ebp
+  9c:	45                   	inc    %ebp
+  9d:	4e                   	dec    %esi
+  9e:	00 56 47             	add    %dl,0x47(%esi)
+  a1:	41                   	inc    %ecx
+  a2:	5f                   	pop    %edi
+  a3:	57                   	push   %edi
+  a4:	48                   	dec    %eax
+  a5:	49                   	dec    %ecx
+  a6:	54                   	push   %esp
+  a7:	45                   	inc    %ebp
+  a8:	00 73 68             	add    %dh,0x68(%ebx)
+  ab:	6f                   	outsl  %ds:(%esi),(%dx)
+  ac:	72 74                	jb     122 <deregister_tm_clones-0x7cde>
+  ae:	20 75 6e             	and    %dh,0x6e(%ebp)
+  b1:	73 69                	jae    11c <deregister_tm_clones-0x7ce4>
+  b3:	67 6e                	outsb  %ds:(%si),(%dx)
+  b5:	65 64 20 69 6e       	gs and %ch,%fs:0x6e(%ecx)
+  ba:	74 00                	je     bc <deregister_tm_clones-0x7d44>
+  bc:	64 65 63 6c 74 79    	fs arpl %bp,%gs:0x79(%esp,%esi,2)
+  c2:	70 65                	jo     129 <deregister_tm_clones-0x7cd7>
+  c4:	28 6e 75             	sub    %ch,0x75(%esi)
+  c7:	6c                   	insb   (%dx),%es:(%edi)
+  c8:	6c                   	insb   (%dx),%es:(%edi)
+  c9:	70 74                	jo     13f <deregister_tm_clones-0x7cc1>
+  cb:	72 29                	jb     f6 <deregister_tm_clones-0x7d0a>
+  cd:	00 56 47             	add    %dl,0x47(%esi)
+  d0:	41                   	inc    %ecx
+  d1:	5f                   	pop    %edi
+  d2:	42                   	inc    %edx
+  d3:	52                   	push   %edx
+  d4:	49                   	dec    %ecx
+  d5:	47                   	inc    %edi
+  d6:	48                   	dec    %eax
+  d7:	54                   	push   %esp
+  d8:	5f                   	pop    %edi
+  d9:	43                   	inc    %ebx
+  da:	59                   	pop    %ecx
+  db:	41                   	inc    %ecx
+  dc:	4e                   	dec    %esi
+  dd:	00 56 47             	add    %dl,0x47(%esi)
+  e0:	41                   	inc    %ecx
+  e1:	5f                   	pop    %edi
+  e2:	43                   	inc    %ebx
+  e3:	4f                   	dec    %edi
+  e4:	4c                   	dec    %esp
+  e5:	4f                   	dec    %edi
+  e6:	52                   	push   %edx
+  e7:	00 56 47             	add    %dl,0x47(%esi)
+  ea:	41                   	inc    %ecx
+  eb:	5f                   	pop    %edi
+  ec:	43                   	inc    %ebx
+  ed:	59                   	pop    %ecx
+  ee:	41                   	inc    %ecx
+  ef:	4e                   	dec    %esi
+  f0:	00 56 47             	add    %dl,0x47(%esi)
+  f3:	41                   	inc    %ecx
+  f4:	5f                   	pop    %edi
+  f5:	42                   	inc    %edx
+  f6:	52                   	push   %edx
+  f7:	4f                   	dec    %edi
+  f8:	57                   	push   %edi
+  f9:	4e                   	dec    %esi
+  fa:	00 75 6e             	add    %dh,0x6e(%ebp)
+  fd:	73 69                	jae    168 <deregister_tm_clones-0x7c98>
+  ff:	67 6e                	outsb  %ds:(%si),(%dx)
+ 101:	65 64 20 63 68       	gs and %ah,%fs:0x68(%ebx)
+ 106:	61                   	popa   
+ 107:	72 00                	jb     109 <deregister_tm_clones-0x7cf7>
+ 109:	56                   	push   %esi
+ 10a:	47                   	inc    %edi
+ 10b:	41                   	inc    %ecx
+ 10c:	5f                   	pop    %edi
+ 10d:	42                   	inc    %edx
+ 10e:	52                   	push   %edx
+ 10f:	49                   	dec    %ecx
+ 110:	47                   	inc    %edi
+ 111:	48                   	dec    %eax
+ 112:	54                   	push   %esp
+ 113:	5f                   	pop    %edi
+ 114:	4d                   	dec    %ebp
+ 115:	41                   	inc    %ecx
+ 116:	47                   	inc    %edi
+ 117:	45                   	inc    %ebp
+ 118:	4e                   	dec    %esi
+ 119:	54                   	push   %esp
+ 11a:	41                   	inc    %ecx
+ 11b:	00 73 79             	add    %dh,0x79(%ebx)
+ 11e:	73 5f                	jae    17f <deregister_tm_clones-0x7c81>
+ 120:	67 65 74 5f          	addr16 gs je 183 <deregister_tm_clones-0x7c7d>
+ 124:	73 63                	jae    189 <deregister_tm_clones-0x7c77>
+ 126:	61                   	popa   
+ 127:	6e                   	outsb  %ds:(%esi),(%dx)
+ 128:	63 6f 64             	arpl   %bp,0x64(%edi)
+ 12b:	65 00 47 4e          	add    %al,%gs:0x4e(%edi)
+ 12f:	55                   	push   %ebp
+ 130:	20 43 2b             	and    %al,0x2b(%ebx)
+ 133:	2b 31                	sub    (%ecx),%esi
+ 135:	34 20                	xor    $0x20,%al
+ 137:	37                   	aaa    
+ 138:	2e 33 2e             	xor    %cs:(%esi),%ebp
+ 13b:	30 20                	xor    %ah,(%eax)
+ 13d:	2d 6d 31 36 20       	sub    $0x2036316d,%eax
+ 142:	2d 6d 61 72 63       	sub    $0x6372616d,%eax
+ 147:	68 3d 69 33 38       	push   $0x3833693d
+ 14c:	36 20 2d 6d 70 72 65 	and    %ch,%ss:0x6572706d
+ 153:	66 65 72 72          	data16 gs jb 1c9 <deregister_tm_clones-0x7c37>
+ 157:	65 64 2d 73 74 61 63 	gs fs sub $0x63617473,%eax
+ 15e:	6b 2d 62 6f 75 6e 64 	imul   $0x64,0x6e756f62,%ebp
+ 165:	61                   	popa   
+ 166:	72 79                	jb     1e1 <deregister_tm_clones-0x7c1f>
+ 168:	3d 32 20 2d 67       	cmp    $0x672d2032,%eax
+ 16d:	20 2d 4f 73 20 2d    	and    %ch,0x2d20734f
+ 173:	73 74                	jae    1e9 <deregister_tm_clones-0x7c17>
+ 175:	64 3d 63 2b 2b 31    	fs cmp $0x312b2b63,%eax
+ 17b:	7a 20                	jp     19d <deregister_tm_clones-0x7c63>
+ 17d:	2d 66 66 72 65       	sub    $0x65726666,%eax
+ 182:	65 73 74             	gs jae 1f9 <deregister_tm_clones-0x7c07>
+ 185:	61                   	popa   
+ 186:	6e                   	outsb  %ds:(%esi),(%dx)
+ 187:	64 69 6e 67 20 2d 66 	imul   $0x6e662d20,%fs:0x67(%esi),%ebp
+ 18e:	6e 
+ 18f:	6f                   	outsl  %ds:(%esi),(%dx)
+ 190:	2d 62 75 69 6c       	sub    $0x6c697562,%eax
+ 195:	74 69                	je     200 <deregister_tm_clones-0x7c00>
+ 197:	6e                   	outsb  %ds:(%esi),(%dx)
+ 198:	20 2d 66 6e 6f 2d    	and    %ch,0x2d6f6e66
+ 19e:	6f                   	outsl  %ds:(%esi),(%dx)
+ 19f:	6d                   	insl   (%dx),%es:(%edi)
+ 1a0:	69 74 2d 66 72 61 6d 	imul   $0x656d6172,0x66(%ebp,%ebp,1),%esi
+ 1a7:	65 
+ 1a8:	2d 70 6f 69 6e       	sub    $0x6e696f70,%eax
+ 1ad:	74 65                	je     214 <deregister_tm_clones-0x7bec>
+ 1af:	72 20                	jb     1d1 <deregister_tm_clones-0x7c2f>
+ 1b1:	2d 66 6e 6f 2d       	sub    $0x2d6f6e66,%eax
+ 1b6:	74 72                	je     22a <deregister_tm_clones-0x7bd6>
+ 1b8:	65 65 2d 63 68 20 2d 	gs gs sub $0x2d206863,%eax
+ 1bf:	66 6e                	data16 outsb %ds:(%esi),(%dx)
+ 1c1:	6f                   	outsl  %ds:(%esi),(%dx)
+ 1c2:	2d 73 74 61 63       	sub    $0x63617473,%eax
+ 1c7:	6b 2d 70 72 6f 74 65 	imul   $0x65,0x746f7270,%ebp
+ 1ce:	63 74 6f 72          	arpl   %si,0x72(%edi,%ebp,2)
+ 1d2:	00 73 79             	add    %dh,0x79(%ebx)
+ 1d5:	73 5f                	jae    236 <deregister_tm_clones-0x7bca>
+ 1d7:	62 69 6f             	bound  %ebp,0x6f(%ecx)
+ 1da:	73 5f                	jae    23b <deregister_tm_clones-0x7bc5>
+ 1dc:	70 72                	jo     250 <deregister_tm_clones-0x7bb0>
+ 1de:	69 6e 74 5f 69 6e 74 	imul   $0x746e695f,0x74(%esi),%ebp
+ 1e5:	00 56 47             	add    %dl,0x47(%esi)
+ 1e8:	41                   	inc    %ecx
+ 1e9:	5f                   	pop    %edi
+ 1ea:	4d                   	dec    %ebp
+ 1eb:	41                   	inc    %ecx
+ 1ec:	47                   	inc    %edi
+ 1ed:	45                   	inc    %ebp
+ 1ee:	4e                   	dec    %esi
+ 1ef:	54                   	push   %esp
+ 1f0:	41                   	inc    %ecx
+ 1f1:	00 56 47             	add    %dl,0x47(%esi)
+ 1f4:	41                   	inc    %ecx
+ 1f5:	5f                   	pop    %edi
+ 1f6:	42                   	inc    %edx
+ 1f7:	4c                   	dec    %esp
+ 1f8:	41                   	inc    %ecx
+ 1f9:	43                   	inc    %ebx
+ 1fa:	4b                   	dec    %ebx
+ 1fb:	00 5f 5f             	add    %bl,0x5f(%edi)
+ 1fe:	66 6c                	data16 insb (%dx),%es:(%edi)
+ 200:	6f                   	outsl  %ds:(%esi),(%dx)
+ 201:	61                   	popa   
+ 202:	74 31                	je     235 <deregister_tm_clones-0x7bcb>
+ 204:	32 38                	xor    (%eax),%bh
+ 206:	00 6c 6f 6e          	add    %ch,0x6e(%edi,%ebp,2)
+ 20a:	67 20 6c 6f          	and    %ch,0x6f(%si)
+ 20e:	6e                   	outsb  %ds:(%esi),(%dx)
+ 20f:	67 20 75 6e          	and    %dh,0x6e(%di)
+ 213:	73 69                	jae    27e <deregister_tm_clones-0x7b82>
+ 215:	67 6e                	outsb  %ds:(%si),(%dx)
+ 217:	65 64 20 69 6e       	gs and %ch,%fs:0x6e(%ecx)
+ 21c:	74 00                	je     21e <deregister_tm_clones-0x7be2>
+ 21e:	56                   	push   %esi
+ 21f:	47                   	inc    %edi
+ 220:	41                   	inc    %ecx
+ 221:	5f                   	pop    %edi
+ 222:	42                   	inc    %edx
+ 223:	52                   	push   %edx
+ 224:	49                   	dec    %ecx
+ 225:	47                   	inc    %edi
+ 226:	48                   	dec    %eax
+ 227:	54                   	push   %esp
+ 228:	5f                   	pop    %edi
+ 229:	52                   	push   %edx
+ 22a:	45                   	inc    %ebp
+ 22b:	44                   	inc    %esp
+ 22c:	00 56 47             	add    %dl,0x47(%esi)
+ 22f:	41                   	inc    %ecx
+ 230:	5f                   	pop    %edi
+ 231:	42                   	inc    %edx
+ 232:	52                   	push   %edx
+ 233:	49                   	dec    %ecx
+ 234:	47                   	inc    %edi
+ 235:	48                   	dec    %eax
+ 236:	54                   	push   %esp
+ 237:	5f                   	pop    %edi
+ 238:	47                   	inc    %edi
+ 239:	52                   	push   %edx
+ 23a:	45                   	inc    %ebp
+ 23b:	45                   	inc    %ebp
+ 23c:	4e                   	dec    %esi
+ 23d:	00 56 47             	add    %dl,0x47(%esi)
+ 240:	41                   	inc    %ecx
+ 241:	5f                   	pop    %edi
+ 242:	42                   	inc    %edx
+ 243:	52                   	push   %edx
+ 244:	49                   	dec    %ecx
+ 245:	47                   	inc    %edi
+ 246:	48                   	dec    %eax
+ 247:	54                   	push   %esp
+ 248:	5f                   	pop    %edi
+ 249:	57                   	push   %edi
+ 24a:	48                   	dec    %eax
+ 24b:	49                   	dec    %ecx
+ 24c:	54                   	push   %esp
+ 24d:	45                   	inc    %ebp
+ 24e:	00 6b 65             	add    %ch,0x65(%ebx)
+ 251:	72 6e                	jb     2c1 <deregister_tm_clones-0x7b3f>
+ 253:	65 6c                	gs insb (%dx),%es:(%edi)
+ 255:	5f                   	pop    %edi
+ 256:	73 74                	jae    2cc <deregister_tm_clones-0x7b34>
+ 258:	61                   	popa   
+ 259:	72 74                	jb     2cf <deregister_tm_clones-0x7b31>
+ 25b:	00 73 79             	add    %dh,0x79(%ebx)
+ 25e:	73 5f                	jae    2bf <deregister_tm_clones-0x7b41>
+ 260:	62 69 6f             	bound  %ebp,0x6f(%ecx)
+ 263:	73 5f                	jae    2c4 <deregister_tm_clones-0x7b3c>
+ 265:	63 6c 65 61          	arpl   %bp,0x61(%ebp,%eiz,2)
+ 269:	72 5f                	jb     2ca <deregister_tm_clones-0x7b36>
+ 26b:	73 63                	jae    2d0 <deregister_tm_clones-0x7b30>
+ 26d:	72 65                	jb     2d4 <deregister_tm_clones-0x7b2c>
+ 26f:	65 6e                	outsb  %gs:(%esi),(%dx)
+ 271:	00 6b 65             	add    %ch,0x65(%ebx)
+ 274:	72 6e                	jb     2e4 <deregister_tm_clones-0x7b1c>
+ 276:	65 6c                	gs insb (%dx),%es:(%edi)
+ 278:	2f                   	das    
+ 279:	6b 65 72 6e          	imul   $0x6e,0x72(%ebp),%esp
+ 27d:	65 6c                	gs insb (%dx),%es:(%edi)
+ 27f:	2e 63 70 70          	arpl   %si,%cs:0x70(%eax)
+ 283:	00 56 47             	add    %dl,0x47(%esi)
+ 286:	41                   	inc    %ecx
+ 287:	5f                   	pop    %edi
+ 288:	52                   	push   %edx
+ 289:	45                   	inc    %ebp
+ 28a:	44                   	inc    %esp
+ 28b:	00 56 47             	add    %dl,0x47(%esi)
+ 28e:	41                   	inc    %ecx
+ 28f:	5f                   	pop    %edi
+ 290:	47                   	inc    %edi
+ 291:	52                   	push   %edx
+ 292:	41                   	inc    %ecx
+ 293:	59                   	pop    %ecx
+ 294:	00 73 79             	add    %dh,0x79(%ebx)
+ 297:	73 5f                	jae    2f8 <deregister_tm_clones-0x7b08>
+ 299:	62 69 6f             	bound  %ebp,0x6f(%ecx)
+ 29c:	73 5f                	jae    2fd <deregister_tm_clones-0x7b03>
+ 29e:	70 72                	jo     312 <deregister_tm_clones-0x7aee>
+ 2a0:	69 6e 74 5f 73 74 72 	imul   $0x7274735f,0x74(%esi),%ebp
+ 2a7:	69 6e 67 00 73 68 6f 	imul   $0x6f687300,0x67(%esi),%ebp
+ 2ae:	72 74                	jb     324 <deregister_tm_clones-0x7adc>
+ 2b0:	20 69 6e             	and    %ch,0x6e(%ecx)
+ 2b3:	74 00                	je     2b5 <deregister_tm_clones-0x7b4b>
+ 2b5:	6c                   	insb   (%dx),%es:(%edi)
+ 2b6:	6f                   	outsl  %ds:(%esi),(%dx)
+ 2b7:	6e                   	outsb  %ds:(%esi),(%dx)
+ 2b8:	67 20 64 6f          	and    %ah,0x6f(%si)
+ 2bc:	75 62                	jne    320 <deregister_tm_clones-0x7ae0>
+ 2be:	6c                   	insb   (%dx),%es:(%edi)
+ 2bf:	65 00 56 47          	add    %dl,%gs:0x47(%esi)
+ 2c3:	41                   	inc    %ecx
+ 2c4:	5f                   	pop    %edi
+ 2c5:	42                   	inc    %edx
+ 2c6:	52                   	push   %edx
+ 2c7:	49                   	dec    %ecx
+ 2c8:	47                   	inc    %edi
+ 2c9:	48                   	dec    %eax
+ 2ca:	54                   	push   %esp
+ 2cb:	5f                   	pop    %edi
+ 2cc:	42                   	inc    %edx
+ 2cd:	4c                   	dec    %esp
+ 2ce:	55                   	push   %ebp
+ 2cf:	45                   	inc    %ebp
+ 2d0:	00 5f 46             	add    %bl,0x46(%edi)
+ 2d3:	6c                   	insb   (%dx),%es:(%edi)
+ 2d4:	6f                   	outsl  %ds:(%esi),(%dx)
+ 2d5:	61                   	popa   
+ 2d6:	74 31                	je     309 <deregister_tm_clones-0x7af7>
+ 2d8:	32 38                	xor    (%eax),%bh
+ 2da:	00 70 56             	add    %dh,0x56(%eax)
+ 2dd:	52                   	push   %edx
+ 2de:	41                   	inc    %ecx
+ 2df:	4d                   	dec    %ebp
+ 2e0:	00 70 6f             	add    %dh,0x6f(%eax)
+ 2e3:	77 65                	ja     34a <deregister_tm_clones-0x7ab6>
+ 2e5:	72 00                	jb     2e7 <deregister_tm_clones-0x7b19>
+ 2e7:	62 61 73             	bound  %esp,0x73(%ecx)
+ 2ea:	69 63 5f 6c 69 62 2f 	imul   $0x2f62696c,0x5f(%ebx),%esp
+ 2f1:	63 5f 6c             	arpl   %bx,0x6c(%edi)
+ 2f4:	69 62 2e 63 00 73 79 	imul   $0x79730063,0x2e(%edx),%esp
+ 2fb:	73 5f                	jae    35c <deregister_tm_clones-0x7aa4>
+ 2fd:	62 69 6f             	bound  %ebp,0x6f(%ecx)
+ 300:	73 5f                	jae    361 <deregister_tm_clones-0x7a9f>
+ 302:	70 75                	jo     379 <deregister_tm_clones-0x7a87>
+ 304:	74 63                	je     369 <deregister_tm_clones-0x7a97>
+ 306:	68 61 72 00 47       	push   $0x47007261
+ 30b:	4e                   	dec    %esi
+ 30c:	55                   	push   %ebp
+ 30d:	20 43 31             	and    %al,0x31(%ebx)
+ 310:	31 20                	xor    %esp,(%eax)
+ 312:	37                   	aaa    
+ 313:	2e 33 2e             	xor    %cs:(%esi),%ebp
+ 316:	30 20                	xor    %ah,(%eax)
+ 318:	2d 6d 31 36 20       	sub    $0x2036316d,%eax
+ 31d:	2d 6d 61 72 63       	sub    $0x6372616d,%eax
+ 322:	68 3d 69 33 38       	push   $0x3833693d
+ 327:	36 20 2d 6d 70 72 65 	and    %ch,%ss:0x6572706d
+ 32e:	66 65 72 72          	data16 gs jb 3a4 <deregister_tm_clones-0x7a5c>
+ 332:	65 64 2d 73 74 61 63 	gs fs sub $0x63617473,%eax
+ 339:	6b 2d 62 6f 75 6e 64 	imul   $0x64,0x6e756f62,%ebp
+ 340:	61                   	popa   
+ 341:	72 79                	jb     3bc <deregister_tm_clones-0x7a44>
+ 343:	3d 32 20 2d 67       	cmp    $0x672d2032,%eax
+ 348:	20 2d 4f 73 20 2d    	and    %ch,0x2d20734f
+ 34e:	73 74                	jae    3c4 <deregister_tm_clones-0x7a3c>
+ 350:	64 3d 67 6e 75 31    	fs cmp $0x31756e67,%eax
+ 356:	31 20                	xor    %esp,(%eax)
+ 358:	2d 66 66 72 65       	sub    $0x65726666,%eax
+ 35d:	65 73 74             	gs jae 3d4 <deregister_tm_clones-0x7a2c>
+ 360:	61                   	popa   
+ 361:	6e                   	outsb  %ds:(%esi),(%dx)
+ 362:	64 69 6e 67 20 2d 66 	imul   $0x6e662d20,%fs:0x67(%esi),%ebp
+ 369:	6e 
+ 36a:	6f                   	outsl  %ds:(%esi),(%dx)
+ 36b:	2d 62 75 69 6c       	sub    $0x6c697562,%eax
+ 370:	74 69                	je     3db <deregister_tm_clones-0x7a25>
+ 372:	6e                   	outsb  %ds:(%esi),(%dx)
+ 373:	20 2d 66 6e 6f 2d    	and    %ch,0x2d6f6e66
+ 379:	6f                   	outsl  %ds:(%esi),(%dx)
+ 37a:	6d                   	insl   (%dx),%es:(%edi)
+ 37b:	69 74 2d 66 72 61 6d 	imul   $0x656d6172,0x66(%ebp,%ebp,1),%esi
+ 382:	65 
+ 383:	2d 70 6f 69 6e       	sub    $0x6e696f70,%eax
+ 388:	74 65                	je     3ef <deregister_tm_clones-0x7a11>
+ 38a:	72 20                	jb     3ac <deregister_tm_clones-0x7a54>
+ 38c:	2d 66 6e 6f 2d       	sub    $0x2d6f6e66,%eax
+ 391:	74 72                	je     405 <deregister_tm_clones-0x79fb>
+ 393:	65 65 2d 63 68 20 2d 	gs gs sub $0x2d206863,%eax
+ 39a:	66 6e                	data16 outsb %ds:(%esi),(%dx)
+ 39c:	6f                   	outsl  %ds:(%esi),(%dx)
+ 39d:	2d 73 74 61 63       	sub    $0x63617473,%eax
+ 3a2:	6b 2d 70 72 6f 74 65 	imul   $0x65,0x746f7270,%ebp
+ 3a9:	63 74 6f 72          	arpl   %si,0x72(%edi,%ebp,2)
+ 3ad:	00 63 6f             	add    %ah,0x6f(%ebx)
+ 3b0:	6c                   	insb   (%dx),%es:(%edi)
+ 3b1:	6f                   	outsl  %ds:(%esi),(%dx)
+ 3b2:	72 00                	jb     3b4 <deregister_tm_clones-0x7a4c>
+ 3b4:	75 69                	jne    41f <deregister_tm_clones-0x79e1>
+ 3b6:	6e                   	outsb  %ds:(%esi),(%dx)
+ 3b7:	74 38                	je     3f1 <deregister_tm_clones-0x7a0f>
+ 3b9:	5f                   	pop    %edi
+ 3ba:	74 00                	je     3bc <deregister_tm_clones-0x7a44>
+ 3bc:	6e                   	outsb  %ds:(%esi),(%dx)
+ 3bd:	75 6d                	jne    42c <deregister_tm_clones-0x79d4>
+ 3bf:	5f                   	pop    %edi
+ 3c0:	00 70 6f             	add    %dh,0x6f(%eax)
+ 3c3:	72 74                	jb     439 <deregister_tm_clones-0x79c7>
+ 3c5:	00 75 69             	add    %dh,0x69(%ebp)
+ 3c8:	6e                   	outsb  %ds:(%esi),(%dx)
+ 3c9:	74 31                	je     3fc <deregister_tm_clones-0x7a04>
+ 3cb:	36 5f                	ss pop %edi
+ 3cd:	74 00                	je     3cf <deregister_tm_clones-0x7a31>
+ 3cf:	73 79                	jae    44a <deregister_tm_clones-0x79b6>
+ 3d1:	73 5f                	jae    432 <deregister_tm_clones-0x79ce>
+ 3d3:	70 75                	jo     44a <deregister_tm_clones-0x79b6>
+ 3d5:	74 63                	je     43a <deregister_tm_clones-0x79c6>
+ 3d7:	68 61 72 00 73       	push   $0x73007261
+ 3dc:	79 73                	jns    451 <deregister_tm_clones-0x79af>
+ 3de:	5f                   	pop    %edi
+ 3df:	69 6e 62 00 6b 65 72 	imul   $0x72656b00,0x62(%esi),%ebp
+ 3e6:	6e                   	outsb  %ds:(%esi),(%dx)
+ 3e7:	65 6c                	gs insb (%dx),%es:(%edi)
+ 3e9:	2f                   	das    
+ 3ea:	63 72 74             	arpl   %si,0x74(%edx)
+ 3ed:	6e                   	outsb  %ds:(%esi),(%dx)
+ 3ee:	2e 53                	cs push %ebx
+	...
+
+Disassembly of section .debug_ranges:
+
+00000000 <.debug_ranges>:
+   0:	ff                   	(bad)  
+   1:	ff                   	(bad)  
+   2:	ff                   	(bad)  
+   3:	ff 00                	incl   (%eax)
+   5:	00 00                	add    %al,(%eax)
+   7:	00 49 81             	add    %cl,-0x7f(%ecx)
+   a:	00 00                	add    %al,(%eax)
+   c:	4c                   	dec    %esp
+   d:	81 00 00 58 81 00    	addl   $0x815800,(%eax)
+  13:	00 5b 81             	add    %bl,-0x7f(%ebx)
+	...
+  1e:	00 00                	add    %al,(%eax)
+  20:	ff                   	(bad)  
+  21:	ff                   	(bad)  
+  22:	ff                   	(bad)  
+  23:	ff 00                	incl   (%eax)
+  25:	00 00                	add    %al,(%eax)
+  27:	00 56 81             	add    %dl,-0x7f(%esi)
+  2a:	00 00                	add    %al,(%eax)
+  2c:	58                   	pop    %eax
+  2d:	81 00 00 60 81 00    	addl   $0x816000,(%eax)
+  33:	00 62 81             	add    %ah,-0x7f(%edx)
+	...
+
+Disassembly of section .debug_loc:
+
+00000000 <.debug_loc>:
+   0:	80 00 00             	addb   $0x0,(%eax)
+   3:	00 90 00 00 00 07    	add    %dl,0x7000000(%eax)
+   9:	00 70 00             	add    %dh,0x0(%eax)
+   c:	48                   	dec    %eax
+   d:	24 48                	and    $0x48,%al
+   f:	26 9f                	es lahf 
+  11:	90                   	nop
+  12:	00 00                	add    %al,(%eax)
+  14:	00 97 00 00 00 01    	add    %dl,0x1000000(%edi)
+  1a:	00 50 00             	add    %dl,0x0(%eax)
+  1d:	00 00                	add    %al,(%eax)
+  1f:	00 00                	add    %al,(%eax)
+  21:	00 00                	add    %al,(%eax)
+  23:	00 30                	add    %dh,(%eax)
+  25:	01 00                	add    %eax,(%eax)
+  27:	00 32                	add    %dh,(%edx)
+  29:	01 00                	add    %eax,(%eax)
+  2b:	00 03                	add    %al,(%ebx)
+  2d:	00 08                	add    %cl,(%eax)
+  2f:	64 9f                	fs lahf 
+	...
+  39:	36 01 00             	add    %eax,%ss:(%eax)
+  3c:	00 38                	add    %bh,(%eax)
+  3e:	01 00                	add    %eax,(%eax)
+  40:	00 03                	add    %al,(%ebx)
+  42:	00 08                	add    %cl,(%eax)
+  44:	60                   	pusha  
+  45:	9f                   	lahf   
+	...
+  4e:	db 00                	fildl  (%eax)
+  50:	00 00                	add    %al,(%eax)
+  52:	13 01                	adc    (%ecx),%eax
+  54:	00 00                	add    %al,(%eax)
+  56:	02 00                	add    (%eax),%al
+  58:	91                   	xchg   %eax,%ecx
+	...
+  61:	00 b1 00 00 00 bf    	add    %dh,-0x41000000(%ecx)
+  67:	00 00                	add    %al,(%eax)
+  69:	00 04 00             	add    %al,(%eax,%eax,1)
+  6c:	47                   	inc    %edi
+  6d:	3f                   	aas    
+  6e:	24 9f                	and    $0x9f,%al
+  70:	bf 00 00 00 db       	mov    $0xdb000000,%edi
+  75:	00 00                	add    %al,(%eax)
+  77:	00 05 00 70 80 80    	add    %al,0x80807000
+  7d:	2e 9f                	cs lahf 
+	...
+  8b:	8a 00                	mov    (%eax),%al
+  8d:	00 00                	add    %al,(%eax)
+  8f:	02 00                	add    (%eax),%al
+  91:	91                   	xchg   %eax,%ecx
+	...
+  9e:	00 8a 00 00 00 02    	add    %cl,0x2000000(%edx)
+  a4:	00 91 04 00 00 00    	add    %dl,0x4(%ecx)
+	...
+  b2:	00 8a 00 00 00 02    	add    %cl,0x2000000(%edx)
+  b8:	00 91 08 00 00 00    	add    %dl,0x8(%ecx)
+  be:	00 00                	add    %al,(%eax)
+  c0:	00 00                	add    %al,(%eax)
+  c2:	00 0d 00 00 00 1e    	add    %cl,0x1e000000
+  c8:	00 00                	add    %al,(%eax)
+  ca:	00 02                	add    %al,(%edx)
+  cc:	00 91 00 1e 00 00    	add    %dl,0x1e00(%ecx)
+  d2:	00 37                	add    %dh,(%edi)
+  d4:	00 00                	add    %al,(%eax)
+  d6:	00 01                	add    %al,(%ecx)
+  d8:	00 50 00             	add    %dl,0x0(%eax)
+  db:	00 00                	add    %al,(%eax)
+  dd:	00 00                	add    %al,(%eax)
+  df:	00 00                	add    %al,(%eax)
+  e1:	00 0d 00 00 00 1e    	add    %cl,0x1e000000
+  e7:	00 00                	add    %al,(%eax)
+  e9:	00 02                	add    %al,(%edx)
+  eb:	00 31                	add    %dh,(%ecx)
+  ed:	9f                   	lahf   
+  ee:	1e                   	push   %ds
+  ef:	00 00                	add    %al,(%eax)
+  f1:	00 30                	add    %dh,(%eax)
+  f3:	00 00                	add    %al,(%eax)
+  f5:	00 01                	add    %al,(%ecx)
+  f7:	00 51 30             	add    %dl,0x30(%ecx)
+  fa:	00 00                	add    %al,(%eax)
+  fc:	00 32                	add    %dh,(%edx)
+  fe:	00 00                	add    %al,(%eax)
+ 100:	00 03                	add    %al,(%ebx)
+ 102:	00 72 7f             	add    %dh,0x7f(%edx)
+ 105:	9f                   	lahf   
+ 106:	32 00                	xor    (%eax),%al
+ 108:	00 00                	add    %al,(%eax)
+ 10a:	98                   	cwtl   
+ 10b:	00 00                	add    %al,(%eax)
+ 10d:	00 01                	add    %al,(%ecx)
+ 10f:	00 51 00             	add    %dl,0x0(%ecx)
+ 112:	00 00                	add    %al,(%eax)
+ 114:	00 00                	add    %al,(%eax)
+ 116:	00 00                	add    %al,(%eax)
+ 118:	00 41 00             	add    %al,0x0(%ecx)
+ 11b:	00 00                	add    %al,(%eax)
+ 11d:	a8 00                	test   $0x0,%al
+ 11f:	00 00                	add    %al,(%eax)
+ 121:	02 00                	add    (%eax),%al
+ 123:	77 00                	ja     125 <deregister_tm_clones-0x7cdb>
+	...
+ 12d:	41                   	inc    %ecx
+ 12e:	00 00                	add    %al,(%eax)
+ 130:	00 4f 00             	add    %cl,0x0(%edi)
+ 133:	00 00                	add    %al,(%eax)
+ 135:	02 00                	add    (%eax),%al
+ 137:	31 9f 4f 00 00 00    	xor    %ebx,0x4f(%edi)
+ 13d:	79 00                	jns    13f <deregister_tm_clones-0x7cc1>
+ 13f:	00 00                	add    %al,(%eax)
+ 141:	02 00                	add    (%eax),%al
+ 143:	91                   	xchg   %eax,%ecx
+ 144:	68 79 00 00 00       	push   $0x79
+ 149:	98                   	cwtl   
+ 14a:	00 00                	add    %al,(%eax)
+ 14c:	00 01                	add    %al,(%ecx)
+ 14e:	00 50 98             	add    %dl,-0x68(%eax)
+ 151:	00 00                	add    %al,(%eax)
+ 153:	00 ac 00 00 00 02 00 	add    %ch,0x20000(%eax,%eax,1)
+ 15a:	91                   	xchg   %eax,%ecx
+ 15b:	68 00 00 00 00       	push   $0x0
+ 160:	00 00                	add    %al,(%eax)
+ 162:	00 00                	add    %al,(%eax)
+ 164:	41                   	inc    %ecx
+ 165:	00 00                	add    %al,(%eax)
+ 167:	00 4f 00             	add    %cl,0x0(%edi)
+ 16a:	00 00                	add    %al,(%eax)
+ 16c:	02 00                	add    (%eax),%al
+ 16e:	30 9f 4f 00 00 00    	xor    %bl,0x4f(%edi)
+ 174:	6e                   	outsb  %ds:(%esi),(%dx)
+ 175:	00 00                	add    %al,(%eax)
+ 177:	00 09                	add    %cl,(%ecx)
+ 179:	00 77 00             	add    %dh,0x0(%edi)
+ 17c:	71 00                	jno    17e <deregister_tm_clones-0x7c82>
+ 17e:	22 73 00             	and    0x0(%ebx),%dh
+ 181:	1c 9f                	sbb    $0x9f,%al
+ 183:	6e                   	outsb  %ds:(%esi),(%dx)
+ 184:	00 00                	add    %al,(%eax)
+ 186:	00 7b 00             	add    %bh,0x0(%ebx)
+ 189:	00 00                	add    %al,(%eax)
+ 18b:	0b 00                	or     (%eax),%eax
+ 18d:	77 00                	ja     18f <deregister_tm_clones-0x7c71>
+ 18f:	71 00                	jno    191 <deregister_tm_clones-0x7c6f>
+ 191:	22 73 00             	and    0x0(%ebx),%dh
+ 194:	1c 23                	sbb    $0x23,%al
+ 196:	01 9f 7b 00 00 00    	add    %ebx,0x7b(%edi)
+ 19c:	98                   	cwtl   
+ 19d:	00 00                	add    %al,(%eax)
+ 19f:	00 09                	add    %cl,(%ecx)
+ 1a1:	00 77 00             	add    %dh,0x0(%edi)
+ 1a4:	71 00                	jno    1a6 <deregister_tm_clones-0x7c5a>
+ 1a6:	22 73 00             	and    0x0(%ebx),%dh
+ 1a9:	1c 9f                	sbb    $0x9f,%al
+	...

@@ -1,8 +1,9 @@
 BITS 16
-[global sys_clear_screen]
-[global sys_print_string]
+[global sys_bios_clear_screen]
+[global sys_bios_print_string]
+[global sys_bios_getchar]
 
-sys_print_string:
+sys_bios_print_string:
     push bp
     mov bp, sp
     mov cx, word[bp + 10]    
@@ -19,7 +20,7 @@ sys_print_string:
     pop bp
     ret
 
-sys_clear_screen:
+sys_bios_clear_screen:
     pusha           
     mov ah,0x06     
     mov al,0        
@@ -32,3 +33,7 @@ sys_clear_screen:
     popa            
     ret             
 
+sys_bios_getchar:
+    mov ah, 0
+    int 16h
+    ret
