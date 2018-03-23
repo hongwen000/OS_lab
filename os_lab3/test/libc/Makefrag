@@ -1,0 +1,3 @@
+$(build_dir)/libc/%.o: libc/%.cpp
+	@mkdir -p $(@D)
+	$(CXX) $(CXXFLAGS) -I libc -c $< -o $@

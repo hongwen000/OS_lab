@@ -11,7 +11,10 @@
                 "${workspaceFolder:test}/include",
                 "${workspaceFolder:test}/basic_lib",
                 "${workspaceRoot}",
-                "${workspaceRoot}/include"
+                "${workspaceRoot}/include",
+                "/Users/lixinrui/onedrive/Documents/大学课程/2018操作系统实验/os_lab3/test/include",
+                "/Users/lixinrui/onedrive/Documents/大学课程/2018操作系统实验/os_lab3/test/basic_lib",
+                "/Users/lixinrui/onedrive/Documents/大学课程/2018操作系统实验/os_lab3/test/libc"
             ],
             "defines": [],
             "intelliSenseMode": "clang-x64",
@@ -25,7 +28,10 @@
                     "${workspaceFolder:test}/include",
                     "${workspaceFolder:test}/basic_lib",
                     "${workspaceRoot}/include",
-                    "${workspaceRoot}"
+                    "${workspaceRoot}",
+                    "/Users/lixinrui/onedrive/Documents/大学课程/2018操作系统实验/os_lab3/test/include",
+                    "/Users/lixinrui/onedrive/Documents/大学课程/2018操作系统实验/os_lab3/test/basic_lib",
+                    "/Users/lixinrui/onedrive/Documents/大学课程/2018操作系统实验/os_lab3/test/libc"
                 ],
                 "limitSymbolsToIncludedHeaders": true,
                 "databaseFilename": ""
