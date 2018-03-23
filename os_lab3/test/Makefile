@@ -52,7 +52,6 @@ bootloader_bin = $(build_dir)/$(bootloader_src:.asm=.bin)
 
 include boot/Makefrag
 
-
 kernel_obj = $(build_dir)/kernel/kernel_start.o \
 			 $(build_dir)/kernel/kernel_main.o
 
@@ -68,19 +67,35 @@ c_src   = basic_lib/c_lib.c
 
 c_obj = $(build_dir)/$(c_src:.c=.o)
 
+basic_lib = $(build_dir)/basic_lib/libbasic.a
+
+$(basic_lib): $(asm_obj) $(c_obj)
+	$(AR) rcs $@ $(asm_obj) $(c_obj)
+
 include basic_lib/Makefrag
 
-OBJ_LINK_LIST:= $(kernel_obj) $(asm_obj) $(c_obj) 
+libc_obj = $(build_dir)/libc/string.o
 
-kernel_img : $(OBJ_LINK_LIST)
-	$(LD)  $(LDFLAGS) --oformat binary $(OBJ_LINK_LIST) -o $(kernel_bin)
-	$(LD)  $(LDFLAGS) $(OBJ_LINK_LIST) -o $(kernel_bin).elf
+libc = $(build_dir)/libc/libc.a
+
+$(libc) : $(libc_obj)
+	$(AR) rcs $@ $(libc_obj) 
+
+include libc/Makefrag
+
+obj_link_list:= $(kernel_obj)
+
+lib_ar_list := $(libc) $(basic_lib)
+
+LDFLAGS += -L $(build_dir)/libc -L $(build_dir)/basic_lib
+
+LDFLAGS_LIB = -lc -lbasic
+
+kernel_img : $(obj_link_list) $(lib_ar_list)
+	$(LD)  $(LDFLAGS) --oformat binary $(obj_link_list) $(LDFLAGS_LIB) -o $(kernel_bin)
+	$(LD)  $(LDFLAGS) $(lib_search_list) $(obj_link_list) $(LDFLAGS_LIB) -o $(kernel_bin).elf
 	$(OBJDUMP) --adjust-vma=0x7e00 -D -Mintel,i386 -b binary -m i386 $(kernel_bin) >kernel_bin_dump
 	$(OBJDUMP) -D $(kernel_bin).elf > kernel_elf_dump
-
-
-#kernel_elf : $(kernel_obj) $(asm_obj) $(c_obj)
-#	$(LD)  $(LDFLAGS) $(kernel_obj) $(asm_obj) $(c_obj) -o $(kernel_bin).elf
 
 floppyfile = $(build_dir)/disk.img
 
@@ -94,12 +109,7 @@ write_kernel: clean_disk kernel_img $(bootloader_bin)
 
 write_all_progs: write_kernel
 
-libc_obj = $(build_dir)/libc/string.o
 
-libc.a: $(libc_obj)
-	$(AR) rcs $@ $(libc_obj) 
-
-include libc/Makefrag
 
 #指定qemu程序
 QEMU = qemu-system-i386

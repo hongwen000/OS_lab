@@ -2,12 +2,19 @@
 	"folders": [
 		{
 			"path": "os_lab3/test"
+		},
+		{
+			"path": "os_lab2"
+		},
+		{
+			"path": "/Users/lixinrui/repo/pdclib-pdclib-c8dc861df697"
 		}
 	],
 	"settings": {
 		"files.associations": {
 			"base_lib.h": "c",
-			"defines.h": "c"
+			"defines.h": "c",
+			"_pdclib_test.h": "c"
 		}
 	}
 }
