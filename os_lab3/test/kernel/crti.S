@@ -13,7 +13,6 @@
 ;	push %ebp
 ;	movl %esp, %ebp
 ;	/* gcc will nicely put the contents of crtbegin.o's .fini section here. */
-[BITS 32]
 [section .init]
 [global _init]
 ;db 'Here is init segment'

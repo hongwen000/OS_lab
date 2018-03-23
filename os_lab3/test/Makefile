@@ -16,8 +16,10 @@ ASELF = -f elf32
 
 GCC_PREFIX = /opt/cross/gcc-i386/bin/i386-elf-
 
+OBJDUMP = $(GCC_PREFIX)objdump
+
 CC = $(GCC_PREFIX)gcc
-CFLAGS =  	-m32 -march=i386 \
+CFLAGS =  	-m16 -march=i386 \
 			-nostdlib -ffreestanding \
 			-mpreferred-stack-boundary=2 -lgcc \
 			-fno-builtin -Os -fno-omit-frame-pointer \
@@ -28,7 +30,7 @@ CFLAGS =  	-m32 -march=i386 \
 
 CXX = $(GCC_PREFIX)g++
 
-CXXFLAGS =  -m32 -march=i386 \
+CXXFLAGS =  -m16 -march=i386 \
 			-nostdlib -ffreestanding \
 			-mpreferred-stack-boundary=2 -lgcc \
 			-fno-builtin -Os -fno-omit-frame-pointer \
@@ -74,9 +76,10 @@ OBJ_LINK_LIST:=$(CRTI_OBJ) $(CRTBEGIN_OBJ) $(OBJS) $(CRTEND_OBJ) $(CRTN_OBJ)
 
 kernel_img : $(OBJ_LINK_LIST)
 	$(LD)  $(LDFLAGS) --oformat binary $(OBJ_LINK_LIST) -o $(kernel_bin)
-
-kernel_elf : $(OBJ_LINK_LIST)
 	$(LD)  $(LDFLAGS) $(OBJ_LINK_LIST) -o $(kernel_bin).elf
+	$(OBJDUMP) --adjust-vma=0x7e00 -D -Mintel,i386 -b binary -m i386 $(kernel_bin) >kernel_bin_dump
+	$(OBJDUMP) -D $(kernel_bin).elf > kernel_elf_dump
+
 
 #kernel_elf : $(kernel_obj) $(asm_obj) $(c_obj)
 #	$(LD)  $(LDFLAGS) $(kernel_obj) $(asm_obj) $(c_obj) -o $(kernel_bin).elf
@@ -138,12 +141,9 @@ gdb: .gdbinit
 	/opt/cross/gcc-i386/bin/i386-elf-gdb -n -x .gdbinit
 
 #启动bochs虚拟机
-bochs: clean write_all_progs
+bochs: write_all_progs
 	export FLOPPYFILE=$(floppyfile) && bochs -q -f bochsrc
 
-dump: clean kernel_img kernel_elf
-	objdump --adjust-vma=0x7e00 -D -Mintel,i386 -b binary -m i386 $(kernel_bin) >kernel_bin_dump
-	objdump -D $(kernel_bin).elf > kernel_elf_dump
 #清理
 clean:
 	rm -rf build | mkdir -p build

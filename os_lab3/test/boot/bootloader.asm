@@ -17,7 +17,7 @@ LoadnEx:
       mov ax,cs                ;段地址 ; 存放数据的内存基地址
       mov es,ax                ;设置段地址（不能直接mov es,段地址）
       mov ds,ax                ;设置数据段
-      mov ebx, KERNEL_LOAD_ADDR ;内核加载地址
+      mov bx, KERNEL_LOAD_ADDR ;内核加载地址
       mov ah,2                 ;功能号
       mov al,KERNEL_SIZE       ;扇区数
       mov dl,0                 ;驱动器号 ; 软盘为0，硬盘和U盘为80H
