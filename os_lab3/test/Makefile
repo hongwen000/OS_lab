@@ -17,7 +17,7 @@ ASELF = -f elf32
 GCC_PREFIX = /opt/cross/gcc-i386/bin/i386-elf-
 
 CC = $(GCC_PREFIX)gcc
-CFLAGS =  	-m16 -march=i386 \
+CFLAGS =  	-m32 -march=i386 \
 			-nostdlib -ffreestanding \
 			-mpreferred-stack-boundary=2 -lgcc \
 			-fno-builtin -Os -fno-omit-frame-pointer \
@@ -28,7 +28,7 @@ CFLAGS =  	-m16 -march=i386 \
 
 CXX = $(GCC_PREFIX)g++
 
-CXXFLAGS =  -m16 -march=i386 \
+CXXFLAGS =  -m32 -march=i386 \
 			-nostdlib -ffreestanding \
 			-mpreferred-stack-boundary=2 -lgcc \
 			-fno-builtin -Os -fno-omit-frame-pointer \
@@ -138,7 +138,7 @@ gdb: .gdbinit
 	/opt/cross/gcc-i386/bin/i386-elf-gdb -n -x .gdbinit
 
 #启动bochs虚拟机
-bochs: write_all_progs
+bochs: clean write_all_progs
 	export FLOPPYFILE=$(floppyfile) && bochs -q -f bochsrc
 
 dump: clean kernel_img kernel_elf

@@ -1,10 +1,10 @@
 ;程序源代码（myos1.asm）
-[BITS 32]
+[BITS 16]
 org  7c00h		; BIOS将把引导扇区加载到0:7C00h处，并开始执行
 
-%define KERNEL_LOAD_ADDR 0x7E00
+%define KERNEL_LOAD_ADDR 0x00007E00
 
-%define KERNEL_ENTRY_ADDR 0x7F10
+%define KERNEL_ENTRY_ADDR 0x00007F10
 
 %define KERNEL_SIZE      32
 
@@ -17,7 +17,7 @@ LoadnEx:
       mov ax,cs                ;段地址 ; 存放数据的内存基地址
       mov es,ax                ;设置段地址（不能直接mov es,段地址）
       mov ds,ax                ;设置数据段
-      mov bx, KERNEL_LOAD_ADDR ;内核加载地址
+      mov ebx, KERNEL_LOAD_ADDR ;内核加载地址
       mov ah,2                 ;功能号
       mov al,KERNEL_SIZE       ;扇区数
       mov dl,0                 ;驱动器号 ; 软盘为0，硬盘和U盘为80H
