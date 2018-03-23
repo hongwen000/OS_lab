@@ -4,7 +4,7 @@ org  7c00h		; BIOS将把引导扇区加载到0:7C00h处，并开始执行
 
 %define KERNEL_LOAD_ADDR 0x00007E00
 
-%define KERNEL_ENTRY_ADDR 0x00007F10
+%define KERNEL_ENTRY_ADDR 0x00007E00
 
 %define KERNEL_SIZE      32
 

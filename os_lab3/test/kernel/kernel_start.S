@@ -7,11 +7,8 @@
 [BITS 16]
 [section .text]
 [global kernel_start]
-[extern _init]
 [extern kernel_main]
 kernel_start:
-
-	call _init
 
 	call kernel_main
 

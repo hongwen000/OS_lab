@@ -14,6 +14,9 @@ ASBIN = -f bin
 
 ASELF = -f elf32
 
+AR = $(GCC_PREFIX)ar
+
+
 GCC_PREFIX = /opt/cross/gcc-i386/bin/i386-elf-
 
 OBJDUMP = $(GCC_PREFIX)objdump
@@ -67,12 +70,7 @@ c_obj = $(build_dir)/$(c_src:.c=.o)
 
 include basic_lib/Makefrag
 
-CRTI_OBJ=$(build_dir)/kernel/crti.o
-CRTBEGIN_OBJ:=$(shell $(CC) $(CFLAGS) -print-file-name=crtbegin.o)
-CRTEND_OBJ:=$(shell $(CC) $(CFLAGS) -print-file-name=crtend.o)
-CRTN_OBJ=$(build_dir)/kernel/crtn.o
-OBJS = $(kernel_obj) $(asm_obj) $(c_obj) 
-OBJ_LINK_LIST:=$(CRTI_OBJ) $(CRTBEGIN_OBJ) $(OBJS) $(CRTEND_OBJ) $(CRTN_OBJ)
+OBJ_LINK_LIST:= $(kernel_obj) $(asm_obj) $(c_obj) 
 
 kernel_img : $(OBJ_LINK_LIST)
 	$(LD)  $(LDFLAGS) --oformat binary $(OBJ_LINK_LIST) -o $(kernel_bin)
@@ -95,6 +93,13 @@ write_kernel: clean_disk kernel_img $(bootloader_bin)
 	dd if=$(kernel_bin) of=$(floppyfile) bs=512 seek=1 conv=notrunc
 
 write_all_progs: write_kernel
+
+libc_obj = $(build_dir)/libc/string.o
+
+libc.a: $(libc_obj)
+	$(AR) rcs $@ $(libc_obj) 
+
+include libc/Makefrag
 
 #指定qemu程序
 QEMU = qemu-system-i386

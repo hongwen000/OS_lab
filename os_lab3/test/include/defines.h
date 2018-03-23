@@ -1,9 +1,13 @@
 #ifndef _BASIC_DEFINE_
 #define _BASIC_DEFINE_
 
+#ifndef _HHOS_LIBC_TEST
+
 #ifndef _CODE16GCC_H_
 #define _CODE16GCC_H_
 __asm__(".code16gcc\n");
+#endif
+
 #endif
 
 #include <stddef.h>
@@ -42,5 +46,7 @@ enum VGA_COLOR{
     ((ROW << 8) | (COLUMN & 0xFF))
 
 #define KEY_DOWN_PRESSED    0x50
+
+#define __HHOS_libc
 
 #endif
