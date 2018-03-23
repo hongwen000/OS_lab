@@ -10,27 +10,29 @@ SHELL=/bin/bash
 
 AS = nasm
 
-ASFLAG = -f bin
+ASBIN = -f bin
+
+ASELF = -f elf32
 
 GCC_PREFIX = /opt/cross/gcc-i386/bin/i386-elf-
 
 CC = $(GCC_PREFIX)gcc
-CFLAGS =  	-m16 -march=i386 -masm=intel \
+CFLAGS =  	-m16 -march=i386 \
 			-nostdlib -ffreestanding \
 			-mpreferred-stack-boundary=2 -lgcc \
-			-fno-builtin -Os -fno-omit-frame-pointer\
-			-Wall -Wno-format -Wno-unused -Wno-write-strings -Werror\
+			-fno-builtin -Os -fno-omit-frame-pointer \
+			-Wall -Wno-format -Wno-unused -Wno-write-strings -Werror \
 			-fno-tree-ch -fno-stack-protector \
-			-std=gnu99  -g \
+			-std=gnu11  -g \
 			-I . -I include
 
 CXX = $(GCC_PREFIX)g++
 
-CXXFLAGS =  -m16 -march=i386 -masm=intel \
+CXXFLAGS =  -m16 -march=i386 \
 			-nostdlib -ffreestanding \
 			-mpreferred-stack-boundary=2 -lgcc \
-			-fno-builtin -Os -fno-omit-frame-pointer\
-			-Wall -Wno-format -Wno-unused -Wno-write-strings -Werror\
+			-fno-builtin -Os -fno-omit-frame-pointer \
+			-Wall -Wno-format -Wno-unused -Wno-write-strings -Werror \
 			-fno-tree-ch -fno-stack-protector \
 			-std=c++17  -g \
 			-I . -I include
@@ -45,13 +47,13 @@ bootloader_bin = $(build_dir)/$(bootloader_src:.asm=.bin)
 
 include boot/Makefrag
 
-kernel_src = kernel/kernel.cpp
 
-kernel_obj = $(build_dir)/$(kernel_src:.cpp=.o)
+kernel_obj = $(build_dir)/kernel/kernel_start.o \
+			 $(build_dir)/kernel/kernel_main.o
 
 include kernel/Makefrag
 
-kernel_bin = $(kernel_obj:.o=.bin)
+kernel_bin = $(build_dir)/kernel/kernel.bin
 
 asm_src = basic_lib/asm_lib.asm
 
@@ -63,15 +65,26 @@ c_obj = $(build_dir)/$(c_src:.c=.o)
 
 include basic_lib/Makefrag
 
-kernel_img : $(kernel_obj) $(asm_obj) $(c_obj)
-	$(LD)  $(LDFLAGS) --oformat binary $(kernel_obj) $(asm_obj) $(c_obj) -o $(kernel_bin)
+CRTI_OBJ=$(build_dir)/kernel/crti.o
+CRTBEGIN_OBJ:=$(shell $(CC) $(CFLAGS) -print-file-name=crtbegin.o)
+CRTEND_OBJ:=$(shell $(CC) $(CFLAGS) -print-file-name=crtend.o)
+CRTN_OBJ=$(build_dir)/kernel/crtn.o
+OBJS = $(kernel_obj) $(asm_obj) $(c_obj) 
+OBJ_LINK_LIST:=$(CRTI_OBJ) $(CRTBEGIN_OBJ) $(OBJS) $(CRTEND_OBJ) $(CRTN_OBJ)
 
-kernel_elf : $(kernel_obj) $(asm_obj) $(c_obj)
-	$(LD)  $(LDFLAGS) $(kernel_obj) $(asm_obj) $(c_obj) -o $(kernel_bin).elf
+kernel_img : $(OBJ_LINK_LIST)
+	$(LD)  $(LDFLAGS) --oformat binary $(OBJ_LINK_LIST) -o $(kernel_bin)
+
+kernel_elf : $(OBJ_LINK_LIST)
+	$(LD)  $(LDFLAGS) $(OBJ_LINK_LIST) -o $(kernel_bin).elf
+
+#kernel_elf : $(kernel_obj) $(asm_obj) $(c_obj)
+#	$(LD)  $(LDFLAGS) $(kernel_obj) $(asm_obj) $(c_obj) -o $(kernel_bin).elf
 
 floppyfile = $(build_dir)/disk.img
 
 clean_disk:
+	@mkdir -p build
 	dd if=/dev/zero of=$(floppyfile) bs=512 count=2880
 
 write_kernel: clean_disk kernel_img $(bootloader_bin)
@@ -128,6 +141,9 @@ gdb: .gdbinit
 bochs: write_all_progs
 	export FLOPPYFILE=$(floppyfile) && bochs -q -f bochsrc
 
+dump: clean kernel_img kernel_elf
+	objdump --adjust-vma=0x7e00 -D -Mintel,i386 -b binary -m i386 $(kernel_bin) >kernel_bin_dump
+	objdump -D $(kernel_bin).elf > kernel_elf_dump
 #清理
 clean:
 	rm -rf build | mkdir -p build

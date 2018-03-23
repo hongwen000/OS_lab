@@ -1,9 +1,12 @@
 ;程序源代码（myos1.asm）
+[BITS 32]
 org  7c00h		; BIOS将把引导扇区加载到0:7C00h处，并开始执行
 
 %define KERNEL_LOAD_ADDR 0x7E00
 
-%define KERNEL_SIZE      1
+%define KERNEL_ENTRY_ADDR 0x7F10
+
+%define KERNEL_SIZE      32
 
 jmp bootloader_start
 
@@ -22,7 +25,7 @@ LoadnEx:
       mov ch,0                 ;柱面号 ; 起始编号为0
       mov cl,2                 ;起始扇区号 ; 起始编号为1
       int 13H                  ;调用读磁盘BIOS的13h功能
-      jmp KERNEL_LOAD_ADDR
+      jmp KERNEL_ENTRY_ADDR
 
       times 510-($-$$) db 0
       db 0x55,0xaa
