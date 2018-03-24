@@ -2,4 +2,4 @@ test: build
 	./test
 
 build: test.cpp
-	clang++ test.cpp -fno-builtin  -I../include -I ../basic_lib -lgtest -o test
+	clang++ -fno-builtin -D_HHOS_LIBC_TEST -I../include -I ../basic_lib -lgtest ctype.cpp stdlib.cpp stdio.cpp string.cpp test.cpp -g -std=c++1z  -o test
