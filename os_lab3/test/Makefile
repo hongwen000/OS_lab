@@ -161,4 +161,6 @@ bochs: write_all_progs
 
 #清理
 clean:
-	rm -rf build | mkdir -p build
+	rm -rf build
+	rm kernel_bin_dump
+	rm kernel_elf_dump
