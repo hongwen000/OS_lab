@@ -1,27 +1,37 @@
-#ifndef _STRING_H
-#define _STRING_H
+#ifndef _STDIO_H
+#define _STDIO_H
 
 #include "defines.h"
+
+#include "sys_lib.h"
 
 #ifdef _HHOS_LIBC_TEST
 namespace hhlibc {
 
 #endif
 
-#ifdef __cplusplus
+#ifndef __cplusplus
 extern "C" {
 #endif
  
-int puts(const char* string);
-int printf( const char* format, ... );
 int putchar( int ch );
-int scanf( const char* format, ... );
+int puts(const char* string);
+int vsprintf( char* buffer, const char* format, va_list vlist );
+int sprintf( char *buffer, const char *format, ... );
+int printf( const char* format, ... );
+
 int getchar(void);
 char *gets( char *str );
+int vsscanf( const char* buffer, const char* format, va_list vlist );
+int sscanf( const char* buffer, const char* format, ... );
+int scanf( const char* format, ... );
+
+int scanf( const char* format, ... );
+
 int rand();
 void srand( unsigned seed );
 
-#ifdef __cplusplus
+#ifndef __cplusplus
 }
 #endif
 

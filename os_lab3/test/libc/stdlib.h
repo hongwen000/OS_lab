@@ -1,0 +1,27 @@
+#ifndef _STDLIB_H
+#define _STDLIB_H
+
+#include "defines.h"
+
+#include "sys_lib.h"
+
+#ifdef _HHOS_LIBC_TEST
+namespace hhlibc {
+
+#endif
+
+#ifndef __cplusplus
+extern "C" {
+#endif
+ 
+long strtol( const char *str, char **str_end, int base );
+
+#ifndef __cplusplus
+}
+#endif
+
+#ifdef _HHOS_LIBC_TEST
+}
+#endif
+
+#endif
