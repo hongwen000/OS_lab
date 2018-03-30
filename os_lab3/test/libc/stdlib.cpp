@@ -6,25 +6,27 @@
 namespace hhlibc {
 
 #endif
-
+//TODO:
+//与标准的差别：
+//只实现了16位及以下的转换
+//未做溢出检测，溢出情况下不会有错误指示
 long strtol( const char *str, char **str_end, int base )
 {
-    auto start = str;   //指向第一个非白空格位置
+    auto start = str;   
+    //start指向第一个非白空格位置
     while(isspace(*start))
         ++start;
     size_t len_num = strlen(start);//非白空格数字串长度
     if(len_num == 0)
     {
-        if(str_end) *str_end = NULL;
+        
+        if(str_end) *str_end = const_cast<char*>(str);
         return 0;
     }
-    auto low = start;   //指向数字低位后的一个位置
-    while(!isspace(*low) && (*low != '\0'))
-        ++low;
     auto high = start;   //指向真正的数字高位在字符串中的起始位置
     bool auto_detected = false;
     int sign = 1;
-    int sign_char_bit = 0;
+    size_t sign_char_bit = 0;
     if(*high == '+' || *high == '-')
     {
         sign = (*high == '+') ? 1 : -1;
@@ -58,13 +60,8 @@ long strtol( const char *str, char **str_end, int base )
         base = 10;
         auto_detected = true;
     }
-    int power = 1;
-    long ret = 0;
-    if(str_end) *str_end = const_cast<char*>(low);
-    for(auto p = low - 1; p >= high; --p)
-    {
-        char ch = *p;
-        int digit = 0;
+    auto char_to_digit = [](auto ch){
+        int digit;
         if(ch >= '0' && ch <= '9')
             digit = ch - '0';
         else if(ch >='A' && ch <= 'F')
@@ -72,20 +69,38 @@ long strtol( const char *str, char **str_end, int base )
         else if(ch >='a' && ch <= 'f')
             digit = ch - 'a' + 10;
         else
-        {
-            ret = 0; //在任意进制下都不合法的字符，重置转换结果
-            power = 1;
-            if(str_end) *str_end = const_cast<char*>(low);
-        }
-        if(digit >= base)   //在该进制下不合法的字符，重置
-        {
-            ret = 0;
-            power = 1;
-            if(str_end) *str_end = const_cast<char*>(low);
-        }
+            digit = -1;
+        return digit;
+    };
+    bool has_vaild_char = false;
+    auto low = start;   
+    //使low指向数字低位后的一个位置
+    while(!isspace(*low) &&             //判断是否是白空格
+          (*low != '\0') &&             //判断是否字符串结束
+          char_to_digit(*low) != -1 &&  //判断是否是合法数字
+          char_to_digit(*low) < base    //判断是否是该进制
+          )
+    {
+        ++low;
+        has_vaild_char = true;
+    }
+    if(!has_vaild_char)
+    {
+        //未发现可转换字符
+        if (str_end) *str_end = const_cast<char*>(str);
+        return 0;
+    }
+    long power = 1;
+    long ret = 0;
+    if(str_end) *str_end = const_cast<char*>(low);
+    for(auto p = low - 1; p >= high; --p)
+    {
+        int digit = char_to_digit(*p);
         ret += power * digit;
+        
         power *= base;
     }
+    ret *= sign;
     return ret;
 }
 

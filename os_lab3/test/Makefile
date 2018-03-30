@@ -53,7 +53,7 @@ bootloader_bin = $(build_dir)/$(bootloader_src:.asm=.bin)
 include boot/Makefrag
 
 kernel_obj = $(build_dir)/kernel/kernel_start.o \
-			 $(build_dir)/kernel/kernel_main.o
+			 $(build_dir)/kernel/kernel_main.o 
 
 include kernel/Makefrag
 
@@ -63,9 +63,8 @@ asm_src = basic_lib/asm_lib.asm
 
 asm_obj = $(build_dir)/$(asm_src:.asm=.o)
 
-c_src   = basic_lib/c_lib.c
-
-c_obj = $(build_dir)/$(c_src:.c=.o)
+c_obj   = $(build_dir)/basic_lib/sys_io.o \
+		  $(build_dir)/basic_lib/sys_tty.o
 
 basic_lib = $(build_dir)/basic_lib/libbasic.a
 
@@ -74,7 +73,11 @@ $(basic_lib): $(asm_obj) $(c_obj)
 
 include basic_lib/Makefrag
 
-libc_obj = $(build_dir)/libc/string.o
+libc_obj = $(build_dir)/libc/string.o \
+		   $(build_dir)/libc/ctype.o \
+		   $(build_dir)/libc/stdlib.o \
+		   $(build_dir)/libc/stdio.o 
+
 
 libc = $(build_dir)/libc/libc.a
 
@@ -89,13 +92,13 @@ lib_ar_list := $(libc) $(basic_lib)
 
 LDFLAGS += -L $(build_dir)/libc -L $(build_dir)/basic_lib
 
-LDFLAGS_LIB = -lc -lbasic
+LDFLAGS_LIB =  -lbasic -lc
 
 kernel_img : $(obj_link_list) $(lib_ar_list)
 	$(LD)  $(LDFLAGS) --oformat binary $(obj_link_list) $(LDFLAGS_LIB) -o $(kernel_bin)
 	$(LD)  $(LDFLAGS) $(lib_search_list) $(obj_link_list) $(LDFLAGS_LIB) -o $(kernel_bin).elf
 	$(OBJDUMP) --adjust-vma=0x7e00 -D -Mintel,i386 -b binary -m i386 $(kernel_bin) >kernel_bin_dump
-	$(OBJDUMP) -D $(kernel_bin).elf > kernel_elf_dump
+	$(OBJDUMP) -S $(kernel_bin).elf > kernel_elf_dump
 
 floppyfile = $(build_dir)/disk.img
 
@@ -157,7 +160,7 @@ gdb: .gdbinit
 
 #启动bochs虚拟机
 bochs: write_all_progs
-	export FLOPPYFILE=$(floppyfile) && bochs -q -f bochsrc
+	export FLOPPYFILE=$(floppyfile) && bochs -qf bochsrc
 
 #清理
 clean:

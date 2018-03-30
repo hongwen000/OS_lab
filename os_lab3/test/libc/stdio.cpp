@@ -10,7 +10,8 @@ namespace hhlibc {
 #ifndef _HHOS_LIBC_TEST
 int putchar( int ch )
 {
-    sys_tty_putchar(ch);
+    sys_get_current_tty()->putchar(ch);
+    //sys_tty_putchar(ch);
     return ch;
 }
 
@@ -121,6 +122,40 @@ int sprintf( char *buffer, const char *format, ... )
     return ret;
 }
 
+#ifndef _HHOS_LIBC_TEST
+static char printbuf[80*25];
+//TODO 关于这个返回值
+int printf( const char* format, ... )
+{
+	int ret;
+	va_list va;
+	va_start(va, format);
+	ret = vsprintf(printbuf, format, va);
+	va_end(va);
+    puts(printbuf);
+    return ret;
+}
+#endif
+
+
+#ifndef _HHOS_LIBC_TEST
+int getchar(void)
+{
+    return sys_bios_getchar();
+}
+char *gets( char *str )
+{
+    char ch;
+    while(true)
+    {
+        ch = getchar();
+        if(ch == '\n') break;
+        *(str++) = ch;
+    }
+    *str = '\0';
+    return str;
+}
+#endif
 
 int vsscanf( const char* buffer, const char* format, va_list vlist )
 {
@@ -128,7 +163,8 @@ int vsscanf( const char* buffer, const char* format, va_list vlist )
     auto p_fmt = format; 
     auto p_buf = buffer;
     bool error = false;
-    while(len_fmt--)
+    int ret = 0;
+    while(static_cast<size_t>(p_fmt - format) < len_fmt)
     {
         if(error) break;
         if(isspace(*p_fmt)) //略过白空格
@@ -159,6 +195,9 @@ int vsscanf( const char* buffer, const char* format, va_list vlist )
                 {
                     char* p = va_arg(vlist, char*);
                     *p = *buffer;
+                    ++buffer;
+                    ++ret;
+                    break;
                 }
                 case 's':
                 {
@@ -168,6 +207,8 @@ int vsscanf( const char* buffer, const char* format, va_list vlist )
                         *(p++) = *(buffer++);
                     }
                     *p = '\0';
+                    ++ret;
+                    break;
                 }
                 case 'd':
                 {
@@ -176,12 +217,80 @@ int vsscanf( const char* buffer, const char* format, va_list vlist )
                     long num = strtol(buffer, &end, 10);
                     *p = static_cast<int>(num);
                     buffer = end;
+                    ++ret;
+                    break;
                 }
+                case 'i':
+                {
+                    int* p = va_arg(vlist, int*);
+                    char* end;
+                    long num = strtol(buffer, &end, 0);
+                    *p = static_cast<int>(num);
+                    buffer = end;
+                    ++ret;
+                    break;
+                }
+                case 'u':
+                {
+                    unsigned int* p = va_arg(vlist, unsigned int*);
+                    char* end;
+                    long num = strtol(buffer, &end, 10);
+                    *p = static_cast<unsigned int>(num);
+                    buffer = end;
+                    ++ret;
+                    break;
+                }
+                case 'o':
+                {
+                    unsigned int* p = va_arg(vlist, unsigned int*);
+                    char* end;
+                    long num = strtol(buffer, &end, 8);
+                    *p = static_cast<unsigned int>(num);
+                    buffer = end;
+                    ++ret;
+                    break;
+                }
+                case 'x':
+                case 'X':
+                {
+                    unsigned int* p = va_arg(vlist, unsigned int*);
+                    char* end;
+                    long num = strtol(buffer, &end, 16);
+                    *p = static_cast<unsigned int>(num);
+                    buffer = end;
+                    ++ret;
+                    break;
+                }
+                default:
+                    break;
             }
         }
     }
+    return ret;
 }
-int sscanf( const char* buffer, const char* format, ... );
+int sscanf( const char* buffer, const char* format, ... )
+{
+   	int ret;
+	va_list va;
+	va_start(va, format);
+	ret = vsscanf(buffer, format, va);
+	va_end(va);
+    return ret; 
+}
+#ifndef _HHOS_LIBC_TEST
+static char scanfbuf[80*25];
+//TODO 关于这个返回值
+int scanf( const char* format, ... )
+{
+    if (!gets(scanfbuf)) return EOF;
+	int ret;
+	va_list va;
+	va_start(va, format);
+	ret = vsscanf(scanfbuf, format, va);
+	va_end(va);
+    return ret;
+}
+#endif
 
 #ifdef _HHOS_LIBC_TEST
 }

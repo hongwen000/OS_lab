@@ -94,9 +94,24 @@ TEST(stdlib, strtol) {
     auto ret = hhlibc::strtol(str, NULL, 10);
     EXPECT_EQ(ret, 123);
 }
+
+TEST(stdio, sscanf) {
+    char* buf="a123string 20f";
+    char c;
+    int  n1;
+    char s[10];
+    int n2;
+    int n3;
+    hhlibc::sscanf(buf, "%c%d%s%o%x", &c, &n1, s, &n2, &n3);
+    EXPECT_EQ(c, 'a');
+    EXPECT_EQ(n1, 123);
+    EXPECT_EQ(std::string(s), std::string("string"));
+    EXPECT_EQ(n2, 16);
+    EXPECT_EQ(n3, 15);
+
+}
+
 int main(int argc, char** argv) {  
     testing::InitGoogleTest(&argc, argv);  
-    char* str = "123";
-    auto ret = hhlibc::strtol(str, NULL, 10);
     return RUN_ALL_TESTS();  
 }  
