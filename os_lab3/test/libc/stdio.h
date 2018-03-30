@@ -1,9 +1,10 @@
 #ifndef _STDIO_H
 #define _STDIO_H
 
-#include "defines.h"
+#include "../include/defines.h"
+#include "sys/hhos.h"
 
-#include "sys_lib.h"
+#define EOF -1
 
 #ifdef _HHOS_LIBC_TEST
 namespace hhlibc {

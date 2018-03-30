@@ -36,4 +36,5 @@ sys_bios_clear_screen:
 sys_bios_getchar:
     mov ah, 0
     int 16h
+    mov ah, 0
     ret

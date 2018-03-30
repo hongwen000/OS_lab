@@ -1,28 +1,20 @@
-#include "sys_lib.h"
+#include "./tty.h"
+#include "../basic_lib/sys_lib.h"
+#include "../libc/string.h"
+#include "../libc/stdio.h"
 
-template<int N>
-constexpr int fibonacci()
-{
-    if constexpr (N>=2)
-        return fibonacci<N-1>() + fibonacci<N-2>();
-    else
-        return N;
-}
-
-const char* arr = "Hello, world";
+static tty* current_tty = nullptr;
+tty* sys_get_current_tty(){return current_tty;}
 
 extern "C" void kernel_main()
 {
     sys_bios_clear_screen();
-    int year = 1998;
-    sys_bios_print_int(year, MAKE_COLOR(VGA_BLACK, VGA_WHITE), MAKE_POS(1,0));
-    int fib = fibonacci<20>();
-    sys_bios_print_int(fib, MAKE_COLOR(VGA_BLACK, VGA_WHITE), MAKE_POS(2,0));
-    char arr[] = "Hello, world";
-    sys_bios_print_string(arr, 12, MAKE_COLOR(VGA_BLACK, VGA_YELLOW), MAKE_POS(0, 0));
-    int i = 1;
-    while(i++) {
-        int num = sys_get_scancode();
-        sys_bios_print_int(num, MAKE_COLOR(VGA_BLACK, VGA_WHITE), MAKE_POS((5+i),5));
+    tty tty1;
+    tty1.tty_init();
+    current_tty = &tty1;
+    while(1){
+        int ch = getchar();
+        sys_print_int(ch, 10, 10);
+        putchar(ch);
     }
 }

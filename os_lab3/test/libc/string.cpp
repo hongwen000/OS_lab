@@ -107,7 +107,7 @@ void reverse(char* buffer)
 {
     char ch;
     size_t len = strlen(buffer);
-    for(int i = 0; i < len / 2; ++i)
+    for(size_t i = 0; i < len / 2; ++i)
     {
         ch = *(buffer + i);
         *(buffer + i) = *(buffer + len - 1 - i);

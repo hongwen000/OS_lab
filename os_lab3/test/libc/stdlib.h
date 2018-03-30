@@ -1,9 +1,9 @@
 #ifndef _STDLIB_H
 #define _STDLIB_H
 
-#include "defines.h"
+#include "../include/defines.h"
 
-#include "sys_lib.h"
+#include "../basic_lib/sys_lib.h"
 
 #ifdef _HHOS_LIBC_TEST
 namespace hhlibc {
