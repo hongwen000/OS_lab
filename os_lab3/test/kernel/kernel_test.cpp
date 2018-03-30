@@ -1,7 +1,14 @@
-
+//template<int N>
+//constexpr int fibonacci()
+//{
+//    if constexpr (N>=2)
+//        return fibonacci<N-1>() + fibonacci<N-2>();
+//    else
+//        return N;
+//}
 extern "C" void kernel_main()
 {
-    sys_bios_clear_screen();
+    //sys_bios_clear_screen();
     //tty_init();
     // int x = 0;
     // int y = 5;
@@ -23,14 +30,14 @@ extern "C" void kernel_main()
     // :"a"(ch),"b"(offset)
     // :"%ecx");
     //sys_putchar('\t', MAKE_COLOR(VGA_BLACK, VGA_WHITE), 0, 0);
-    tty tty1;
-    tty1.tty_init();
-    current_tty = &tty1;
-    while(1){
-        int ch = getchar();
-        sys_print_int(ch, 10, 10);
-        putchar(ch);
-    }
+    //tty tty1;
+    //tty1.tty_init();
+    //current_tty = &tty1;
+    //while(1){
+    //    int ch = getchar();
+    //    sys_print_int(ch, 10, 10);
+    //    putchar(ch);
+    //}
     //int year = 1998;
     //sys_bios_print_int(year, MAKE_COLOR(VGA_BLACK, VGA_YELLOW), MAKE_POS(1,0));
     //int fib = fibonacci<20>();

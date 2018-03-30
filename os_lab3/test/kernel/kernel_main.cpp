@@ -12,9 +12,5 @@ extern "C" void kernel_main()
     tty tty1;
     tty1.tty_init();
     current_tty = &tty1;
-    while(1){
-        int ch = getchar();
-        sys_print_int(ch, 10, 10);
-        putchar(ch);
-    }
+    while(1);
 }
