@@ -1,0 +1,273 @@
+# 1 "basic_lib/sys_io.cpp"
+# 1 "/Users/lixinrui/onedrive/Documents/大学课程/2018操作系统实验/os_lab3/test//"
+# 1 "<built-in>"
+# 1 "<command-line>"
+# 1 "basic_lib/sys_io.cpp"
+# 1 "basic_lib/sys_lib.h" 1
+
+
+# 1 "basic_lib/../include/defines.h" 1
+
+
+
+
+
+
+
+__asm__(".code16gcc\n");
+
+
+
+
+# 1 "/opt/cross/gcc-i386/lib/gcc/i386-elf/7.3.0/include/stddef.h" 1 3 4
+# 149 "/opt/cross/gcc-i386/lib/gcc/i386-elf/7.3.0/include/stddef.h" 3 4
+
+# 149 "/opt/cross/gcc-i386/lib/gcc/i386-elf/7.3.0/include/stddef.h" 3 4
+typedef long int ptrdiff_t;
+# 216 "/opt/cross/gcc-i386/lib/gcc/i386-elf/7.3.0/include/stddef.h" 3 4
+typedef long unsigned int size_t;
+# 426 "/opt/cross/gcc-i386/lib/gcc/i386-elf/7.3.0/include/stddef.h" 3 4
+typedef struct {
+  long long __max_align_ll __attribute__((__aligned__(__alignof__(long long))));
+  long double __max_align_ld __attribute__((__aligned__(__alignof__(long double))));
+
+
+
+
+
+
+  __float128 __max_align_f128 __attribute__((__aligned__(__alignof(__float128))));
+
+} max_align_t;
+
+
+
+
+
+
+  typedef decltype(nullptr) nullptr_t;
+# 14 "basic_lib/../include/defines.h" 2
+
+# 1 "/opt/cross/gcc-i386/lib/gcc/i386-elf/7.3.0/include/stdint.h" 1 3 4
+# 11 "/opt/cross/gcc-i386/lib/gcc/i386-elf/7.3.0/include/stdint.h" 3 4
+# 1 "/opt/cross/gcc-i386/lib/gcc/i386-elf/7.3.0/include/stdint-gcc.h" 1 3 4
+# 34 "/opt/cross/gcc-i386/lib/gcc/i386-elf/7.3.0/include/stdint-gcc.h" 3 4
+typedef signed char int8_t;
+
+
+typedef short int int16_t;
+
+
+typedef long int int32_t;
+
+
+typedef long long int int64_t;
+
+
+typedef unsigned char uint8_t;
+
+
+typedef short unsigned int uint16_t;
+
+
+typedef long unsigned int uint32_t;
+
+
+typedef long long unsigned int uint64_t;
+
+
+
+
+typedef signed char int_least8_t;
+typedef short int int_least16_t;
+typedef long int int_least32_t;
+typedef long long int int_least64_t;
+typedef unsigned char uint_least8_t;
+typedef short unsigned int uint_least16_t;
+typedef long unsigned int uint_least32_t;
+typedef long long unsigned int uint_least64_t;
+
+
+
+typedef int int_fast8_t;
+typedef int int_fast16_t;
+typedef int int_fast32_t;
+typedef long long int int_fast64_t;
+typedef unsigned int uint_fast8_t;
+typedef unsigned int uint_fast16_t;
+typedef unsigned int uint_fast32_t;
+typedef long long unsigned int uint_fast64_t;
+
+
+
+
+typedef long int intptr_t;
+
+
+typedef long unsigned int uintptr_t;
+
+
+
+
+typedef long long int intmax_t;
+typedef long long unsigned int uintmax_t;
+# 12 "/opt/cross/gcc-i386/lib/gcc/i386-elf/7.3.0/include/stdint.h" 2 3 4
+# 16 "basic_lib/../include/defines.h" 2
+
+# 1 "/opt/cross/gcc-i386/lib/gcc/i386-elf/7.3.0/include/stdalign.h" 1 3 4
+# 18 "basic_lib/../include/defines.h" 2
+
+# 1 "/opt/cross/gcc-i386/lib/gcc/i386-elf/7.3.0/include-fixed/limits.h" 1 3 4
+# 20 "basic_lib/../include/defines.h" 2
+
+# 1 "/opt/cross/gcc-i386/lib/gcc/i386-elf/7.3.0/include/stdarg.h" 1 3 4
+# 40 "/opt/cross/gcc-i386/lib/gcc/i386-elf/7.3.0/include/stdarg.h" 3 4
+typedef __builtin_va_list __gnuc_va_list;
+# 99 "/opt/cross/gcc-i386/lib/gcc/i386-elf/7.3.0/include/stdarg.h" 3 4
+typedef __gnuc_va_list va_list;
+# 22 "basic_lib/../include/defines.h" 2
+
+
+# 23 "basic_lib/../include/defines.h"
+enum VGA_COLOR{
+    VGA_BLACK = 0x00,
+    VGA_BLUE = 0x01,
+    VGA_GREEN = 0x02,
+    VGA_CYAN = 0x03,
+    VGA_RED = 0x04,
+    VGA_MAGENTA = 0x05,
+    VGA_BROWN = 0x06,
+    VGA_WHITE = 0x07,
+    VGA_GRAY = 0x08,
+    VGA_BRIGHT_BLUE = 0x09,
+    VGA_BRIGHT_GREEN = 0x0A,
+    VGA_BRIGHT_CYAN = 0x0B,
+    VGA_BRIGHT_RED = 0x0C,
+    VGA_BRIGHT_MAGENTA = 0x0D,
+    VGA_YELLOW = 0x0E,
+    VGA_BRIGHT_WHITE = 0x0F
+};
+# 4 "basic_lib/sys_lib.h" 2
+
+
+
+
+extern "C"{
+
+    void sys_dbg_bochs_putc(char c);
+    void sys_bios_print_string(const char* str, unsigned int len, int color, int pos);
+    void sys_bios_print_int(int num, int color, int pos);
+    void sys_bios_clear_screen();
+    void sys_bios_putchar(char c, int color, int x, int y);
+    int sys_bios_getchar();
+    uint8_t sys_inb(uint16_t port);
+    void sys_outb(uint16_t port, uint8_t data);
+    char sys_get_scancode();
+    int sys_getchar();
+    void sys_putchar(int c, int color, int x, int y);
+    void sys_print_string(const char* str, unsigned int len, int x, int y);
+    void sys_print_int(int num, int x, int y);
+    void sys_read_disk(uint32_t address, size_t logical_start_sector, size_t secotr_cnt);
+
+
+}
+# 2 "basic_lib/sys_io.cpp" 2
+void sys_bios_print_int(int num, int color, int pos)
+{
+    int num_ = num;
+    int len = 1;
+    while(num_ /= 10) len++;
+    char arr[len + 1];
+    int power = 1;
+    for(int i = 0; i < len; ++i, power *= 10)
+        arr[len - i - 1] = '0' + ((num / power) % 10);
+    arr[len] = '\0';
+    sys_bios_print_string(arr, len, color, pos);
+}
+
+void sys_print_string(const char* str, unsigned int len, int x, int y)
+{
+    int color = (((VGA_BLACK << 4) | (VGA_WHITE & 0x0F)));
+    for(unsigned int i = 0; i < len; ++i)
+    {
+        sys_putchar(str[i], color, x, y + i);
+    }
+}
+
+void sys_print_int(int num, int x, int y)
+{
+    int num_ = num;
+    int len = 1;
+    while(num_ /= 10) len++;
+    char arr[len + 1];
+    int power = 1;
+    for(int i = 0; i < len; ++i, power *= 10)
+        arr[len - i - 1] = '0' + ((num / power) % 10);
+    arr[len] = '\0';
+    sys_print_string(arr, len, x, y);
+}
+# 68 "basic_lib/sys_io.cpp"
+void sys_putchar(int c, int color, int x, int y)
+{
+    int offset = (x * 80 + y)*2;
+    uint16_t ch = c | (color << 8);
+    asm volatile (".intel_syntax noprefix\n\t"
+    "pusha\n\t"
+    "mov cx, 0xB800\n\t"
+    "mov gs, cx\n\t"
+ "mov bp,bx\n\t"
+    "mov word ptr gs:[bp],ax\n\t"
+    "popa\n\t"
+    ".att_syntax noprefix\n\t"
+    :
+    :"a"(ch),"b"(offset)
+    :"%ecx");
+}
+
+void sys_bios_putchar(char c, int color, int x, int y)
+{
+    sys_bios_print_string(&c, 1, color, ((x << 8) | (y & 0xFF)));
+}
+
+uint8_t sys_inb(uint16_t port)
+{
+    uint8_t ret;
+    asm volatile ( "inb %1, %0"
+                   : "=a"(ret)
+                   : "Nd"(port) );
+    return ret;
+}
+# 110 "basic_lib/sys_io.cpp"
+void sys_outb(uint16_t port, uint8_t data)
+{
+    asm volatile ( "outb %0, %1"
+                   :
+                   : "a"(data), "Nd"(port) );
+}
+# 125 "basic_lib/sys_io.cpp"
+void sys_dbg_bochs_putc(char c){
+    sys_outb(0xe9, (uint8_t)c);
+}
+
+char sys_get_scancode()
+{
+    while (!(sys_inb(0x64) & 1));
+    return sys_inb(0x60);
+}
+
+void sys_read_disk(uint32_t address, size_t logical_start_sector, size_t secotr_cnt)
+{
+    size_t cylinder = logical_start_sector / (2 * 18);
+    size_t head = (logical_start_sector % (2 * 18)) / 18;
+    size_t sector = (logical_start_sector % (2 * 18)) % 18 + 1;
+    uint16_t _cx = ((cylinder & 255) << 8) | ((cylinder & 768) >> 2) | sector;
+    asm volatile
+    ("movw %0, %%bx\n\t"
+     "movb %1, %%dh\n\t"
+     "movw %2, %%cx\n\t"
+     "movb %3, %%al\n\t"
+     "movb $0, %%dl\n\t"
+     "movb $2, %%ah\n\t"
+     "int $0x13\n\t"
+     : :"g"(address), "g"(head), "g"(_cx), "g" (secotr_cnt));
+}
