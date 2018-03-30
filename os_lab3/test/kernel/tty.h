@@ -17,6 +17,7 @@ public:
     {
         cur_x = 0;
         cur_y = 0;
+        move_cursor(0, 0);
         color = MAKE_COLOR(VGA_BLACK, VGA_WHITE);
         memset(tty_mem, ' ', 80*25*2);
     }

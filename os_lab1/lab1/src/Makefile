@@ -1,5 +1,5 @@
 #目标文件名
-OBJFILE = lab1
+OBJFILE = test
 
 #软盘文件名
 FLOPPYFILE = floppy3.img
@@ -7,6 +7,33 @@ FLOPPYFILE = floppy3.img
 #编译规则
 obj: $(OBJFILE).asm
 	nasm $(OBJFILE).asm -o $(OBJFILE)
+
+GCC_PREFIX = /opt/cross/gcc-i386/bin/i386-elf-
+
+OBJDUMP = $(GCC_PREFIX)objdump
+
+CC = $(GCC_PREFIX)gcc
+CFLAGS =  	-m16 -march=i386 \
+			-nostdlib -ffreestanding \
+			-mpreferred-stack-boundary=2 -lgcc \
+			-fno-builtin -Os -fno-omit-frame-pointer \
+			-Wall -Wno-format -Wno-unused -Wno-write-strings -Werror \
+			-fno-tree-ch -fno-stack-protector \
+			-std=gnu11  -g \
+			-I . -I include
+
+CXX = $(GCC_PREFIX)g++
+
+CXXFLAGS =  -m16 -march=i386 \
+			-nostdlib -ffreestanding \
+			-mpreferred-stack-boundary=2 -lgcc \
+			-fno-builtin -Os -fno-omit-frame-pointer \
+			-Wall -Wno-format -Wno-unused -Wno-write-strings -Werror \
+			-fno-tree-ch -fno-stack-protector \
+			-std=c++17  -g \
+			-I . -I include
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 #生成软盘规则
 $(FLOPPYFILE): obj

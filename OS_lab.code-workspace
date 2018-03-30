@@ -8,13 +8,17 @@
 		},
 		{
 			"path": "/Users/lixinrui/repo/pdclib-pdclib-c8dc861df697"
+		},
+		{
+			"path": "/Users/lixinrui/code_snip/2018-03-25"
 		}
 	],
 	"settings": {
 		"files.associations": {
 			"base_lib.h": "c",
 			"defines.h": "c",
-			"_pdclib_test.h": "c"
+			"_pdclib_test.h": "c",
+			"regex": "cpp"
 		}
 	}
 }

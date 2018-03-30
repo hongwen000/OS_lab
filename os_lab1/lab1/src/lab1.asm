@@ -56,8 +56,8 @@ data:
     count   dw delay
     dcount  dw ddelay
     rdul    db Dn_Rt         
-    x       dw 7
-    y       dw 0
+    x       dw 1
+    y       dw 1
     char    db 'A'
     color   db 01h
     myid db 'Lixinrui 15323032'

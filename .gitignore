@@ -33,3 +33,12 @@
 *.app
 
 **/build
+*.img
+kernel_bin_dump
+kernel_elf_dump
+*.swp
+os_lab3/test/libc/test*
+
+gdbdash
+.gdbdash
+.gdbinit
