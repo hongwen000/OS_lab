@@ -42,3 +42,5 @@ os_lab3/test/libc/test*
 gdbdash
 .gdbdash
 .gdbinit
+.aux
+OStoolsDOS
