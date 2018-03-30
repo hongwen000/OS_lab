@@ -1,11 +1,11 @@
-//template<int N>
-//constexpr int fibonacci()
-//{
-//    if constexpr (N>=2)
-//        return fibonacci<N-1>() + fibonacci<N-2>();
-//    else
-//        return N;
-//}
+template<int N>
+constexpr int fibonacci()
+{
+    if constexpr (N>=2)
+        return fibonacci<N-1>() + fibonacci<N-2>();
+    else
+        return N;
+}
 extern "C" void kernel_main()
 {
     //sys_bios_clear_screen();

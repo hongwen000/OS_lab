@@ -100,6 +100,25 @@ kernel_img : $(obj_link_list) $(lib_ar_list)
 	$(OBJDUMP) --adjust-vma=0x7e00 -D -Mintel,i386 -b binary -m i386 $(kernel_bin) >kernel_bin_dump
 	$(OBJDUMP) -S $(kernel_bin).elf > kernel_elf_dump
 
+disk_index = 16
+
+define DO_write
+dd if=$(strip $(1)) of=$(floppyfile) bs=1024 seek=$(strip $(disk_index)) conv=notrunc
+$(eval disk_index = $(call plus,$(disk_index),1))
+
+endef
+
+include usr/Makefrag
+
+user_bin = $(build_dir)/usr/user1.bin \
+           $(build_dir)/usr/user2.bin \
+           $(build_dir)/usr/user3.bin \
+           $(build_dir)/usr/user4.bin \
+           $(build_dir)/usr/user5.bin
+
+write_usr_progs: $(user_bin)
+	$(foreach user_prog, $(user_bin), $(call DO_write, $(user_prog)))
+
 floppyfile = $(build_dir)/disk.img
 
 clean_disk:
@@ -110,7 +129,7 @@ write_kernel: clean_disk kernel_img $(bootloader_bin)
 	dd if=$(bootloader_bin) of=$(floppyfile) conv=notrunc
 	dd if=$(kernel_bin) of=$(floppyfile) bs=512 seek=1 conv=notrunc
 
-write_all_progs: write_kernel
+write_all_progs: write_kernel write_usr_progs
 
 
 
@@ -145,12 +164,12 @@ qemu-nox: write_all_progs
 	sed "s/localhost:1234/localhost:$(GDBPORT)/" < gdbinit.part >> $@
 
 #qemu连接gdb
-qemu-gdb: .gdbinit write_all_progs kernel_elf
+qemu-gdb: .gdbinit write_all_progs 
 	@echo "*** Now run 'gdb'." 1>&2
 	$(QEMU) -serial mon:stdio $(QEMUOPTS) -S $(QEMUGDB)
 
 #qemu命令行界面连接gdb
-qemu-nox-gdb: .gdbinit write_all_progs kernel_elf
+qemu-nox-gdb: .gdbinit write_all_progs 
 	@echo "*** Now run 'gdb'." 1>&2
 	$(QEMU) -nographic $(QEMUOPTS) -S $(QEMUGDB)
 

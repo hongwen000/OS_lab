@@ -1,0 +1,4 @@
+$(build_dir)/usr/%.bin: usr/%.asm
+	mkdir -p $(@D) ;\
+	cd usr ;\
+	$(AS) $(ASBIN) ../$< -o ../$@

@@ -2,6 +2,8 @@ BITS 16
 [global sys_bios_clear_screen]
 [global sys_bios_print_string]
 [global sys_bios_getchar]
+[global sys_execve_bin]
+
 
 sys_bios_print_string:
     push bp
@@ -38,3 +40,15 @@ sys_bios_getchar:
     int 16h
     mov ah, 0
     ret
+
+sys_execve_bin:
+      push bp
+      mov bp, sp
+      mov word[0xA000], 0xCD
+      mov word[0xA000 + 2], 20h
+      mov word[0xA00A], return_point
+      mov word[0xA00A + 2], cs
+      jmp 0xA100
+return_point:
+      pop bp
+      ret
