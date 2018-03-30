@@ -132,7 +132,7 @@ char sys_get_scancode()
     return sys_inb(0x60);
 }
 
-void sys_read_disk(uint32_t address, uint16_t logical_start_sector, uint8_t secotr_cnt)
+void sys_read_disk(uint32_t segment, uint32_t address, uint16_t logical_start_sector, uint8_t secotr_cnt)
 {
     uint8_t head = (logical_start_sector % (FLOPPY_HEAD_PER_DISK * FLOPPY_SECTOR_PER_TRACK)) / FLOPPY_SECTOR_PER_TRACK;
     uint16_t cylinder = logical_start_sector / (FLOPPY_HEAD_PER_DISK * FLOPPY_SECTOR_PER_TRACK);
@@ -142,12 +142,16 @@ void sys_read_disk(uint32_t address, uint16_t logical_start_sector, uint8_t seco
     uint16_t mask2 = 768;
     uint16_t _cx = ((cylinder & mask1) << 8) | ((cylinder & mask2) >> 2) | sector;
     asm volatile
-    ("movw %0, %%bx\n\t"    //加载地址
-     "movb %1, %%dh\n\t"    //head号
-     "movw %2, %%cx\n\t"    //cx高十位是cylinder号，低8位是sector号
-     "movb %3, %%al\n\t"    //扇区数
+    ("push %%es\n\t"
+     "movw %0, %%bx\n\t"
+     "movw %%bx, %%es\n\t"  //段地址
+     "movw %1, %%bx\n\t"    //加载地址
+     "movb %2, %%dh\n\t"    //head号
+     "movw %3, %%cx\n\t"    //cx高十位是cylinder号，低8位是sector号
+     "movb %4, %%al\n\t"    //扇区数
      "movb $0, %%dl\n\t"    //驱动器号
      "movb $2, %%ah\n\t"    //功能号
      "int $0x13\n\t"
-     : :"g"(address), "g"(head), "g"(_cx), "g" (secotr_cnt));
+     "pop %%es\n\t"
+     : :"g"(segment), "g"(address), "g"(head), "g"(_cx), "g" (secotr_cnt));
 }

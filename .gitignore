@@ -34,8 +34,8 @@
 
 **/build
 *.img
-kernel_bin_dump
-kernel_elf_dump
+/*/kernel_bin_dump
+/*/kernel_elf_dump
 *.swp
 os_lab3/test/libc/test*
 
@@ -44,3 +44,5 @@ gdbdash
 .gdbinit
 .aux
 OStoolsDOS
+/*/cmake-build-debug/*
+/*/.idea/*

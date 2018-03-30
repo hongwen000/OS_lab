@@ -44,11 +44,24 @@ sys_bios_getchar:
 sys_execve_bin:
       push bp
       mov bp, sp
+      push ds
+      push es
+      push ss
+      mov ax, 0x1000
+      mov ds, ax
+      mov es, ax
+      mov ss, ax
       mov word[0xA000], 0xCD
       mov word[0xA000 + 2], 20h
       mov word[0xA00A], return_point
       mov word[0xA00A + 2], cs
-      jmp 0xA100
+      jmp 0x1000:0xA100
 return_point:
+      pop ax
+      mov ss, ax
+      pop ax
+      mov es, ax
+      pop ax
+      mov ds, ax
       pop bp
       ret
