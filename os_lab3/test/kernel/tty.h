@@ -3,6 +3,8 @@
 #include "../basic_lib/sys_lib.h"
 #include "string.h"
 
+#define _USE_MULTI_TTY_
+
 class tty{
 
 private: 
@@ -10,6 +12,10 @@ private:
     int cur_y;
     int color;
 #ifdef _USE_MULTI_TTY_
+    struct tty_char {
+        int color;
+        int c;
+    };
     char tty_mem[80*25*2];
 #endif
 public:
@@ -123,11 +129,7 @@ public:
                 break;
             }
         }
-        sys_bios_print_int(cur_x, MAKE_COLOR(VGA_BLACK, VGA_WHITE), MAKE_POS(7, 40));
-        sys_bios_print_int(cur_y, MAKE_COLOR(VGA_BLACK, VGA_WHITE), MAKE_POS(8, 42));
         scroll_up();
-        sys_bios_print_int(cur_x, MAKE_COLOR(VGA_BLACK, VGA_YELLOW), MAKE_POS(15, 44));
-        sys_bios_print_int(cur_y, MAKE_COLOR(VGA_BLACK, VGA_YELLOW), MAKE_POS(16, 46));
         move_cursor(cur_x, cur_y);
     }
 };
