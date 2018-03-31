@@ -3,8 +3,6 @@
 #include "../basic_lib/sys_lib.h"
 #include "string.h"
 
-#define _USE_MULTI_TTY_
-
 class tty{
 
 private: 
@@ -53,9 +51,9 @@ public:
     {
         cur_y = y;
     }
-    void set_color(int color)
+    void set_color(int _color)
     {
-        color = color;
+        color = _color;
     }
     void move_cursor(int x, int y)
     {

@@ -2,3 +2,11 @@ $(build_dir)/usr/%.bin: usr/%.asm
 	mkdir -p $(@D) ;\
 	cd usr ;\
 	$(AS) $(ASBIN) ../$< -o ../$@
+
+$(build_dir)/usr/%.o: usr/%.cpp
+	mkdir -p $(@D) ;\
+	$(CXX) $(CXXFLAGS) -I libc -I libc/sys -c $< -o $@
+
+$(build_dir)/usr/%.bin: $(build_dir)/usr/%.o
+	mkdir -p $(@D) ;\
+	$(LD) $(LDFLAGS) -Ttext=0x1A000 --oformat binary $< -lc -lbasic  -o $@
