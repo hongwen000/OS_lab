@@ -8,18 +8,24 @@ class tty{
 private: 
     int cur_x;
     int cur_y;
-    int old_x;
-    int old_y;
     int color;
+#ifdef _USE_MULTI_TTY_
     char tty_mem[80*25*2];
+#endif
 public:
+    tty() {
+        sys_bios_clear_screen();
+        tty_init();
+    }
     void tty_init()
     {
         cur_x = 0;
         cur_y = 0;
         move_cursor(0, 0);
         color = MAKE_COLOR(VGA_BLACK, VGA_WHITE);
+#ifdef _USE_MULTI_TTY_
         memset(tty_mem, ' ', 80*25*2);
+#endif
     }
     int  get_x()
     {
@@ -53,10 +59,20 @@ public:
         sys_outb(0x3D4, 0x0E);
         sys_outb(0x3D5, (uint8_t) ((pos >> 8) & 0xFF));
     }
+    void scroll_up()
+    {
+        if (cur_x >= 25)
+        {
+            sys_bios_scroll_up(color);
+            --cur_x;
+        }
+    }
     void putchar_worker(int c, int color, int x, int y)
     {
+#ifdef _USE_MULTI_TTY_
         tty_mem[y + 80 * x] = c;
         tty_mem[y + 80 * x + 1] = color;
+#endif
         sys_putchar(c, color, x, y);
     }
     void putchar(int c)
@@ -107,6 +123,11 @@ public:
                 break;
             }
         }
+        sys_bios_print_int(cur_x, MAKE_COLOR(VGA_BLACK, VGA_WHITE), MAKE_POS(7, 40));
+        sys_bios_print_int(cur_y, MAKE_COLOR(VGA_BLACK, VGA_WHITE), MAKE_POS(8, 42));
+        scroll_up();
+        sys_bios_print_int(cur_x, MAKE_COLOR(VGA_BLACK, VGA_YELLOW), MAKE_POS(15, 44));
+        sys_bios_print_int(cur_y, MAKE_COLOR(VGA_BLACK, VGA_YELLOW), MAKE_POS(16, 46));
         move_cursor(cur_x, cur_y);
     }
 };

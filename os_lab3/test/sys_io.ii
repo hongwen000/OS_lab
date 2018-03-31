@@ -154,6 +154,7 @@ enum VGA_COLOR{
 
 extern "C"{
 
+    void sys_execve_bin();
     void sys_dbg_bochs_putc(char c);
     void sys_bios_print_string(const char* str, unsigned int len, int color, int pos);
     void sys_bios_print_int(int num, int color, int pos);
@@ -167,7 +168,8 @@ extern "C"{
     void sys_putchar(int c, int color, int x, int y);
     void sys_print_string(const char* str, unsigned int len, int x, int y);
     void sys_print_int(int num, int x, int y);
-    void sys_read_disk(uint32_t address, size_t logical_start_sector, size_t secotr_cnt);
+    void sys_read_disk(uint32_t segment, uint32_t address, uint16_t logical_start_sector, uint8_t secotr_cnt);
+    void sys_bios_scroll_up(int color);
 
 
 }
@@ -224,6 +226,21 @@ void sys_putchar(int c, int color, int x, int y)
     :"%ecx");
 }
 
+void sys_bios_scroll_up(int color)
+{
+    asm volatile
+    ("movb $0x1, %%al\n\t"
+    "movb %0, %%bh\n\t"
+    "movb $0x0, %%ch\n\t"
+    "movb $0x0, %%cl\n\t"
+    "movb $0x18, %%dh\n\t"
+    "movb $0x4F, %%dl\n\t"
+    "movb $0x10, %%ah\n\t"
+    "int 10h\n\t"
+    :
+    : "g"(color));
+}
+
 void sys_bios_putchar(char c, int color, int x, int y)
 {
     sys_bios_print_string(&c, 1, color, ((x << 8) | (y & 0xFF)));
@@ -237,14 +254,14 @@ uint8_t sys_inb(uint16_t port)
                    : "Nd"(port) );
     return ret;
 }
-# 110 "basic_lib/sys_io.cpp"
+# 125 "basic_lib/sys_io.cpp"
 void sys_outb(uint16_t port, uint8_t data)
 {
     asm volatile ( "outb %0, %1"
                    :
                    : "a"(data), "Nd"(port) );
 }
-# 125 "basic_lib/sys_io.cpp"
+# 140 "basic_lib/sys_io.cpp"
 void sys_dbg_bochs_putc(char c){
     sys_outb(0xe9, (uint8_t)c);
 }
@@ -255,19 +272,26 @@ char sys_get_scancode()
     return sys_inb(0x60);
 }
 
-void sys_read_disk(uint32_t address, size_t logical_start_sector, size_t secotr_cnt)
+void sys_read_disk(uint32_t segment, uint32_t address, uint16_t logical_start_sector, uint8_t secotr_cnt)
 {
-    size_t cylinder = logical_start_sector / (2 * 18);
-    size_t head = (logical_start_sector % (2 * 18)) / 18;
-    size_t sector = (logical_start_sector % (2 * 18)) % 18 + 1;
-    uint16_t _cx = ((cylinder & 255) << 8) | ((cylinder & 768) >> 2) | sector;
+    uint8_t head = (logical_start_sector % (2 * 18)) / 18;
+    uint16_t cylinder = logical_start_sector / (2 * 18);
+    uint16_t sector = (logical_start_sector % (2 * 18)) % 18 + 1;
+
+    uint16_t mask1 = 255;
+    uint16_t mask2 = 768;
+    uint16_t _cx = ((cylinder & mask1) << 8) | ((cylinder & mask2) >> 2) | sector;
     asm volatile
-    ("movw %0, %%bx\n\t"
-     "movb %1, %%dh\n\t"
-     "movw %2, %%cx\n\t"
-     "movb %3, %%al\n\t"
+    ("push %%es\n\t"
+     "movw %0, %%bx\n\t"
+     "movw %%bx, %%es\n\t"
+     "movw %1, %%bx\n\t"
+     "movb %2, %%dh\n\t"
+     "movw %3, %%cx\n\t"
+     "movb %4, %%al\n\t"
      "movb $0, %%dl\n\t"
      "movb $2, %%ah\n\t"
      "int $0x13\n\t"
-     : :"g"(address), "g"(head), "g"(_cx), "g" (secotr_cnt));
+     "pop %%es\n\t"
+     : :"g"(segment), "g"(address), "g"(head), "g"(_cx), "g" (secotr_cnt));
 }

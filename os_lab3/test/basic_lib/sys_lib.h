@@ -22,6 +22,7 @@ extern "C"{
     void sys_print_string(const char* str, unsigned int len, int x, int y);
     void sys_print_int(int num, int x, int y);
     void sys_read_disk(uint32_t segment, uint32_t address, uint16_t logical_start_sector, uint8_t secotr_cnt);
+    void sys_bios_scroll_up(int color);
 
 #ifdef __cplusplus
 }

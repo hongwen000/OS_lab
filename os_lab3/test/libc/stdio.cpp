@@ -201,8 +201,9 @@ int vsscanf( const char* buffer, const char* format, va_list vlist )
                 }
                 case 's':
                 {
+                    while (*buffer && isspace(*buffer)) buffer++;
                     char* p = va_arg(vlist, char*);
-                    while(!isspace(*buffer))
+                    while(*buffer && !isspace(*buffer))
                     {
                         *(p++) = *(buffer++);
                     }

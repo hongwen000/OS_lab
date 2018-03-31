@@ -82,6 +82,24 @@ void sys_putchar(int c, int color, int x, int y)
     :"%ecx");
 }
 
+void sys_bios_scroll_up(int color)
+{
+    //这里pusha和popa是必要的，不然会错误！！！（一小时）
+    asm volatile
+    ("pusha\n\t"
+    "movb $1, %%al\n\t"
+    "movb %0, %%bh\n\t"
+    "movb $0, %%ch\n\t"
+    "movb $0, %%cl\n\t"
+    "movb $24, %%dh\n\t"
+    "movb $79, %%dl\n\t"
+    "movb $0x06, %%ah\n\t"
+    "int $0x10\n\t"
+    "popa\n\t"
+    :
+    : "g"(color));
+}
+
 void sys_bios_putchar(char c, int color, int x, int y)
 {
     sys_bios_print_string(&c, 1, color, MAKE_POS(x, y));
