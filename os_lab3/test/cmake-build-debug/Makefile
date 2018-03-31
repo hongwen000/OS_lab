@@ -150,6 +150,33 @@ libc/test.cpp.s:
 	$(MAKE) -f CMakeFiles/TEST.dir/build.make CMakeFiles/TEST.dir/libc/test.cpp.s
 .PHONY : libc/test.cpp.s
 
+usr/bc.o: usr/bc.cpp.o
+
+.PHONY : usr/bc.o
+
+# target to build an object file
+usr/bc.cpp.o:
+	$(MAKE) -f CMakeFiles/TEST.dir/build.make CMakeFiles/TEST.dir/usr/bc.cpp.o
+.PHONY : usr/bc.cpp.o
+
+usr/bc.i: usr/bc.cpp.i
+
+.PHONY : usr/bc.i
+
+# target to preprocess a source file
+usr/bc.cpp.i:
+	$(MAKE) -f CMakeFiles/TEST.dir/build.make CMakeFiles/TEST.dir/usr/bc.cpp.i
+.PHONY : usr/bc.cpp.i
+
+usr/bc.s: usr/bc.cpp.s
+
+.PHONY : usr/bc.s
+
+# target to generate assembly for a file
+usr/bc.cpp.s:
+	$(MAKE) -f CMakeFiles/TEST.dir/build.make CMakeFiles/TEST.dir/usr/bc.cpp.s
+.PHONY : usr/bc.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -162,6 +189,9 @@ help:
 	@echo "... libc/test.o"
 	@echo "... libc/test.i"
 	@echo "... libc/test.s"
+	@echo "... usr/bc.o"
+	@echo "... usr/bc.i"
+	@echo "... usr/bc.s"
 .PHONY : help
 
 

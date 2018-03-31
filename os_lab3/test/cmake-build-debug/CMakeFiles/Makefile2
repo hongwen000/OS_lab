@@ -66,7 +66,7 @@ CMAKE_BINARY_DIR = /Users/lixinrui/onedrive/Documents/大学课程/2018操作系
 CMakeFiles/TEST.dir/all:
 	$(MAKE) -f CMakeFiles/TEST.dir/build.make CMakeFiles/TEST.dir/depend
 	$(MAKE) -f CMakeFiles/TEST.dir/build.make CMakeFiles/TEST.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/lixinrui/onedrive/Documents/大学课程/2018操作系统实验/os_lab3/test/cmake-build-debug/CMakeFiles --progress-num=1,2 "Built target TEST"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/lixinrui/onedrive/Documents/大学课程/2018操作系统实验/os_lab3/test/cmake-build-debug/CMakeFiles --progress-num=1,2,3 "Built target TEST"
 .PHONY : CMakeFiles/TEST.dir/all
 
 # Include target in all.
@@ -76,7 +76,7 @@ all: CMakeFiles/TEST.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/TEST.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/lixinrui/onedrive/Documents/大学课程/2018操作系统实验/os_lab3/test/cmake-build-debug/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/lixinrui/onedrive/Documents/大学课程/2018操作系统实验/os_lab3/test/cmake-build-debug/CMakeFiles 3
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/TEST.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /Users/lixinrui/onedrive/Documents/大学课程/2018操作系统实验/os_lab3/test/cmake-build-debug/CMakeFiles 0
 .PHONY : CMakeFiles/TEST.dir/rule

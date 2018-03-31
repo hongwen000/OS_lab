@@ -44,7 +44,7 @@ CXXFLAGS =  -m16 -march=i386 \
 
 LD  = $(GCC_PREFIX)ld
 
-LDFLAGS =  -static -Tlinker.ld -nostdlib --nmagic
+LDFLAGS =  -static -nostdlib --nmagic
 
 bootloader_src = boot/bootloader.asm
 
@@ -56,6 +56,8 @@ kernel_obj = $(build_dir)/kernel/kernel_start.o \
 			 $(build_dir)/kernel/kernel_main.o 
 
 include kernel/Makefrag
+
+-include $(wildcard $(build_dir)/kernel/*.d)
 
 kernel_bin = $(build_dir)/kernel/kernel.bin
 
@@ -76,7 +78,8 @@ include basic_lib/Makefrag
 libc_obj = $(build_dir)/libc/string.o \
 		   $(build_dir)/libc/ctype.o \
 		   $(build_dir)/libc/stdlib.o \
-		   $(build_dir)/libc/stdio.o 
+		   $(build_dir)/libc/stdio.o \
+		   $(build_dir)/libc/crt0.o
 
 
 libc = $(build_dir)/libc/libc.a
@@ -94,9 +97,11 @@ LDFLAGS += -L $(build_dir)/libc -L $(build_dir)/basic_lib
 
 LDFLAGS_LIB =  -lbasic -lc
 
-kernel_img : $(obj_link_list) $(lib_ar_list)
-	$(LD)  $(LDFLAGS) --oformat binary $(obj_link_list) $(LDFLAGS_LIB) -o $(kernel_bin)
-	$(LD)  $(LDFLAGS) $(lib_search_list) $(obj_link_list) $(LDFLAGS_LIB) -o $(kernel_bin).elf
+kernel_mod : $(wildcard kernel/*.h)
+
+kernel_img : $(kernel_mod) $(obj_link_list) $(lib_ar_list)
+	$(LD)  $(LDFLAGS) -Tlinker.ld --oformat binary $(obj_link_list) $(LDFLAGS_LIB) -o $(kernel_bin)
+	$(LD)  $(LDFLAGS) -Tlinker.ld $(lib_search_list) $(obj_link_list) $(LDFLAGS_LIB) -o $(kernel_bin).elf
 	$(OBJDUMP) --adjust-vma=0x7e00 -D -Mintel,i386 -b binary -m i386 $(kernel_bin) >kernel_bin_dump
 	$(OBJDUMP) -S $(kernel_bin).elf > kernel_elf_dump
 
@@ -110,11 +115,12 @@ endef
 
 include usr/Makefrag
 
-user_bin = $(build_dir)/usr/record.bin \
-           $(build_dir)/usr/user1.bin \
-           $(build_dir)/usr/user2.bin \
-           $(build_dir)/usr/user3.bin \
-           $(build_dir)/usr/user4.bin \
+user_bin = $(build_dir)/usr/help.bin   \
+           $(build_dir)/usr/record.bin \
+           $(build_dir)/usr/user1.bin  \
+           $(build_dir)/usr/user2.bin  \
+           $(build_dir)/usr/user3.bin  \
+           $(build_dir)/usr/user4.bin  \
            $(build_dir)/usr/user5.bin
 
 write_usr_progs: $(user_bin)
@@ -179,7 +185,7 @@ gdb: .gdbinit
 	/opt/cross/gcc-i386/bin/i386-elf-gdb -n -x .gdbinit
 
 #启动bochs虚拟机
-bochs: clean write_all_progs
+bochs: write_all_progs
 	export FLOPPYFILE=$(floppyfile) && bochs -qf bochsrc
 
 #清理

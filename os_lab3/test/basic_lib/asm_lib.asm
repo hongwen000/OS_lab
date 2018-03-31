@@ -44,10 +44,9 @@ sys_bios_getchar:
 sys_execve_bin:
       push bp
       mov bp, sp
-      pusha         //同样这里要保护堆栈！！！
+      pusha         ;同样这里要保护堆栈！！！
       push ds
       push es
-      push ss
       mov ax, 0x1000
       mov ds, ax
       mov es, ax
@@ -58,7 +57,7 @@ sys_execve_bin:
       mov word[0xA00A + 2], cs
       jmp 0x1000:0xA100
 return_point:
-      pop ax
+      mov ax, 0x0000
       mov ss, ax
       pop ax
       mov es, ax
