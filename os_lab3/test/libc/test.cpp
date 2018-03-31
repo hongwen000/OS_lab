@@ -112,6 +112,27 @@ TEST(stdio, sscanf) {
 }
 
 int main(int argc, char** argv) {  
-    testing::InitGoogleTest(&argc, argv);  
-    return RUN_ALL_TESTS();  
+    testing::InitGoogleTest(&argc, argv);
+    char record_buf[] = "5\npopup-1\n5";
+    char buf1[32];
+    char buf2[32];
+    char buf3[32];
+    hhlibc::sscanf(record_buf, "%s%s%s", buf1, buf2, buf3);
+    std::cout << buf1 << '\t' <<hhlibc::strlen(buf1) << std::endl;
+    std::cout << buf2 << '\t' <<hhlibc::strlen(buf2) << std::endl;
+    std::cout << buf3 << '\t' <<hhlibc::strlen(buf3) << std::endl;
+
+    char * p = record_buf;
+    char one_record[32];
+    hhlibc::sscanf(p, "%s", one_record);
+    size_t n = hhlibc::strtol(one_record, NULL, 10);
+    std::cout << n << std::endl;
+    size_t len = strlen(one_record);
+    p+=len+1;
+    char name[32];
+    char lba[32];
+    hhlibc::sscanf(p, "%s%s", name, lba);
+    std::cout << name << std::endl;
+    std::cout << lba << std::endl;
+    //return RUN_ALL_TESTS();
 }  

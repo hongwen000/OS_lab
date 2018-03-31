@@ -82,6 +82,9 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/Users/lixinrui/onedrive/Documents/大学课程/2018操作系统实验/os_lab3/test/kernel/sh.h">
+			<Option target="TEST"/>
+		</Unit>
 		<Unit filename="/Users/lixinrui/onedrive/Documents/大学课程/2018操作系统实验/os_lab3/test/libc/test.cpp">
 			<Option target="TEST"/>
 		</Unit>

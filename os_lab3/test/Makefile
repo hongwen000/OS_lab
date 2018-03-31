@@ -110,7 +110,8 @@ endef
 
 include usr/Makefrag
 
-user_bin = $(build_dir)/usr/user1.bin \
+user_bin = $(build_dir)/usr/record.bin \
+           $(build_dir)/usr/user1.bin \
            $(build_dir)/usr/user2.bin \
            $(build_dir)/usr/user3.bin \
            $(build_dir)/usr/user4.bin \
@@ -178,11 +179,11 @@ gdb: .gdbinit
 	/opt/cross/gcc-i386/bin/i386-elf-gdb -n -x .gdbinit
 
 #启动bochs虚拟机
-bochs: write_all_progs
+bochs: clean write_all_progs
 	export FLOPPYFILE=$(floppyfile) && bochs -qf bochsrc
 
 #清理
 clean:
 	rm -rf build
-	rm kernel_bin_dump
-	rm kernel_elf_dump
+	rm -f kernel_bin_dump
+	rm -f kernel_elf_dump

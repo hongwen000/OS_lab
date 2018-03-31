@@ -4,4 +4,4 @@ project(HHOS)
 set(CMAKE_CXX_STANDARD 11)
 include_directories(/usr/include)
 add_executable(TEST
-    libc/test.cpp)
+    libc/test.cpp kernel/sh.h)
