@@ -10,6 +10,7 @@
 #include "stdlib.h"
 #include "sys_lib.h"
 #include "../basic_lib/sys_lib.h"
+#include "bin_loader.h"
 
 class sh{
 private:
@@ -26,7 +27,6 @@ private:
     size_t pos = 0;
     int exec()
     {
-        printf("Exec %s\n", buf);
         if (strcmp(buf, "ls") == 0)
         {
             printf("lba\tname\n");
@@ -34,6 +34,20 @@ private:
             {
                 printf("%d\t%s\n", progs[i].lba, progs[i].name);
             }
+        }
+        else {
+            bool found = false;
+            for(size_t i = 0; i < prog_cnt; ++i)
+            {
+                if (strcmp(buf, progs[i].name) == 0)
+                {
+                    found = true;
+                    bin_loader::load_binary_from_floppy(progs[i].lba);
+                    break;
+                }
+            }
+            if (!found)
+                printf("%s\n", "No such command or file");
         }
         return SUCCESS;
     }

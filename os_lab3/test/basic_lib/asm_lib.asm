@@ -44,6 +44,7 @@ sys_bios_getchar:
 sys_execve_bin:
       push bp
       mov bp, sp
+      pusha         //同样这里要保护堆栈！！！
       push ds
       push es
       push ss
@@ -63,5 +64,6 @@ return_point:
       mov es, ax
       pop ax
       mov ds, ax
+      popa
       pop bp
       ret
