@@ -27,10 +27,21 @@ static inline void system_call_putchar(int ch)
     asm volatile(
     "movb %0, %%al\n\t"
     "movb $1, %%ah\n\t"
+            "movw %%ss, %%bx\n\t"
+            "movw %%bx, %%fs\n\t"
+            "movw $0, %%bx\n\t"
+            "movw %%bx, %%ss\n\t"
+            "movw %%bx, %%ds\n\t"
+            "movw %%bx, %%es\n\t"
     "int $0x98\n\t"
+            "movw %%fs, %%bx\n\t"
+            "movw %%bx, %%ss\n\t"
+            "movw %%bx, %%ds\n\t"
+            "movw %%bx, %%es\n\t"
+
     :
     :"r"(c)
-    :"%eax"
+    :"%eax", "ebx"
     );
 }
 #endif

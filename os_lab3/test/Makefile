@@ -120,7 +120,8 @@ user_bin = $(build_dir)/usr/help.bin   \
            $(build_dir)/usr/user2.bin  \
            $(build_dir)/usr/user3.bin  \
            $(build_dir)/usr/user4.bin  \
-           $(build_dir)/usr/user5.bin
+           $(build_dir)/usr/user5.bin  \
+           $(build_dir)/usr/bc.bin
 
 write_usr_progs: $(user_bin)
 	$(foreach user_prog, $(user_bin), $(call DO_write, $(user_prog)))

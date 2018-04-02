@@ -56,8 +56,11 @@ private:
                 {
                     found = true;
                     bin_loader::load_binary_from_floppy(progs[i].lba);
-                    sys_bios_clear_screen();
-                    sys_get_current_tty()->tty_init();
+                    if(!(strlen(progs[i].name) > 2 && progs[i].name[0] == 'c' && progs[i].name[1] == '_'))
+                    {
+                        sys_bios_clear_screen();
+                        sys_get_current_tty()->tty_init();
+                    }
                     break;
                 }
             }
