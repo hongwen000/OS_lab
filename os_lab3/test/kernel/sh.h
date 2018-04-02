@@ -12,6 +12,8 @@
 #include "../basic_lib/sys_lib.h"
 #include "bin_loader.h"
 #include "../libc/sys/hhos.h"
+#define HELP_FILE_SECTOR 32
+#define REC_FILE_SECTOR 52
 
 class sh{
 private:
@@ -66,7 +68,7 @@ private:
     }
     void read_prog_record()
     {
-        sys_read_disk(0, (uint32_t)record_buf, 34, 1);
+        sys_read_disk(0, (uint32_t)record_buf, REC_FILE_SECTOR, 1);
         char buf1[32];
         char buf2[32];
         char buf3[32];
@@ -84,7 +86,7 @@ private:
     }
     void read_help_file()
     {
-        sys_read_disk(0, (uint32_t)help, 32, 1);
+        sys_read_disk(0, (uint32_t)help, HELP_FILE_SECTOR, 1);
     }
 public:
     sh(){

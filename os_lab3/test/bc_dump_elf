@@ -1,0 +1,27 @@
+
+build/usr/bc.bin.elf:     file format elf32-i386
+
+
+Disassembly of section .text:
+
+0001a100 <cmain>:
+
+#include "../include/defines.h"
+#include "../libc/stdio.h"
+
+extern "C" void cmain()
+{
+   1a100:	66 55                	push   %bp
+   1a102:	66 89 e5             	mov    %sp,%bp
+
+}
+   1a105:	66 5d                	pop    %bp
+   1a107:	66 c3                	retw   
+   1a109:	66 90                	xchg   %ax,%ax
+   1a10b:	66 90                	xchg   %ax,%ax
+   1a10d:	66 90                	xchg   %ax,%ax
+   1a10f:	90                   	nop
+
+0001a110 <c_start>:
+   1a110:	e8 ed ff b4 4c       	call   4cb6a102 <_data+0x4cb4ffb2>
+   1a115:	cd 21                	int    $0x21

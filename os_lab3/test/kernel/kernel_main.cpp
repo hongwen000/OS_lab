@@ -22,6 +22,8 @@ static inline void print_ok(char * mod) {
 }
 extern "C" void kernel_main()
 {
+
+
     tty tty1;
     current_tty = &tty1;
     print_ok("TTY");

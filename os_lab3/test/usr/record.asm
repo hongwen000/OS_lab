@@ -1,12 +1,12 @@
 db `5\n`
 db `popup1\n`
-db `36\n`
+db `72\n`
 db `popup2\n`
-db `38\n`
+db `92\n`
 db `popup3\n`
-db `40\n`
+db `112\n`
 db `popup4\n`
-db `42\n`
+db `132\n`
 db `snake\n`
-db `44\n`
+db `152\n`
 times 1024 - ($ - $$) db 0

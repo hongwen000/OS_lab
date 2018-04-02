@@ -1,4 +1,4 @@
-#include "string.h"
+#include "./string.h"
 
 #ifdef _HHOS_LIBC_TEST
 namespace hhlibc {

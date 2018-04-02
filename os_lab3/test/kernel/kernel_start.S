@@ -10,12 +10,8 @@
 [extern kernel_main]
 [extern sys_bios_getchar]
 [extern sys_current_tty_putchar]
+[extern system_call_getchar]
 [extern fun_in_c]
-
-;mov eax, 0x18
-;push eax
-;call dword fun_in_c
-
 
 kernel_start:
     push interrupt_20h

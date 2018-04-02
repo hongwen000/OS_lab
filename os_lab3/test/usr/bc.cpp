@@ -5,25 +5,7 @@
 #include "../include/defines.h"
 #include "../libc/stdio.h"
 
-void main()
+extern "C" void main()
 {
-    char op;
-    int num1, num2, result = 0;
-    printf("Basic calculate ver 0.001\n");
-    scanf("%d %c %d", &num1, &num2);
-    scanf("%s", &op);
-    switch(op)
-    {
-            case '+': result = num1 + num2;
-            break;
-            case '-': result = num1 - num2;
-            break;
-            case '*': result = num1 * num2;
-            break;
-            case '/': result = num1 / num2;
-            break;
-            default : printf("wrong input");
-            break;
-    }
-        printf("%d\n", result);
+    printf("In c");
 }
