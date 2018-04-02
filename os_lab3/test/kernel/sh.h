@@ -5,9 +5,9 @@
 #ifndef HHOS_SH_H
 #define HHOS_SH_H
 
-#include "stdio.h"
-#include "string.h"
-#include "stdlib.h"
+#include "../libc/stdio.h"
+#include "../libc/string.h"
+#include "../libc/stdlib.h"
 #include "sys_lib.h"
 #include "../basic_lib/sys_lib.h"
 #include "bin_loader.h"

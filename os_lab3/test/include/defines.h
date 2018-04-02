@@ -1,6 +1,8 @@
 #ifndef _BASIC_DEFINE_
 #define _BASIC_DEFINE_
 
+
+
 #ifndef _HHOS_LIBC_TEST
 
 #ifndef _CODE16GCC_H_
@@ -10,15 +12,19 @@ __asm__(".code16gcc\n");
 
 #endif
 
-#include <stddef.h>
+using size_t = unsigned long;
+using uint8_t = unsigned char;
+using uint16_t = unsigned short;
+using uint32_t = unsigned int;
 
-#include <stdint.h>
+typedef __builtin_va_list va_list;
 
-#include <stdalign.h>
+#define va_start(ap, last) __builtin_va_start(ap, last)
 
-#include <limits.h>
+#define va_arg(ap, type) __builtin_va_arg(ap, type)
 
-#include <stdarg.h>
+#define va_end(ap) __builtin_va_end(ap)
+
 
 enum VGA_COLOR{
     VGA_BLACK           =   0x00,    

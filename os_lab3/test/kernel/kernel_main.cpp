@@ -6,6 +6,12 @@
 #include "sh.h"
 static tty* current_tty = nullptr;
 tty* sys_get_current_tty(){return current_tty;}
+extern "C" void sys_current_tty_putchar(int ch)
+{
+    int mask = 0x00FF;
+    ch = ch & mask;
+    sys_get_current_tty()->putchar(ch);
+}
 const char* str = "Welcome to HHOS version 1.2.0\nYou can input help to see how to use it!";
 static inline void print_ok(char * mod) {
     printf("%s init [", mod);

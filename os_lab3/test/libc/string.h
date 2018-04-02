@@ -1,7 +1,7 @@
 #ifndef _STRING_H
 #define _STRING_H
 
-#include "defines.h"
+#include "../include/defines.h"
 
 #ifdef _HHOS_LIBC_TEST
 namespace hhlibc {

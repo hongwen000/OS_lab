@@ -2,9 +2,8 @@
 // Created by 李新锐 on 31/03/2018.
 //
 
+#include "../include/defines.h"
 #include "../libc/stdio.h"
-
-#include <stdio.h>
 
 void main()
 {

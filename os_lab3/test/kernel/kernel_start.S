@@ -8,6 +8,13 @@
 [section .text]
 [global kernel_start]
 [extern kernel_main]
+[extern sys_bios_getchar]
+[extern sys_current_tty_putchar]
+[extern fun_in_c]
+
+;mov eax, 0x18
+;push eax
+;call dword fun_in_c
 
 
 kernel_start:
@@ -18,6 +25,11 @@ kernel_start:
 
     push interrupt_21h
     push 21h * 4
+    call install_int
+    add sp, 4
+
+    push interrupt_98h
+    push 98h * 4
     call install_int
     add sp, 4
 
@@ -51,3 +63,23 @@ interrupt_21h:
       iret
 panic_21h_func_not_impl:
       jmp $
+
+interrupt_98h:
+      cmp ah, 0h
+      jnz func_01
+func_00:
+      call sys_bios_getchar
+      jmp int_98h_end
+func_01:
+      pusha
+      cmp ah, 1h
+      jnz func_02
+      push eax
+      call dword sys_current_tty_putchar
+      add sp, 4
+      popa
+      jmp int_98h_end
+func_02:
+
+int_98h_end:
+      iret

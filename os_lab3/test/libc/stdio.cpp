@@ -10,7 +10,8 @@ namespace hhlibc {
 #ifndef _HHOS_LIBC_TEST
 int putchar( int ch )
 {
-    sys_get_current_tty()->putchar(ch);
+    //sys_get_current_tty()->putchar(ch);
+    system_call_putchar(ch);
     //sys_tty_putchar(ch);
     return ch;
 }
