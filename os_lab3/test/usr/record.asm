@@ -1,4 +1,4 @@
-db `5\n`
+db `6\n`
 db `popup1\n`
 db `72\n`
 db `popup2\n`
@@ -9,4 +9,6 @@ db `popup4\n`
 db `132\n`
 db `snake\n`
 db `152\n`
+db `c_calc\n`
+db `172\n`
 times 1024 - ($ - $$) db 0

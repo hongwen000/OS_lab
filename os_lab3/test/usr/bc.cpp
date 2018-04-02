@@ -7,5 +7,5 @@
 
 extern "C" void main()
 {
-    printf("In c");
+    printf("In c\n");
 }
