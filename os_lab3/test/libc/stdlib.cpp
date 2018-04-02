@@ -1,6 +1,6 @@
-#include "stdlib.h"
-#include "string.h"
-#include "ctype.h"
+#include "./stdlib.h"
+#include "./string.h"
+#include "./ctype.h"
 
 #ifdef _HHOS_LIBC_TEST
 namespace hhlibc {

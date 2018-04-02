@@ -1,7 +1,7 @@
-#include "stdio.h"
-#include "string.h"
-#include "stdlib.h"
-#include "ctype.h"
+#include "./stdio.h"
+#include "./string.h"
+#include "./stdlib.h"
+#include "./ctype.h"
 
 #ifdef _HHOS_LIBC_TEST
 namespace hhlibc {
@@ -142,7 +142,7 @@ int printf( const char* format, ... )
 #ifndef _HHOS_LIBC_TEST
 int getchar(void)
 {
-    return sys_bios_getchar();
+    return system_call_getchar();
 }
 char *gets( char *str )
 {

@@ -3,9 +3,7 @@
 [global _start]
 [extern main]
 _start:
-
-	call main
-
+    call dword main
 	mov ah, 4ch
 	int 21h
 

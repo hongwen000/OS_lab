@@ -9,7 +9,7 @@ static inline int system_call_getchar()
     int ret = 0;
     asm volatile (
     "movb $0, %%ah\n\t"
-    "int $0x99\n\t"
+    "int $0x98\n\t"
     "movl %%eax, %0\n\t"
     :"=r"(ret)
     :

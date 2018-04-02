@@ -1,4 +1,4 @@
-#include "ctype.h"
+#include "./ctype.h"
 
 #ifdef _HHOS_LIBC_TEST
 namespace hhlibc {

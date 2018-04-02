@@ -78,8 +78,7 @@ include basic_lib/Makefrag
 libc_obj = $(build_dir)/libc/string.o \
 		   $(build_dir)/libc/ctype.o \
 		   $(build_dir)/libc/stdlib.o \
-		   $(build_dir)/libc/stdio.o \
-		   $(build_dir)/libc/crt0.o
+		   $(build_dir)/libc/stdio.o
 
 
 libc = $(build_dir)/libc/libc.a
@@ -105,11 +104,11 @@ kernel_img : $(kernel_mod) $(obj_link_list) $(lib_ar_list)
 	$(OBJDUMP) --adjust-vma=0x7e00 -D -Mintel,i386 -b binary -m i386 $(kernel_bin) >kernel_bin_dump
 	$(OBJDUMP) -S $(kernel_bin).elf > kernel_elf_dump
 
-disk_index = 16
+disk_index = 32
 
 define DO_write
-dd if=$(strip $(1)) of=$(floppyfile) bs=1024 seek=$(strip $(disk_index)) conv=notrunc
-$(eval disk_index = $(call plus,$(disk_index),1))
+dd if=$(strip $(1)) of=$(floppyfile) bs=512 seek=$(strip $(disk_index)) conv=notrunc
+$(eval disk_index = $(call plus,$(disk_index),20))
 
 endef
 

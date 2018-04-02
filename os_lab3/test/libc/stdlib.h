@@ -3,8 +3,6 @@
 
 #include "../include/defines.h"
 
-#include "../basic_lib/sys_lib.h"
-
 #ifdef _HHOS_LIBC_TEST
 namespace hhlibc {
 
