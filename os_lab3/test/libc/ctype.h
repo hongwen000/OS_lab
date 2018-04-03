@@ -13,6 +13,8 @@ extern "C" {
 #endif
  
 int isspace( int ch );
+int isalnum(int ch);
+int isdigit(int ch);
 
 #ifndef __cplusplus
 }

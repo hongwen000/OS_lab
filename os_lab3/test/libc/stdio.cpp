@@ -150,7 +150,11 @@ char *gets( char *str )
     while(true)
     {
         ch = getchar();
-        if(ch == '\n') break;
+        putchar(ch);
+        if(ch == 13) {
+            putchar('\n');
+            break;
+        }
         *(str++) = ch;
     }
     *str = '\0';
