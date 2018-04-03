@@ -174,7 +174,7 @@ qemu-nox: write_all_progs
 	sed "s/localhost:1234/localhost:$(GDBPORT)/" < gdbinit.part >> $@
 
 #qemu连接gdb
-qemu-gdb: .gdbinit write_all_progs 
+qemu-gdb: .gdbinit #write_all_progs 
 	@echo "*** Now run 'gdb'." 1>&2
 	$(QEMU) -serial mon:stdio $(QEMUOPTS) -S $(QEMUGDB)
 

@@ -7,115 +7,191 @@
 #include "../libc/ctype.h"
 
 #define SIZE 50
+template <typename T>
+struct fixed_stack {
+    T stack[SIZE];
+    int ele_cnt = 0;
+    void push(T ch)
+    {
+        stack[ele_cnt] = ch;
+        ++ele_cnt;
+    }
+    T top()
+    {
+        return stack[ele_cnt - 1];
+    }
+    void pop()
+    {
+        ele_cnt--;
+    }
+};
+
 class calc{
 public:
-    calc(char* infix)
+    calc (const char * input)
     {
-        infix_to_postfix(infix);
+        errorn = parse(input);
+        infix2pofix(parsed_input);
     }
-    int eval_postfix()
+    int get_err()
     {
-        char ch;
-        int i = 0, op1, op2;
-        while ((ch = postfix[i++]) != 0) {
-            if (isdigit(ch))
-                push(ch - '0');
-            else {
-                op2 = pop();
-                op1 = pop();
-                switch (ch) {
-                    case '+':
-                        push(op1 + op2);
-                        break;
-                    case '-':
-                        push(op1 - op2);
-                        break;
-                    case '*':
-                        push(op1 * op2);
-                        break;
-                    case '/':
-                        push(op1 / op2);
-                        break;
-                }
-            }
-        }
-        return s[top];
+        return errorn;
+    }
+
+    inline int get_result()
+    {
+        return eval_pofix();
     }
 
 private:
-    char s[SIZE];
-    int top = -1;
-    char postfix[SIZE];
-    void RemoveSpaces(char* source)
+    char parsed_input[SIZE];
+    char pofix[SIZE];
+    fixed_stack<int> s;
+    int errorn;
+    inline int priority(char ch)
     {
-        char* i = source;
-        char* j = source;
-        while (*j != 0) {
-            *i = *j++;
-            if (*i != ' ')
-                i++;
-        }
-        *i = 0;
+        if (ch == '*' || ch == '/')
+            return 4;
+        else if (ch == '+' || ch == '-')
+            return 3;
+        else if (ch == '#')
+            return 2;
+        else
+            return 1;
     }
-    void push(char elem)
+    int parse(const char* infix)
     {
-        s[++top] = elem;
-    }
-    char pop()
-    {
-        return (s[top--]);
-    }
-    int pr(char elem)
-    {
-        switch (elem) {
-            case '#':
-                return 0;
-            case '(':
-                return 1;
-            case '+':
-            case '-':
-                return 2;
-            case '*':
-            case '/':
-                return 3;
-        }
-        return -1;
-    }
-    void infix_to_postfix(char* infix)
-    {
-        char ch, elem;
-        int i = 0, k = 0;
-        RemoveSpaces(infix);
-        push('#');
-        while ((ch = infix[i++]) != '\0') {
-            if (ch == '(')
-                push(ch);
-            else if (isalnum(ch))
-                postfix[k++] = ch;
-            else if (ch == ')') {
-                while (s[top] != '(')
-                    postfix[k++] = pop();
-                elem = pop();
-            } else {
-                while (pr(s[top]) >= pr(ch))
-                    postfix[k++] = pop();
-                push(ch);
+        int k = 0;
+        char ch;
+        for(size_t i = 0; i < strlen(infix); ++i)
+        {
+            ch = infix[i];
+            if(isspace(ch))
+            {
+                continue;
+            }
+            else if (isdigit(ch) || ch == '(' || ch == ')' || ch == '+' || ch == '-' || ch == '*' || ch == '/')
+            {
+                parsed_input[k++] = ch;
+            }
+            else
+            {
+                return i + 1;
             }
         }
-        while (s[top] != '#'){
-            postfix[k++] = pop();
-        }
-        postfix[k] = 0;
+        return 0;
     }
-
+    void infix2pofix(const char* infix_str)
+    {
+        char ch;
+        s.push('#');
+        int j = 0;
+        for(size_t i = 0; i < strlen(infix_str); ++i)
+        {
+            ch = infix_str[i];
+            if (ch == '(')
+            {
+                s.push('(');
+            }
+            else if (ch == ')')
+            {
+                while (s.top() != '(')
+                {
+                    pofix[j++] = s.top();
+                    s.pop();
+                }
+                s.pop();    //移除'('
+            }
+            else if (isdigit(ch))
+            {
+                pofix[j++] = ch;
+            }
+            else
+            {
+                while (priority(ch) < priority(s.top()))
+                {
+                    pofix[j++] = s.top();
+                    s.pop();
+                }
+                s.push(ch);
+            }
+        }
+        while (s.top() != '#')
+        {
+            pofix[j++] = s.top();
+            s.pop();
+        }
+        pofix[j] = '\0';
+    }
+    int eval_pofix()
+    {
+        int op1 = 0;
+        int op2 = 0;
+        char ch;
+        for(size_t i = 0; i < strlen(pofix); ++i)
+        {
+            ch = pofix[i];
+            if (isdigit(ch))
+            {
+                s.push(ch - '0');
+            } else{
+                op1 = s.top();
+                s.pop();
+                op2 = s.top();
+                s.pop();
+                switch (ch)
+                {
+                    case '+':
+                    {
+                        s.push(op1 + op2);
+                        break;
+                    }
+                    case '-':
+                    {
+                        s.push(op2 - op1);
+                        break;
+                    }
+                    case '*':
+                    {
+                        s.push(op1 * op2);
+                        break;
+                    }
+                    case '/':
+                    {
+                        s.push(op2 / op1);
+                        break;
+                    }
+                    default:
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        return s.top();
+    }
 };
 
 extern "C" void main()
 {
     char infix[SIZE];
-    printf("Basic calculate 1.0\n");
-    gets(infix);
-    printf("%s\n", infix);
-    calc c(infix);
-    printf("%d\n",c.eval_postfix());
+    printf("Basic calculate 1.1\n");
+    printf("Input q to exit\n");
+    while (true)
+    {
+        gets(infix);
+        if (strcmp(infix, "q") == 0)
+            break;
+        calc c(infix);
+        int errorn = c.get_err();
+        if(errorn != 0)
+        {
+            printf("Wrong input at column %d\n", errorn);
+        }
+        else
+        {
+            printf("%d\n", c.get_result());
+        }
+    }
 }
+
