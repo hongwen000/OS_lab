@@ -19,7 +19,20 @@
 class sh{
 private:
     static constexpr int buf_size = 128;
+    static constexpr int history_term = 10;
+    static constexpr char * prompt = "HHOS> ";
     static constexpr int SUCCESS = 0;
+    static constexpr char * cmd_list[] = {
+            "ls",
+            "dir",
+            "cls",
+            "clear",
+            "help",
+            "echo",
+            "history"
+    };
+    int supported_cmd_num = 7;
+
     char * inputs[buf_size / 2];
     struct cmd{
         int start;
@@ -27,19 +40,27 @@ private:
     };
     cmd cmds[buf_size / 4];
     char buf[buf_size];
+    char histroy[history_term][buf_size];
     char record_buf[512];
     char help[512];
+    size_t prog_cnt = 0;
+    size_t pos = 0;
+
+    bool inline is_command(const cmd & input_cmd, const char* cmd_name){
+        return (strcmp(inputs[input_cmd.start], cmd_name) == 0);
+    }
     struct prog_entry {
         char name[32];
         int lba;
     };
     prog_entry progs[16];
-    size_t prog_cnt = 0;
-    size_t pos = 0;
-    static constexpr char * prompt = "HHOS> ";
-    bool inline is_command(const cmd & input_cmd, const char* cmd_name){
-        return (strcmp(inputs[input_cmd.start], cmd_name) == 0);
+
+    void history_push(const char* buf)
+    {
+        memmove(histroy[1], histroy[0], buf_size * history_term * sizeof(char));
+        strcpy(histroy[0], buf);
     }
+
     int exec(const cmd & input_cmd)
     {
         if (is_command(input_cmd, "ls") || is_command(input_cmd, "dir")) {
@@ -65,6 +86,13 @@ private:
                 printf("%s ", inputs[input_cmd.start + i]);
             }
             printf("\n");
+        }
+        else if (is_command(input_cmd, "history"))
+        {
+            for(int i = 1; i < history_term; ++i)
+            {
+                printf("%s\n", histroy[i]);
+            }
         }
         else {
             bool found = false;
@@ -178,6 +206,26 @@ private:
         return i;
     }
 
+    int bf(const char* Pattern, const char * Text) {
+        using ss_t = int;
+        ss_t m = strlen(Pattern);
+        ss_t n = strlen(Text);
+        ss_t i = 0, k = 0;
+        while(k < m && i < n) {
+            if(Pattern[k] == Text[i]) {
+                ++k;
+                ++i;
+            }
+            else {
+                i = i - k + 1;
+                k = 0;
+            }
+        }
+        if(k >= m)
+            return i - k;
+        return -1;
+    }
+
 
 public:
     sh(){
@@ -200,6 +248,7 @@ public:
             else if (in == 13)
             {
                 putchar('\n');
+                history_push(buf);
                 int input_cnt = split_input(buf);
                 if (input_cnt == 0)
                     continue;
@@ -215,6 +264,25 @@ public:
             else if (in == 0)
             {
                 continue;
+            }
+            else if( in == '\t')
+            {
+                bool first_matching = false;
+                for(int i = 0; i < supported_cmd_num; ++i){
+                    if(bf(buf, cmd_list[i]) != -1)
+                    {
+                        if(!first_matching){
+                            printf("\n");
+                            first_matching = true;
+                        }
+                        printf("%s\n", cmd_list[i]);
+                    }
+                }
+                for(size_t i = 0; i < prog_cnt; ++i)
+                    if(bf(buf, progs[i].name) != -1)
+                        printf("%s\n", progs[i].name);
+                printf("%s", prompt);
+                printf("%s", buf);
             }
             else {
                 putchar(in);

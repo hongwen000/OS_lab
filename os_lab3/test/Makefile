@@ -103,6 +103,9 @@ kernel_img : $(kernel_mod) $(obj_link_list) $(lib_ar_list)
 	$(LD)  $(LDFLAGS) -Tlinker.ld $(lib_search_list) $(obj_link_list) $(LDFLAGS_LIB) -o $(kernel_bin).elf
 	$(OBJDUMP) --adjust-vma=0x7e00 -D -Mintel,i386 -b binary -m i386 $(kernel_bin) >kernel_bin_dump
 	$(OBJDUMP) -S $(kernel_bin).elf > kernel_elf_dump
+rm_kernel:
+	rm -f $(kernel_bin)
+	rm -f $(kernel_bin).elf
 
 disk_index = 32
 
