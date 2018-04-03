@@ -12,13 +12,20 @@
 #include "../basic_lib/sys_lib.h"
 #include "bin_loader.h"
 #include "../libc/sys/hhos.h"
+#include "../libc/ctype.h"
 #define HELP_FILE_SECTOR 32
 #define REC_FILE_SECTOR 52
 
 class sh{
 private:
-    static constexpr int buf_size = 512;
+    static constexpr int buf_size = 128;
     static constexpr int SUCCESS = 0;
+    char * inputs[buf_size / 2];
+    struct cmd{
+        int start;
+        int cnt = 0;
+    };
+    cmd cmds[buf_size / 4];
     char buf[buf_size];
     char record_buf[512];
     char help[512];
@@ -30,29 +37,40 @@ private:
     size_t prog_cnt = 0;
     size_t pos = 0;
     static constexpr char * prompt = "HHOS> ";
-    int exec()
+    bool inline is_command(const cmd & input_cmd, const char* cmd_name){
+        return (strcmp(inputs[input_cmd.start], cmd_name) == 0);
+    }
+    int exec(const cmd & input_cmd)
     {
-        if (strcmp(buf, "ls") == 0|| strcmp(buf, "dir") == 0)
-        {
+        if (is_command(input_cmd, "ls") || is_command(input_cmd, "dir")) {
             printf("You have %d user programs intalled\n\n", prog_cnt);
-            for(size_t i = 0; i < prog_cnt; ++i)
-            {
+            for (size_t i = 0; i < prog_cnt; ++i) {
                 printf("%s\n", progs[i].name);
             }
-        } else if (strcmp(buf, "cls") == 0 || strcmp(buf, "clear") == 0)
+        }
+        else if (is_command(input_cmd, "cls") || is_command(input_cmd, "clear"))
         {
             sys_bios_clear_screen();
             sys_get_current_tty()->tty_init();
-        } else if (strcmp(buf, "help") == 0)
+        }
+        else if (is_command(input_cmd, "help"))
         {
             printf("%s\n", help);
 
+        }
+        else if (is_command(input_cmd, "echo"))
+        {
+            for(int i = 1; i < input_cmd.cnt; ++i)
+            {
+                printf("%s ", inputs[input_cmd.start + i]);
+            }
+            printf("\n");
         }
         else {
             bool found = false;
             for(size_t i = 0; i < prog_cnt; ++i)
             {
-                if (strcmp(buf, progs[i].name) == 0)
+                if (is_command(input_cmd, progs[i].name))
                 {
                     found = true;
                     bin_loader::load_binary_from_floppy(progs[i].lba);
@@ -91,6 +109,76 @@ private:
     {
         sys_read_disk(0, (uint32_t)help, HELP_FILE_SECTOR, 1);
     }
+    int split_input(char* buf)
+    {
+        int i = 0;
+        char * p = buf;
+        while(*p && isspace(*p)){
+            ++p;
+        };
+        bool con = false;
+        while (*p)
+        {
+            if(isspace(*p))
+            {
+                *p = '\0';
+                if(con)
+                {
+                    con = false;
+                    ++i;
+                }
+            }
+            else
+            {
+                if(!con)
+                {
+                    inputs[i] = p;
+                    con = true;
+                }
+            }
+            ++p;
+        }
+        if(con) ++i;
+        return i;
+    }
+    int split_batch(char** inputs, int input_cnt)
+    {
+        int i = 0;
+        int p = 0;
+        while(strcmp(inputs[p], ";") == 0){
+            ++p;
+        };
+        bool con = false;
+        while (p < input_cnt)
+        {
+            if(strcmp(inputs[p], ";") == 0)
+            {
+
+                if(con)
+                {
+                    con = false;
+                    ++i;
+                }
+            }
+            else
+            {
+                if(!con)
+                {
+                    cmds[i].start = p;
+                    cmds[i].cnt++;
+                    con = true;
+                }
+                else {
+                    cmds[i].cnt++;
+                }
+            }
+            ++p;
+        }
+        if(con) ++i;
+        return i;
+    }
+
+
 public:
     sh(){
         memset(buf, 0, buf_size);
@@ -112,10 +200,21 @@ public:
             else if (in == 13)
             {
                 putchar('\n');
-                exec();
+                int input_cnt = split_input(buf);
+                if (input_cnt == 0)
+                    continue;
+                int cmd_cnt = split_batch(inputs, input_cnt);
+                for(int cmd_num = 0; cmd_num < cmd_cnt; ++ cmd_num)
+                {
+                    exec(cmds[cmd_num]);
+                }
                 memset(buf, 0, buf_size);
                 pos = 0;
                 printf("%s", prompt);
+            }
+            else if (in == 0)
+            {
+                continue;
             }
             else {
                 putchar(in);

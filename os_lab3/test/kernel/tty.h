@@ -90,9 +90,11 @@ public:
             }
             case '\r':
             {
-                cur_x = 0;
+                cur_y = 0;
                 break;
             }
+            case 0:
+                break;
             case '\b':
             {
                 if(cur_y == 0 && cur_x == 0) 

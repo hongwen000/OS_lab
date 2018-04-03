@@ -134,5 +134,5 @@ int main(int argc, char** argv) {
     hhlibc::sscanf(p, "%s%s", name, lba);
     std::cout << name << std::endl;
     std::cout << lba << std::endl;
-    //return RUN_ALL_TESTS();
+    return RUN_ALL_TESTS();
 }  
