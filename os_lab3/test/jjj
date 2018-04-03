@@ -1,3 +1,30 @@
+$(build_dir)/basic_lib/%.o: basic_lib/%.asm
+	@mkdir -p $(@D)
+	$(AS) $(ASFLAGS) -f elf32 $< -o $@
+
+$(build_dir)/basic_lib/%.o: basic_lib/%.cpp
+	@mkdir -p $(@D)
+	$(CXX) $(CXXFLAGS) -I basic_lib -c $< -o $@
+$(build_dir)/boot/%.bin: boot/%.asm
+	@mkdir -p $(@D)
+	$(AS) $(ASBIN) $< -o $@$(build_dir)/kernel/%.o: kernel/%.cpp
+	@mkdir -p $(@D)
+	$(CXX) $(CXXFLAGS) -I basic_lib -I libc -c $< -o $@ -MMD -MF $(@:.o=.d)
+
+$(build_dir)/kernel/%.o: kernel/%.S
+	@mkdir -p $(@D)
+	$(AS) $(ASELF) $< -o $@test: build
+	./test
+
+.PRECIOUS:test
+build: test.cpp
+	clang++ -Wno-writable-strings -fno-builtin -D_HHOS_LIBC_TEST -I../include -I ../basic_lib -lgtest ctype.cpp stdlib.cpp stdio.cpp string.cpp test.cpp -g -std=c++1z  -o test
+$(build_dir)/libc/%.o: libc/%.cpp
+	@mkdir -p $(@D)
+	$(CXX) $(CXXFLAGS) -I libc/sys -I libc -I kernel -c $< -o $@
+$(build_dir)/libc/%.o: libc/%.S
+	@mkdir -p $(@D)
+	$(AS) $(ASELF) $< -o $@
 include mkinc/gmsl
 
 .SUFFIXES:
@@ -174,7 +201,7 @@ qemu-nox: write_all_progs
 	sed "s/localhost:1234/localhost:$(GDBPORT)/" < gdbinit.part >> $@
 
 #qemu连接gdb
-qemu-gdb: .gdbinit #write_all_progs 
+qemu-gdb: .gdbinit write_all_progs 
 	@echo "*** Now run 'gdb'." 1>&2
 	$(QEMU) -serial mon:stdio $(QEMUOPTS) -S $(QEMUGDB)
 
@@ -196,3 +223,21 @@ clean:
 	rm -rf build
 	rm -f kernel_bin_dump
 	rm -f kernel_elf_dump
+$(build_dir)/usr/%.bin: usr/%.asm
+	mkdir -p $(@D) ;\
+	cd usr ;\
+	$(AS) $(ASBIN) ../$< -o ../$@
+
+$(build_dir)/usr/%.o: usr/%.cpp
+	mkdir -p $(@D) ;\
+	$(CXX) $(CXXFLAGS) -I libc -I libc/sys -c $< -o $@
+
+$(build_dir)/libc/cstart.o : libc/cstart.S
+	mkdir -p $(@D) ;\
+    $(AS) $(ASELF) libc/cstart.S -o $(build_dir)/libc/cstart.o
+
+$(build_dir)/usr/%.bin: $(build_dir)/usr/%.o $(build_dir)/libc/cstart.o
+	mkdir -p $(@D) ;\
+    make $(build_dir)/libc/libc.a
+	$(LD) $(LDFLAGS) -Tusr/linker.ld --oformat binary  $(build_dir)/libc/cstart.o  $< -lc -o $@
+	$(LD) $(LDFLAGS) -Tusr/linker.ld $(build_dir)/libc/cstart.o $< -lc -o $@.elf

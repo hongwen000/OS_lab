@@ -64,9 +64,10 @@ private:
     int exec(const cmd & input_cmd)
     {
         if (is_command(input_cmd, "ls") || is_command(input_cmd, "dir")) {
-            printf("You have %d user programs intalled\n\n", prog_cnt);
+            printf("You have %d user programs intalled\n", prog_cnt);
+            printf("Program Name\t\t\tSector Number\n");
             for (size_t i = 0; i < prog_cnt; ++i) {
-                printf("%s\n", progs[i].name);
+                printf("%s\t\t\t\t\t%d\n", progs[i].name, progs[i].lba);
             }
         }
         else if (is_command(input_cmd, "cls") || is_command(input_cmd, "clear"))
@@ -193,7 +194,7 @@ private:
                 if(!con)
                 {
                     cmds[i].start = p;
-                    cmds[i].cnt++;
+                    cmds[i].cnt = 1;
                     con = true;
                 }
                 else {
@@ -248,6 +249,11 @@ public:
             else if (in == 13)
             {
                 putchar('\n');
+                if(strlen(buf) == 0)
+                {
+                    printf("%s", prompt);
+                    continue;
+                }
                 history_push(buf);
                 int input_cnt = split_input(buf);
                 if (input_cnt == 0)
@@ -280,7 +286,13 @@ public:
                 }
                 for(size_t i = 0; i < prog_cnt; ++i)
                     if(bf(buf, progs[i].name) != -1)
+                    {
+                        if(!first_matching){
+                            printf("\n");
+                            first_matching = true;
+                        }
                         printf("%s\n", progs[i].name);
+                    }
                 printf("%s", prompt);
                 printf("%s", buf);
             }

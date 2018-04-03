@@ -25,21 +25,42 @@
     <splitter split-orientation="horizontal" split-proportion="0.5">
       <split-first>
         <leaf>
-          <file leaf-file-name="sh.h" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/kernel/sh.h">
+          <file leaf-file-name="asm_lib.asm" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/basic_lib/asm_lib.asm">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="492">
-                  <caret line="79" column="0" lean-forward="true" selection-start-line="79" selection-start-column="0" selection-end-line="79" selection-end-column="0" />
-                  <folding>
-                    <element signature="e#77#103#0" expanded="true" />
-                    <element signature="e#1290#1450#0" expanded="false" />
-                    <element signature="e#3214#3782#0" expanded="false" />
-                    <element signature="e#3787#3883#0" expanded="false" />
-                    <element signature="e#3888#4526#0" expanded="false" />
-                    <element signature="e#4531#5309#0" expanded="false" />
-                    <element signature="e#5315#5776#0" expanded="false" />
-                    <element signature="e#5791#5890#0" expanded="false" />
-                  </folding>
+                <state relative-caret-position="150">
+                  <caret line="10" column="10" lean-forward="false" selection-start-line="10" selection-start-column="10" selection-end-line="10" selection-end-column="10" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="stdio.h" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/libc/stdio.h">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="360">
+                  <caret line="25" column="26" lean-forward="false" selection-start-line="25" selection-start-column="26" selection-end-line="25" selection-end-column="26" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="stdio.cpp" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/libc/stdio.cpp">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="609">
+                  <caret line="157" column="20" lean-forward="false" selection-start-line="157" selection-start-column="20" selection-end-line="157" selection-end-column="20" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="stdlib.cpp" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/libc/stdlib.cpp">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="45">
+                  <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -51,28 +72,32 @@
           <file leaf-file-name="sh.h" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/kernel/sh.h">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="325">
-                  <caret line="58" column="0" lean-forward="false" selection-start-line="58" selection-start-column="0" selection-end-line="58" selection-end-column="0" />
-                  <folding>
-                    <element signature="e#77#103#0" expanded="true" />
-                    <element signature="e#1290#1450#0" expanded="false" />
-                    <element signature="e#1456#3209#0" expanded="false" />
-                    <element signature="e#3214#3782#0" expanded="false" />
-                    <element signature="e#3787#3883#0" expanded="false" />
-                    <element signature="e#3888#4526#0" expanded="false" />
-                    <element signature="e#4531#5309#0" expanded="false" />
-                    <element signature="e#5791#5890#0" expanded="false" />
-                  </folding>
+                <state relative-caret-position="285">
+                  <caret line="69" column="33" lean-forward="false" selection-start-line="69" selection-start-column="33" selection-end-line="69" selection-end-column="33" />
+                  <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="string.h" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/libc/string.h">
+          <file leaf-file-name="asm_lib.asm" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/basic_lib/asm_lib.asm">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="244">
-                  <caret line="23" column="26" lean-forward="false" selection-start-line="23" selection-start-column="26" selection-end-line="23" selection-end-column="26" />
+                <state relative-caret-position="325">
+                  <caret line="59" column="10" lean-forward="false" selection-start-line="59" selection-start-column="10" selection-end-line="59" selection-end-column="10" />
                   <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="bc.cpp" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/usr/bc.cpp">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="-832">
+                  <caret line="72" column="61" lean-forward="false" selection-start-line="72" selection-start-column="61" selection-end-line="72" selection-end-column="61" />
+                  <folding>
+                    <element signature="e#40#71#0" expanded="true" />
+                    <element signature="e#152#164#0" expanded="true" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -102,10 +127,18 @@
       <find>fs</find>
       <find>infx</find>
       <find>num_input</find>
+      <find>sys_execve_bin</find>
+      <find>_USE_16_BIT_</find>
+      <find>sys_bios_print_string</find>
+      <find>sys_bios_getchar</find>
+      <find>sys_put</find>
+      <find>sys_bios_clear_screen</find>
+      <find>putch</find>
     </findStrings>
     <replaceStrings>
       <replace>infix</replace>
       <replace>input_cnt</replace>
+      <replace>_16_BIT_DIRECT_USED_IN_C_</replace>
     </replaceStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$/libc</dir>
@@ -116,20 +149,15 @@
       <list>
         <option value="$PROJECT_DIR$/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/kernel/bin_loader.cpp" />
-        <option value="$PROJECT_DIR$/boot/bootloader.asm" />
         <option value="$PROJECT_DIR$/kernel/kernel_test.cpp" />
         <option value="$PROJECT_DIR$/usr/common.asm" />
         <option value="$PROJECT_DIR$/libc/test.cpp" />
-        <option value="$PROJECT_DIR$/basic_lib/sys_io.cpp" />
         <option value="$PROJECT_DIR$/kernel/bin_loader.h" />
-        <option value="$PROJECT_DIR$/basic_lib/asm_lib.asm" />
-        <option value="$PROJECT_DIR$/usr/help.asm" />
         <option value="$PROJECT_DIR$/kernel/Makefrag" />
         <option value="$PROJECT_DIR$/build/libc/bc.c" />
         <option value="$PROJECT_DIR$/libc/Makefrag" />
         <option value="$PROJECT_DIR$/libc/string.h" />
         <option value="$PROJECT_DIR$/include/defines.h" />
-        <option value="$PROJECT_DIR$/basic_lib/sys_lib.h" />
         <option value="$PROJECT_DIR$/libc/stdlib.cpp" />
         <option value="$PROJECT_DIR$/libc/stdlib.h" />
         <option value="$PROJECT_DIR$/libc/string.cpp" />
@@ -142,12 +170,18 @@
         <option value="$PROJECT_DIR$/kernel/kernel_main.cpp" />
         <option value="$PROJECT_DIR$/usr/record.asm" />
         <option value="$PROJECT_DIR$/libc/sys/hhos.h" />
-        <option value="$PROJECT_DIR$/libc/stdio.cpp" />
         <option value="$PROJECT_DIR$/libc/ctype.cpp" />
         <option value="$PROJECT_DIR$/libc/ctype.h" />
-        <option value="$PROJECT_DIR$/usr/bc.cpp" />
         <option value="$PROJECT_DIR$/kernel/tty.h" />
+        <option value="$PROJECT_DIR$/basic_lib/sys_io.cpp" />
+        <option value="$PROJECT_DIR$/boot/bootloader.asm" />
+        <option value="$PROJECT_DIR$/basic_lib/asm_lib.asm" />
+        <option value="$PROJECT_DIR$/basic_lib/sys_lib.h" />
+        <option value="$PROJECT_DIR$/usr/help.asm" />
+        <option value="$PROJECT_DIR$/libc/stdio.cpp" />
+        <option value="$PROJECT_DIR$/usr/calc.cpp" />
         <option value="$PROJECT_DIR$/kernel/sh.h" />
+        <option value="$PROJECT_DIR$/usr/bc.cpp" />
       </list>
     </option>
   </component>
@@ -282,12 +316,12 @@
       <updated>1522402348597</updated>
       <workItem from="1522402349928" duration="17302000" />
       <workItem from="1522458267481" duration="22650000" />
-      <workItem from="1522629881015" duration="32671000" />
+      <workItem from="1522629881015" duration="41735000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="72623000" />
+    <option name="totallyTimeSpent" value="81687000" />
   </component>
   <component name="TodoView" selected-index="2">
     <todo-panel id="selected-file">
@@ -299,10 +333,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="989" height="900" extended-state="0" />
+    <frame x="0" y="0" width="1440" height="900" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.17758985" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17758985" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32889965" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32769045" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23095526" sideWeight="0.5137421" order="7" side_tool="true" content_ui="tabs" />
@@ -350,23 +384,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/kernel/sh.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="34" column="57" lean-forward="false" selection-start-line="34" selection-start-column="57" selection-end-line="34" selection-end-column="57" />
-          <folding>
-            <element signature="e#77#103#0" expanded="true" />
-            <element signature="e#1290#1450#0" expanded="false" />
-            <element signature="e#3214#3782#0" expanded="false" />
-            <element signature="e#3787#3883#0" expanded="false" />
-            <element signature="e#3888#4526#0" expanded="false" />
-            <element signature="e#4531#5309#0" expanded="false" />
-            <element signature="e#5315#5776#0" expanded="false" />
-            <element signature="e#5791#5890#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/libc/crt0.S">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
@@ -429,14 +446,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/usr/help.asm">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="11" column="0" lean-forward="true" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -515,17 +524,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/libc/stdlib.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#21#0" expanded="false" />
-            <element signature="e#89#107#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/libc/Makefrag">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
@@ -538,14 +536,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="9" column="0" lean-forward="false" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/usr/user5.asm">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="20" column="20" lean-forward="false" selection-start-line="20" selection-start-column="20" selection-end-line="20" selection-end-column="20" />
           <folding />
         </state>
       </provider>
@@ -590,14 +580,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/basic_lib/sys_io.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="364">
-          <caret line="153" column="0" lean-forward="false" selection-start-line="153" selection-start-column="0" selection-end-line="153" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/kernel/kernel_main.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
@@ -630,14 +612,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/basic_lib/sys_lib.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="26" column="17" lean-forward="false" selection-start-line="26" selection-start-column="17" selection-end-line="26" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/basic_lib/sys_tty.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -662,44 +636,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/libc/stdio.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="25" column="26" lean-forward="false" selection-start-line="25" selection-start-column="26" selection-end-line="25" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/usr/bc.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1485">
-          <caret line="99" column="31" lean-forward="false" selection-start-line="99" selection-start-column="31" selection-end-line="99" selection-end-column="31" />
-          <folding>
-            <element signature="e#40#71#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/libc/sys/hhos.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="300">
           <caret line="21" column="19" lean-forward="false" selection-start-line="21" selection-start-column="19" selection-end-line="21" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/boot/bootloader.asm">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="17" column="13" lean-forward="false" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/libc/stdio.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="295">
-          <caret line="154" column="8" lean-forward="false" selection-start-line="154" selection-start-column="8" selection-end-line="154" selection-end-column="8" />
           <folding />
         </state>
       </provider>
@@ -712,43 +652,120 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/basic_lib/asm_lib.asm">
+    <entry file="file://$PROJECT_DIR$/usr/user5.asm">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="22" column="6" lean-forward="false" selection-start-line="22" selection-start-column="6" selection-end-line="22" selection-end-column="6" />
+        <state relative-caret-position="165">
+          <caret line="11" column="12" lean-forward="false" selection-start-line="11" selection-start-column="12" selection-end-line="11" selection-end-column="12" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/kernel/tty.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="401">
-          <caret line="82" column="4" lean-forward="false" selection-start-line="82" selection-start-column="4" selection-end-line="82" selection-end-column="4" />
+        <state relative-caret-position="472">
+          <caret line="69" column="19" lean-forward="false" selection-start-line="69" selection-start-column="19" selection-end-line="69" selection-end-column="19" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/libc/string.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="244">
-          <caret line="23" column="26" lean-forward="false" selection-start-line="23" selection-start-column="26" selection-end-line="23" selection-end-column="26" />
+        <state relative-caret-position="255">
+          <caret line="17" column="5" lean-forward="false" selection-start-line="17" selection-start-column="5" selection-end-line="17" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/basic_lib/sys_io.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="251">
+          <caret line="67" column="5" lean-forward="false" selection-start-line="67" selection-start-column="5" selection-end-line="67" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/basic_lib/sys_lib.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="19" column="17" lean-forward="false" selection-start-line="19" selection-start-column="17" selection-end-line="19" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/boot/bootloader.asm">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="12" column="0" lean-forward="false" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/usr/help.asm">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="17" lean-forward="true" selection-start-line="0" selection-start-column="17" selection-end-line="0" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libc/stdio.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="25" column="26" lean-forward="false" selection-start-line="25" selection-start-column="26" selection-end-line="25" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libc/stdlib.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libc/stdio.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="609">
+          <caret line="157" column="20" lean-forward="false" selection-start-line="157" selection-start-column="20" selection-end-line="157" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/usr/calc.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="265">
+          <caret line="95" column="0" lean-forward="false" selection-start-line="95" selection-start-column="0" selection-end-line="95" selection-end-column="0" />
+          <folding>
+            <element signature="e#40#71#0" expanded="false" />
+            <element signature="e#152#164#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/basic_lib/asm_lib.asm">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="325">
+          <caret line="59" column="10" lean-forward="false" selection-start-line="59" selection-start-column="10" selection-end-line="59" selection-end-column="10" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/kernel/sh.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="492">
-          <caret line="79" column="0" lean-forward="true" selection-start-line="79" selection-start-column="0" selection-end-line="79" selection-end-column="0" />
+        <state relative-caret-position="285">
+          <caret line="69" column="33" lean-forward="false" selection-start-line="69" selection-start-column="33" selection-end-line="69" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/usr/bc.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-832">
+          <caret line="72" column="61" lean-forward="false" selection-start-line="72" selection-start-column="61" selection-end-line="72" selection-end-column="61" />
           <folding>
-            <element signature="e#77#103#0" expanded="true" />
-            <element signature="e#1290#1450#0" expanded="false" />
-            <element signature="e#3214#3782#0" expanded="false" />
-            <element signature="e#3787#3883#0" expanded="false" />
-            <element signature="e#3888#4526#0" expanded="false" />
-            <element signature="e#4531#5309#0" expanded="false" />
-            <element signature="e#5315#5776#0" expanded="false" />
-            <element signature="e#5791#5890#0" expanded="false" />
+            <element signature="e#40#71#0" expanded="true" />
+            <element signature="e#152#164#0" expanded="true" />
           </folding>
         </state>
       </provider>

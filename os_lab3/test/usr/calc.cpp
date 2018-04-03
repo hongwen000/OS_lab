@@ -1,5 +1,5 @@
 //
-// Created by 李新锐 on 31/03/2018.
+// Created by 李新锐 on 04/04/2018.
 //
 
 #include "../include/defines.h"
@@ -28,26 +28,16 @@ struct fixed_stack {
 
 class calc{
 public:
-    calc (const char * input)
+    calc (const char * infix)
     {
-        errorn = parse(input);
-        infix2pofix(parsed_input);
+        infix2pofix(infix);
     }
-    int get_err()
-    {
-        return errorn;
-    }
-
-    inline int get_result()
-    {
-        return eval_pofix();
-    }
+    int operator() (){ return eval_pofix();};
 
 private:
-    char parsed_input[SIZE];
+    char parsed_str[SIZE];
     char pofix[SIZE];
     fixed_stack<int> s;
-    int errorn;
     inline int priority(char ch)
     {
         if (ch == '*' || ch == '/')
@@ -59,36 +49,14 @@ private:
         else
             return 1;
     }
-    int parse(const char* infix)
-    {
-        int k = 0;
-        char ch;
-        for(size_t i = 0; i < strlen(infix); ++i)
-        {
-            ch = infix[i];
-            if(isspace(ch))
-            {
-                continue;
-            }
-            else if (isdigit(ch) || ch == '(' || ch == ')' || ch == '+' || ch == '-' || ch == '*' || ch == '/')
-            {
-                parsed_input[k++] = ch;
-            }
-            else
-            {
-                return i + 1;
-            }
-        }
-        return 0;
-    }
-    void infix2pofix(const char* infix_str)
+    void infix2pofix(const char* infix)
     {
         char ch;
         s.push('#');
         int j = 0;
-        for(size_t i = 0; i < strlen(infix_str); ++i)
+        for(size_t i = 0; i < strlen(parsed_str); ++i)
         {
-            ch = infix_str[i];
+            ch = infix[i];
             if (ch == '(')
             {
                 s.push('(');
@@ -168,30 +136,12 @@ private:
                 }
             }
         }
-        return s.top();
     }
 };
-
 extern "C" void main()
 {
     char infix[SIZE];
-    printf("Basic calculate 1.1\n");
-    printf("Input q to exit\n");
-    while (true)
-    {
-        gets(infix);
-        if (strcmp(infix, "q") == 0)
-            break;
-        calc c(infix);
-        int errorn = c.get_err();
-        if(errorn != 0)
-        {
-            printf("Wrong input at column %d\n", errorn);
-        }
-        else
-        {
-            printf("%d\n", c.get_result());
-        }
-    }
+    printf("Basic calculate 1.0\n");
+    gets(infix);
+    printf("%d\n",calc(infix));
 }
-

@@ -146,10 +146,17 @@ int getchar(void)
 }
 char *gets( char *str )
 {
+    int cnt = 0;
     char ch;
     while(true)
     {
         ch = getchar();
+        if (ch == '\b')
+        {
+            if (cnt > 0)
+                putchar(ch);
+            continue;
+        }
         putchar(ch);
         if(ch == 13) {
             putchar('\n');

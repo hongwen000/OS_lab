@@ -1,4 +1,6 @@
 BITS 16
+%define _16_BIT_DIRECT_USED_IN_C_
+
 [global sys_bios_clear_screen]
 [global sys_bios_print_string]
 [global sys_bios_getchar]
@@ -20,7 +22,12 @@ sys_bios_print_string:
 	int	10h			        
     mov bp, gs
     pop bp
+    %ifdef _16_BIT_DIRECT_USED_IN_C_
+    pop ecx
+    jmp cx
+    %else
     ret
+    %endif
 
 sys_bios_clear_screen:
     pusha           
@@ -33,7 +40,12 @@ sys_bios_clear_screen:
     mov dl,79  
     int 0x10        
     popa            
-    ret             
+    %ifdef _16_BIT_DIRECT_USED_IN_C_
+    pop ecx
+    jmp cx
+    %else
+    ret
+    %endif
 
 sys_bios_getchar:
     mov ah, 0
@@ -42,27 +54,32 @@ sys_bios_getchar:
     ret
 
 sys_execve_bin:
-      push bp
-      mov bp, sp
-      pusha         ;同样这里要保护堆栈！！！
-      push ds
-      push es
-      mov ax, 0x1000
-      mov ds, ax
-      mov es, ax
-      mov ss, ax
-      mov word[0xA000], 0xCD
-      mov word[0xA000 + 2], 20h
-      mov word[0xA00A], return_point
-      mov word[0xA00A + 2], cs
-      jmp 0x1000:0xA100
+    push bp
+    mov bp, sp
+    pusha         ;这里要保护寄存器!!!
+    push ds
+    push es
+    mov ax, 0x1000
+    mov ds, ax
+    mov es, ax
+    mov ss, ax
+    mov word[0xA000], 0xCD
+    mov word[0xA000 + 2], 20h
+    mov word[0xA00A], return_point
+    mov word[0xA00A + 2], cs
+    jmp 0x1000:0xA100
 return_point:
-      mov ax, 0x0000
-      mov ss, ax
-      pop ax
-      mov es, ax
-      pop ax
-      mov ds, ax
-      popa
-      pop bp
-      ret
+    mov ax, 0x0000
+    mov ss, ax
+    pop ax
+    mov es, ax
+    pop ax
+    mov ds, ax
+    popa
+    pop bp
+    %ifdef _16_BIT_DIRECT_USED_IN_C_
+    pop ecx
+    jmp cx
+    %else
+    ret
+    %endif
