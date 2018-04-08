@@ -5,6 +5,8 @@ BITS 16
 [global sys_bios_print_string]
 [global sys_bios_getchar]
 [global sys_execve_bin]
+[global sys_sleep]
+[extern sys_int08_arrive]
 
 
 sys_bios_print_string:
@@ -75,6 +77,26 @@ return_point:
     mov es, ax
     pop ax
     mov ds, ax
+    popa
+    pop bp
+    %ifdef _16_BIT_DIRECT_USED_IN_C_
+    pop ecx
+    jmp cx
+    %else
+    ret
+    %endif
+
+sys_sleep:
+    push bp
+    mov bp, sp
+    pusha
+    mov cx, word[bp+10]
+    sleep_loop:
+        cmp byte[sys_int08_arrive], 0
+        jz sleep_loop
+        mov ax, 0
+        xchg al, byte[sys_int08_arrive]
+        loop sleep_loop
     popa
     pop bp
     %ifdef _16_BIT_DIRECT_USED_IN_C_

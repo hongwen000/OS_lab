@@ -16,6 +16,10 @@ ASELF = -f elf32
 
 AR = $(GCC_PREFIX)ar
 
+all:
+	make clean
+	make bochs
+
 
 GCC_PREFIX = /opt/cross/gcc-i386/bin/i386-elf-
 
@@ -65,8 +69,7 @@ asm_src = basic_lib/asm_lib.asm
 
 asm_obj = $(build_dir)/$(asm_src:.asm=.o)
 
-c_obj   = $(build_dir)/basic_lib/sys_io.o \
-		  $(build_dir)/basic_lib/sys_tty.o
+c_obj   = $(build_dir)/basic_lib/sys_io.o
 
 basic_lib = $(build_dir)/basic_lib/libbasic.a
 
@@ -124,7 +127,9 @@ user_bin = $(build_dir)/usr/help.bin   \
            $(build_dir)/usr/user3.bin  \
            $(build_dir)/usr/user4.bin  \
            $(build_dir)/usr/user5.bin  \
-           $(build_dir)/usr/bc.bin
+           $(build_dir)/usr/bc.bin \
+           $(build_dir)/usr/sleep.bin
+
 
 write_usr_progs: $(user_bin)
 	$(foreach user_prog, $(user_bin), $(call DO_write, $(user_prog)))

@@ -4,6 +4,30 @@
 #include "../../basic_lib/sys_lib.h"
 tty* sys_get_current_tty();
 
+static inline void system_call_sleep(unsigned int n)
+{
+    asm volatile(
+    "movl %0, %%ecx\n\t"
+    "movb $2, %%ah\n\t"
+            "movw %%ss, %%bx\n\t"
+            "movw %%bx, %%fs\n\t"
+            "movw $0, %%bx\n\t"
+            "movw %%bx, %%ss\n\t"
+            "movw %%bx, %%ds\n\t"
+            "movw %%bx, %%es\n\t"
+    "int $0x98\n\t"
+            "movw %%fs, %%bx\n\t"
+            "movw %%bx, %%ss\n\t"
+            "movw %%bx, %%ds\n\t"
+            "movw %%bx, %%es\n\t"
+
+    :
+    :"r"(n)
+    :"%eax", "%ebx", "%ecx"
+    );
+
+}
+
 static inline int system_call_getchar()
 {
     int ret = 0;
@@ -43,5 +67,6 @@ static inline void system_call_putchar(int ch)
     :"r"(c)
     :"%eax", "ebx"
     );
+    //TODO
 }
 #endif
