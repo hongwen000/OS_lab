@@ -12,8 +12,26 @@
 [extern sys_current_tty_putchar]
 [extern system_call_getchar]
 [extern fun_in_c]
+[global sys_int08_arrive]
 
 kernel_start:
+
+    mov bh, 3
+    cli
+    mov al, 0x8A
+    out 0x70, al
+    in al, 0x71
+    and al, 0xF0
+    or bh, al
+    mov al, 0x8A
+    out 0x70, al
+    mov al, bh
+    out 0x71, al
+    sti
+    push interrupt_08h
+    push 08h * 4
+    call install_int
+    add sp, 4
 
 	mov ax, [09h * 4]
 	mov word [int_09_saved], ax
@@ -59,6 +77,58 @@ install_int:
       mov es, ax
       pop bp
       ret
+
+int_08_what_to_play db 0
+sys_int08_arrive dd 0
+
+interrupt_08h:
+    cli
+    push es
+    pusha
+    mov al, 1
+    xchg al, byte[sys_int08_arrive]
+
+    mov ax, cs
+    mov es, ax
+    
+    mov cx, 0xB800
+    mov gs, cx
+    mov ah, 0x9
+
+    test_up:
+    cmp byte[es:int_08_what_to_play], 0
+    jnz test_left
+    mov al, '|'
+    mov byte[es:int_08_what_to_play], 1
+    jmp test_input_over
+    test_left:
+    cmp byte[es:int_08_what_to_play], 1
+    jnz test_right
+    mov al, '/'
+    mov byte[es:int_08_what_to_play], 2
+    jmp test_input_over
+    test_right:
+    cmp byte[es:int_08_what_to_play], 2
+    jnz test_down
+    mov al, '-'
+    mov byte[es:int_08_what_to_play], 3
+    jmp test_input_over
+    test_down:
+    cmp byte[es:int_08_what_to_play], 3
+    jnz test_input_over
+    mov al, '\'
+    mov byte[es:int_08_what_to_play], 0
+    test_input_over:
+
+    mov word [gs:0x500],ax
+
+	mov al,0x20
+	out 0x20,al
+	out 0xA0,al
+    popa
+    pop es
+    sti
+	iret
 
 int_09_saved dd 0
 ouchs db 'OUCH!OUCH!'
