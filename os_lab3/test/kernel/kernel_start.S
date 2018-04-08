@@ -78,7 +78,7 @@ install_int:
       pop bp
       ret
 
-int_08_what_to_play db 0
+int_08_what_to_play dw 0
 sys_int08_arrive dd 0
 
 interrupt_08h:
@@ -95,29 +95,39 @@ interrupt_08h:
     mov gs, cx
     mov ah, 0x9
 
+%define INTEVAL 256
+
     test_up:
-    cmp byte[es:int_08_what_to_play], 0
-    jnz test_left
+    cmp word[es:int_08_what_to_play], INTEVAL
+    jge test_left
     mov al, '|'
-    mov byte[es:int_08_what_to_play], 1
+    inc word[es:int_08_what_to_play]
     jmp test_input_over
+
     test_left:
-    cmp byte[es:int_08_what_to_play], 1
-    jnz test_right
+    cmp word[es:int_08_what_to_play], INTEVAL * 2
+    jge test_right
     mov al, '/'
-    mov byte[es:int_08_what_to_play], 2
+    inc word[es:int_08_what_to_play]
     jmp test_input_over
+
     test_right:
-    cmp byte[es:int_08_what_to_play], 2
-    jnz test_down
+    cmp word[es:int_08_what_to_play], INTEVAL * 3
+    jge test_down
     mov al, '-'
-    mov byte[es:int_08_what_to_play], 3
+    inc word[es:int_08_what_to_play]
     jmp test_input_over
+
     test_down:
-    cmp byte[es:int_08_what_to_play], 3
-    jnz test_input_over
+    cmp word[es:int_08_what_to_play], INTEVAL * 4
+    jge reset_char
     mov al, '\'
-    mov byte[es:int_08_what_to_play], 0
+    inc word[es:int_08_what_to_play]
+    jmp test_input_over
+
+    reset_char:
+    mov word[es:int_08_what_to_play], 0
+
     test_input_over:
 
     mov word [gs:0x500],ax
@@ -196,15 +206,33 @@ func_00:
       call sys_bios_getchar
       jmp int_98h_end
 func_01:
-      pusha
       cmp ah, 1h
       jnz func_02
+      pusha
       push eax
       call dword sys_current_tty_putchar
       add sp, 4
       popa
       jmp int_98h_end
 func_02:
+      cmp ah, 2h
+      jnz func_03
+      push es
+      pusha
+      mov ax, cs
+      mov es, ax
+      sti
+      sleep_loop:
+          cmp byte[es:sys_int08_arrive], 0
+          jz sleep_loop
+          mov ax, 0
+          xchg al, byte[es:sys_int08_arrive]
+          loop sleep_loop
+      popa
+      pop es
+      jmp int_98h_end
+
+func_03:
 
 int_98h_end:
       iret
