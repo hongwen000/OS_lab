@@ -46,3 +46,5 @@ gdbdash
 OStoolsDOS
 /*/cmake-build-debug/*
 /*/.idea/*
+os_lab3/test/cmake-build-debug
+os_lab3/test/kernel_elf_dump
