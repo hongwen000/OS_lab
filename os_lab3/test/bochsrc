@@ -19,7 +19,8 @@ boot: floppy
 # log: bochsout.txt
 
 # disable the mouse
-mouse: enabled=0
+mouse: type=ps2, enabled=1
+#mouse: enabled=0
 
 # enable key mapping, using US layout as default.
 keyboard: keymap=/usr/local/Cellar/bochs/2.6.9_1/share/bochs/keymaps/sdl2-pc-us.map
