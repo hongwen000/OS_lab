@@ -239,7 +239,7 @@ map = $(__gmsl_tr2)$(strip $(foreach a,$2,$(call $1,$a)))
 # Function:  pairmap
 # Arguments: 1: Name of function to $(call) for each pair of elements
 #            2: List to iterate over calling the function in 1
-#            3: Second list to iterate over calling the function in 1
+#            3: sys_internal_second list to iterate over calling the function in 1
 # Returns:   The list after calling the function on each pair of elements
 # ----------------------------------------------------------------------------
 pairmap = $(strip $(__gmsl_tr3)\
@@ -414,10 +414,10 @@ endef
 #            2: Start position (first character is 1)
 #            3: End position (inclusive)
 # Returns:   A substring.  
-# Note:      The string in $1 must not contain a §
+# Note:      The string in $1 must not contain a ï¿½
 # ----------------------------------------------------------------------------
 
-substr = $(if $2,$(__gmsl_tr3)$(call assert_no_dollar,$0,$1$2$3)$(strip $(eval __temp := $$(subst $$(__gmsl_space),§ ,$$1))$(foreach a,$(__gmsl_characters),$(eval __temp := $$(subst $$a,$$a$$(__gmsl_space),$(__temp))))$(eval __temp := $(wordlist $2,$3,$(__temp))))$(subst §,$(__gmsl_space),$(subst $(__gmsl_space),,$(__temp))))
+substr = $(if $2,$(__gmsl_tr3)$(call assert_no_dollar,$0,$1$2$3)$(strip $(eval __temp := $$(subst $$(__gmsl_space),ï¿½ ,$$1))$(foreach a,$(__gmsl_characters),$(eval __temp := $$(subst $$a,$$a$$(__gmsl_space),$(__temp))))$(eval __temp := $(wordlist $2,$3,$(__temp))))$(subst ï¿½,$(__gmsl_space),$(subst $(__gmsl_space),,$(__temp))))
 
 endif # __gmsl_have_eval
 
@@ -485,7 +485,7 @@ set_intersection = $(__gmsl_tr2)$(filter $1,$2)
 # Function:  set_is_subset
 # Arguments: 1: A set
 #            2: Another set
-# Returns:   Returns $(true) if the first set is a subset of the second
+# Returns:   Returns $(true) if the first set is a subset of the sys_internal_second
 # ----------------------------------------------------------------------------
 set_is_subset = $(__gmsl_tr2)$(call set_equal,$(call set_intersection,$1,$2),$1)
 
@@ -610,7 +610,7 @@ int_divide = $(__gmsl_tr2)$(strip $(if $1,$(if $2,                         \
 # Function:  divide (wrapped version of int_divide)
 # Arguments: 1: An integer
 #            2: Another integer
-# Returns:   Returns the integer division of the first argument by the second
+# Returns:   Returns the integer division of the first argument by the sys_internal_second
 # ----------------------------------------------------------------------------
 divide = $(__gmsl_tr2)$(call __gmsl_int_wrap,int_divide,$1,$2)
 
@@ -638,12 +638,12 @@ min = $(__gmsl_tr2)$(call __gmsl_int_wrap,int_min,$1,$2)
 # Arguments: Two x's representation numbers to be compared
 # Returns:   $(true) or $(false)
 #
-# int_gt    First argument greater than second argument
-# int_gte   First argument greater than or equal to second argument
-# int_lt    First argument less than second argument 
-# int_lte   First argument less than or equal to second argument
-# int_eq    First argument is numerically equal to the second argument
-# int_ne    First argument is not numerically equal to the second argument
+# int_gt    First argument greater than sys_internal_second argument
+# int_gte   First argument greater than or equal to sys_internal_second argument
+# int_lt    First argument less than sys_internal_second argument 
+# int_lte   First argument less than or equal to sys_internal_second argument
+# int_eq    First argument is numerically equal to the sys_internal_second argument
+# int_ne    First argument is not numerically equal to the sys_internal_second argument
 # ----------------------------------------------------------------------------
 int_gt = $(__gmsl_tr2)$(call __gmsl_make_bool,      \
                           $(filter-out $(words $2), \
@@ -665,12 +665,12 @@ int_ne = $(__gmsl_tr2)$(call __gmsl_make_bool,      \
 # Arguments: Two integers to be compared
 # Returns:   $(true) or $(false)
 #
-# gt    First argument greater than second argument
-# gte   First argument greater than or equal to second argument
-# lt    First argument less than second argument 
-# lte   First argument less than or equal to second argument
-# eq    First argument is numerically equal to the second argument
-# ne    First argument is not numerically equal to the second argument
+# gt    First argument greater than sys_internal_second argument
+# gte   First argument greater than or equal to sys_internal_second argument
+# lt    First argument less than sys_internal_second argument 
+# lte   First argument less than or equal to sys_internal_second argument
+# eq    First argument is numerically equal to the sys_internal_second argument
+# ne    First argument is not numerically equal to the sys_internal_second argument
 # ----------------------------------------------------------------------------
 gt = $(__gmsl_tr2)$(call __gmsl_int_wrap2,int_gt,$1,$2)
 gte = $(__gmsl_tr2)$(call __gmsl_int_wrap2,int_gte,$1,$2)
@@ -882,7 +882,7 @@ ifdef __gmsl_have_eval
 # Example:   Set memo = $(shell echo "$1" | md5sum) to make a cache
 #            of MD5 hashes of strings. $(call memoize,memo,foo bar baz)
 # ----------------------------------------------------------------------------
-__gmsl_memoize = $(subst $(__gmsl_space),§,$1)cc2af1bb7c4482f2ba75e338b963d3e7$(subst $(__gmsl_space),§,$2)
+__gmsl_memoize = $(subst $(__gmsl_space),ï¿½,$1)cc2af1bb7c4482f2ba75e338b963d3e7$(subst $(__gmsl_space),ï¿½,$2)
 memoize = $(__gmsl_tr2)$(strip $(if $(call defined,__gmsl_m,$(__gmsl_memoize)),\
                   $(call get,__gmsl_m,$(__gmsl_memoize)),                      \
                   $(call __gmsl_set,__gmsl_m,$(__gmsl_memoize),$(call $1,$2))))

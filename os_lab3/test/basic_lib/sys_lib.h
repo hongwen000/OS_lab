@@ -23,6 +23,8 @@ extern "C"{
     void sys_read_disk(uint32_t segment, uint32_t address, uint16_t logical_start_sector, uint8_t secotr_cnt);
     void sys_bios_scroll_up(int color);
     void sys_sleep(int n);
+    void read_rtc();
+    extern char sys_internal_time_str[20];
 
 #ifdef __cplusplus
 }

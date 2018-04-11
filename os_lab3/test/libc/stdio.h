@@ -4,7 +4,9 @@
 #include "../include/defines.h"
 #include "sys/hhos.h"
 
+#ifndef _HHOS_LIBC_TEST
 #define EOF -1
+#endif
 
 #ifdef _HHOS_LIBC_TEST
 namespace hhlibc {

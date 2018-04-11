@@ -7,6 +7,8 @@
 #include "./string.h"
 #include "./stdio.h"
 #include "./stdlib.h"
+#include "./ctype.h"
+#include "./assert.h"
 
 TEST(string, strlen) {
   EXPECT_EQ(hhlibc::strlen("123"), std::strlen("123"));
@@ -95,6 +97,11 @@ TEST(stdlib, strtol) {
     EXPECT_EQ(ret, 123);
 }
 
+TEST(stdlib, div) {
+    auto ret = hhlibc::div(11, 3);
+    EXPECT_EQ(ret.quot, 3);
+    EXPECT_EQ(ret.rem, 2);
+}
 TEST(stdio, sscanf) {
     char* buf="a123string 20f";
     char c;
@@ -113,6 +120,7 @@ TEST(stdio, sscanf) {
 
 int main(int argc, char** argv) {  
     testing::InitGoogleTest(&argc, argv);
+    hhos_assert(1 == 2);
     char record_buf[] = "5\npopup-1\n5";
     char buf1[32];
     char buf2[32];

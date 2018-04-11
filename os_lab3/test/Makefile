@@ -69,7 +69,8 @@ asm_src = basic_lib/asm_lib.asm
 
 asm_obj = $(build_dir)/$(asm_src:.asm=.o)
 
-c_obj   = $(build_dir)/basic_lib/sys_io.o
+c_obj   = $(build_dir)/basic_lib/sys_io.o \
+		  $(build_dir)/basic_lib/cmos.o
 
 basic_lib = $(build_dir)/basic_lib/libbasic.a
 
@@ -110,7 +111,7 @@ rm_kernel:
 	rm -f $(kernel_bin)
 	rm -f $(kernel_bin).elf
 
-disk_index = 32
+disk_index = 64
 
 define DO_write
 dd if=$(strip $(1)) of=$(floppyfile) bs=512 seek=$(strip $(disk_index)) conv=notrunc
@@ -128,7 +129,8 @@ user_bin = $(build_dir)/usr/help.bin   \
            $(build_dir)/usr/user4.bin  \
            $(build_dir)/usr/user5.bin  \
            $(build_dir)/usr/bc.bin \
-           $(build_dir)/usr/sleep.bin
+           $(build_dir)/usr/sleep.bin  \
+           $(build_dir)/usr/int.bin 
 
 
 write_usr_progs: $(user_bin)

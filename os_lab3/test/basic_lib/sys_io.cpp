@@ -173,3 +173,41 @@ void sys_read_disk(uint32_t segment, uint32_t address, uint16_t logical_start_se
      "pop %%es\n\t"
      : :"g"(segment), "g"(address), "g"(head), "g"(_cx), "g" (secotr_cnt));
 }
+
+extern "C" void interrupt_33h_c() {
+    const char* l11 = " _____      _     _____  _____ ";
+    const char* l12 = "|_   _|    | |   |____ ||____ |";
+    const char* l13 = "  | | _ __ | |_      / /    / /";
+    const char* l14 = "  | || '_ \\| __|     \\ \\    \\ \\";
+    const char* l15 = " _| || | | | |_  .___/ /.___/ /";
+    const char* l16 = " \\___/_| |_|\\__| \\____/ \\____/ ";
+    sys_bios_print_string(l11, 31, MAKE_COLOR(VGA_BLACK, VGA_CYAN), MAKE_POS(0, 0));
+    sys_bios_print_string(l12, 31, MAKE_COLOR(VGA_BLACK, VGA_CYAN), MAKE_POS(1, 0));
+    sys_bios_print_string(l13, 31, MAKE_COLOR(VGA_BLACK, VGA_CYAN), MAKE_POS(2, 0));
+    sys_bios_print_string(l14, 31, MAKE_COLOR(VGA_BLACK, VGA_CYAN), MAKE_POS(3, 0));
+    sys_bios_print_string(l15, 31, MAKE_COLOR(VGA_BLACK, VGA_CYAN), MAKE_POS(4, 0));
+    sys_bios_print_string(l16, 31, MAKE_COLOR(VGA_BLACK, VGA_CYAN), MAKE_POS(5, 0));
+}
+
+extern "C" void interrupt_34h_c() {
+
+    const char * l11 = " __    __  __    __   ______    ______  ";
+    const char * l12 = "|  \\  |  \\|  \\  |  \\ /      \\  /      \\ ";
+    const char * l13 = "| $$  | $$| $$  | $$|  $$$$$$\\|  $$$$$$\\";
+    const char * l14 = "| $$__| $$| $$__| $$| $$  | $$| $$___\\$$";
+    const char * l15 = "| $$    $$| $$    $$| $$  | $$ \\$$    \\ ";
+    const char * l16 = "| $$$$$$$$| $$$$$$$$| $$  | $$ _\\$$$$$$\\";
+    const char * l17 = "| $$  | $$| $$  | $$| $$__/ $$|  \\__| $$";
+    const char * l18 = "| $$  | $$| $$  | $$ \\$$    $$ \\$$    $$";
+    const char * l19 = " \\$$   \\$$ \\$$   \\$$  \\$$$$$$   \\$$$$$$ ";
+
+    sys_bios_print_string(l11, 40, MAKE_COLOR(VGA_BLACK, VGA_BRIGHT_CYAN), MAKE_POS(0, 40));
+    sys_bios_print_string(l12, 40, MAKE_COLOR(VGA_BLACK, VGA_BRIGHT_CYAN), MAKE_POS(1, 40));
+    sys_bios_print_string(l13, 40, MAKE_COLOR(VGA_BLACK, VGA_BRIGHT_CYAN), MAKE_POS(2, 40));
+    sys_bios_print_string(l14, 40, MAKE_COLOR(VGA_BLACK, VGA_BRIGHT_CYAN), MAKE_POS(3, 40));
+    sys_bios_print_string(l15, 40, MAKE_COLOR(VGA_BLACK, VGA_BRIGHT_CYAN), MAKE_POS(4, 40));
+    sys_bios_print_string(l16, 40, MAKE_COLOR(VGA_BLACK, VGA_BRIGHT_CYAN), MAKE_POS(5, 40));
+    sys_bios_print_string(l17, 40, MAKE_COLOR(VGA_BLACK, VGA_BRIGHT_CYAN), MAKE_POS(6, 40));
+    sys_bios_print_string(l18, 40, MAKE_COLOR(VGA_BLACK, VGA_BRIGHT_CYAN), MAKE_POS(7, 40));
+    sys_bios_print_string(l19, 40, MAKE_COLOR(VGA_BLACK, VGA_BRIGHT_CYAN), MAKE_POS(8, 40));
+}

@@ -10,13 +10,6 @@
 __asm__(".code16gcc\n");
 #endif
 
-#endif
-
-using size_t = unsigned long;
-using uint8_t = unsigned char;
-using uint16_t = unsigned short;
-using uint32_t = unsigned int;
-
 typedef __builtin_va_list va_list;
 
 #define va_start(ap, last) __builtin_va_start(ap, last)
@@ -24,6 +17,15 @@ typedef __builtin_va_list va_list;
 #define va_arg(ap, type) __builtin_va_arg(ap, type)
 
 #define va_end(ap) __builtin_va_end(ap)
+#else
+#include <stdarg.h>
+#endif
+
+
+using size_t = unsigned long;
+using uint8_t = unsigned char;
+using uint16_t = unsigned short;
+using uint32_t = unsigned int;
 
 
 enum VGA_COLOR{
