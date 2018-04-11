@@ -8,13 +8,13 @@
 #include "../libc/stdio.h"
 #include "../libc/string.h"
 #include "../libc/stdlib.h"
-#include "sys_lib.h"
+#include "../basic_lib/sys_lib.h"
 #include "../basic_lib/sys_lib.h"
 #include "bin_loader.h"
 #include "../libc/sys/hhos.h"
 #include "../libc/ctype.h"
-#define HELP_FILE_SECTOR 32
-#define REC_FILE_SECTOR 52
+#define HELP_FILE_SECTOR 64
+#define REC_FILE_SECTOR 84
 
 class sh{
 private:
@@ -29,9 +29,10 @@ private:
             "clear",
             "help",
             "echo",
-            "history"
+            "history",
+            "date"
     };
-    int supported_cmd_num = 7;
+    int supported_cmd_num = 8;
 
     char * inputs[buf_size / 2];
     struct cmd{
@@ -94,6 +95,11 @@ private:
             {
                 printf("%s\n", histroy[i]);
             }
+        }
+        else if (is_command(input_cmd, "date"))
+        {
+            read_rtc();
+            printf("%s", sys_internal_time_str);
         }
         else {
             bool found = false;

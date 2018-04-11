@@ -1,7 +1,7 @@
 #ifndef _TTY_H_
 #define _TTY_H_
 #include "../basic_lib/sys_lib.h"
-#include "string.h"
+#include "../libc/string.h"
 
 class tty{
 

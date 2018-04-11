@@ -24,3 +24,5 @@ mouse: type=ps2, enabled=1
 
 # enable key mapping, using US layout as default.
 keyboard: keymap=/usr/local/Cellar/bochs/2.6.9_1/share/bochs/keymaps/sdl2-pc-us.map
+
+#clock: sync=both

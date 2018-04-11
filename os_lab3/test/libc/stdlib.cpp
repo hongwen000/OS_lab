@@ -5,7 +5,61 @@
 #ifdef _HHOS_LIBC_TEST
 namespace hhlibc {
 
+#else
+
+void abort()
+{
+    asm volatile ("int $0x20\n\t");
+}
 #endif
+int abs(int n)
+{
+    return n > 0 ? n : -n;
+}
+
+long labs( long n )
+{
+    return n > 0 ? n : -n;
+}
+
+div_t div( int x, int y )
+{
+    if(x == 0) return div_t{0, 0};
+    div_t r = div(x/2, y);
+    r.quot = 2 * r.quot;
+    r.rem = 2 * r.rem;
+    if(x % 2) r.rem = r.rem + 1;
+    if(r.rem >= y) 
+    {
+        r.quot = r.quot + 1;
+        r.rem = r.rem - y;
+    }
+    return r;
+}
+
+ldiv_t ldiv( long x, long y )
+{
+    if(x == 0) return ldiv_t{0, 0};
+    ldiv_t r = ldiv(x/2, y);
+    r.quot = 2 * r.quot;
+    r.rem = 2 * r.rem;
+    if(x % 2) r.rem = r.rem + 1;
+    if(r.rem >= y) 
+    {
+        r.quot = r.quot + 1;
+        r.rem = r.rem - y;
+    }
+    return r;
+}
+int atoi(const char* s)
+{
+    return (int)strtol(s, (char**)nullptr, 10);
+}
+
+long atol(const char* s)
+{
+    return strtol(s, (char**)nullptr, 10);
+}
 //TODO:
 //与标准的差别：
 //只实现了16位及以下的转换

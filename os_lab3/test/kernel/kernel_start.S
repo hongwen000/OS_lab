@@ -12,22 +12,19 @@
 [extern sys_current_tty_putchar]
 [extern system_call_getchar]
 [extern fun_in_c]
+[extern interrupt_33h_c]
+[extern interrupt_34h_c]
 [global sys_int08_arrive]
 
 kernel_start:
 
-    mov bh, 3
-    cli
-    mov al, 0x8A
-    out 0x70, al
-    in al, 0x71
-    and al, 0xF0
-    or bh, al
-    mov al, 0x8A
-    out 0x70, al
-    mov al, bh
-    out 0x71, al
-    sti
+    mov al,34h
+	out 43h,al
+	mov ax,1193182/25
+	out 40h,al
+	mov al,ah
+	out 40h,al
+
     push interrupt_08h
     push 08h * 4
     call install_int
@@ -50,6 +47,16 @@ kernel_start:
 
     push interrupt_21h
     push 21h * 4
+    call install_int
+    add sp, 4
+
+    push interrupt_33h
+    push 33h * 4
+    call install_int
+    add sp, 4
+
+    push interrupt_34h
+    push 34h * 4
     call install_int
     add sp, 4
 
@@ -95,7 +102,7 @@ interrupt_08h:
     mov gs, cx
     mov ah, 0x9
 
-%define INTEVAL 256
+%define INTEVAL 16
 
     test_up:
     cmp word[es:int_08_what_to_play], INTEVAL
@@ -130,7 +137,7 @@ interrupt_08h:
 
     test_input_over:
 
-    mov word [gs:0x500],ax
+    mov word [gs:82],ax
 
 	mov al,0x20
 	out 0x20,al
@@ -152,27 +159,27 @@ interrupt_09h:
 	mov bp,bx
     mov ah, 0x9
     mov al, 'O'
-    mov word [gs:0],ax
+    mov word [gs:60],ax
     mov al, 'U'
-    mov word [gs:2],ax
+    mov word [gs:62],ax
     mov al, 'C'
-    mov word [gs:4],ax
+    mov word [gs:64],ax
     mov al, 'H'
-    mov word [gs:6],ax
+    mov word [gs:66],ax
     mov al, 'S'
-    mov word [gs:8],ax
+    mov word [gs:68],ax
     mov al, '!'
-    mov word [gs:10],ax
+    mov word [gs:70],ax
     mov al, 'O'
-    mov word [gs:12],ax
+    mov word [gs:72],ax
     mov al, 'U'
-    mov word [gs:14],ax
+    mov word [gs:74],ax
     mov al, 'C'
-    mov word [gs:16],ax
+    mov word [gs:76],ax
     mov al, 'H'
-    mov word [gs:18],ax
+    mov word [gs:78],ax
     mov al, '!'
-    mov word [gs:20],ax
+    mov word [gs:80],ax
     popa
 
 	push es
@@ -236,3 +243,11 @@ func_03:
 
 int_98h_end:
       iret
+
+interrupt_33h:
+    call dword interrupt_33h_c
+    iret
+
+interrupt_34h:
+    call dword interrupt_34h_c
+    iret
