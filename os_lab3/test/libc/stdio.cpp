@@ -142,7 +142,8 @@ int printf( const char* format, ... )
 #ifndef _HHOS_LIBC_TEST
 int getchar(void)
 {
-    return system_call_getchar();
+    int ch = system_call_getchar();
+    return ch;
 }
 char *gets( char *str )
 {
@@ -158,7 +159,7 @@ char *gets( char *str )
             continue;
         }
         putchar(ch);
-        if(ch == 13) {
+        if(ch == 13 || ch == 10) {
             putchar('\n');
             break;
         }

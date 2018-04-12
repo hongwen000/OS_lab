@@ -8,7 +8,6 @@
 [section .text]
 [global kernel_start]
 [extern kernel_main]
-[extern sys_bios_getchar]
 [extern sys_getchar]
 [extern kb_handler]
 [extern sys_current_tty_putchar]
@@ -16,11 +15,6 @@
 [extern fun_in_c]
 [extern interrupt_33h_c]
 [extern interrupt_34h_c]
-;FIXED BUG
-;要哭了，终于调试出来了
-;不能用static的，引用地址时会出问题
-;必须要用全局变量
-[extern ctrl_shift_status]
 [global sys_int08_arrive]
 
 kernel_start:
@@ -31,18 +25,17 @@ kernel_start:
 	out 40h,al
 	mov al,ah
 	out 40h,al
-    
-    mov byte[ctrl_shift_status], 0
+
     push interrupt_08h
     push 08h * 4
     call install_int
     add sp, 4
 
-    push interrupt_09h
-    push 09h * 4
-    call install_int
-    add sp, 4
-    
+;    push interrupt_09h
+;    push 09h * 4
+;    call install_int
+;    add sp, 4
+
     push interrupt_20h
     push 20h * 4
     call install_int
@@ -154,7 +147,7 @@ ouchs db 'OUCH!OUCH!'
 len_ouch db 10
 
 interrupt_09h:	
-    cli
+
     pusha
     mov cx, 0xB800
     mov gs, cx
@@ -182,20 +175,10 @@ interrupt_09h:
     mov word [gs:78],ax
     mov al, '!'
     mov word [gs:80],ax
-
-    ;这里也要切换段（一开始没想到）因为随时可能在用户程序中被调用
-    push ds
-    push es
-    mov ax, cs
-    mov ds, ax
-    mov es, ax
-    call dword kb_handler
-    pop es
-    pop ds
-	mov al,0x20
-	out 0x20,al
-	out 0xA0,al
     popa
+
+    ;call dword kb_handler
+
 	sti
 	iret
 
@@ -212,7 +195,6 @@ panic_21h_func_not_impl:
       jmp $
 
 interrupt_98h:
-      cli
       cmp ah, 0h
       jnz func_01
 func_00:
