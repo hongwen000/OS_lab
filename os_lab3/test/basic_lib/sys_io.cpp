@@ -1,4 +1,12 @@
 #include "sys_lib.h"
+#include "../kernel/kb.h"
+
+extern "C" int sys_getchar()
+{
+    unsigned char ch = kb_buf_out();
+    return ch;
+}
+
 void sys_bios_print_int(int num, int color, int pos)
 {
     int num_ = num;

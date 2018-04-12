@@ -26,7 +26,7 @@ GCC_PREFIX = /opt/cross/gcc-i386/bin/i386-elf-
 OBJDUMP = $(GCC_PREFIX)objdump
 
 CC = $(GCC_PREFIX)gcc
-CFLAGS =  	-m16 -march=i386 \
+CFLAGS =  	-m16 -march=i486 \
 			-nostdlib -ffreestanding \
 			-mpreferred-stack-boundary=2 -lgcc \
 			-fno-builtin -Os -fno-omit-frame-pointer \
@@ -57,7 +57,9 @@ bootloader_bin = $(build_dir)/$(bootloader_src:.asm=.bin)
 include boot/Makefrag
 
 kernel_obj = $(build_dir)/kernel/kernel_start.o \
-			 $(build_dir)/kernel/kernel_main.o 
+			 $(build_dir)/kernel/kernel_main.o \
+			 $(build_dir)/kernel/kb.o 
+
 
 include kernel/Makefrag
 

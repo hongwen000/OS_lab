@@ -252,7 +252,7 @@ public:
                     buf[pos--] = '\0';
                 }
             }
-            else if (in == 13)
+            else if (in == 13 || in == 10)
             {
                 putchar('\n');
                 if(strlen(buf) == 0)

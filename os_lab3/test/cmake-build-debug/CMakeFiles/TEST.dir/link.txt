@@ -1,1 +1,0 @@
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  -g -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/TEST.dir/libc/test.cpp.o CMakeFiles/TEST.dir/usr/bc.cpp.o CMakeFiles/TEST.dir/usr/calc.cpp.o  -o TEST 
