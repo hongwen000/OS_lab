@@ -35,59 +35,61 @@ static uint16_t sys_year;
 char sys_internal_time_str[20];
  
  
-enum {
-      cmos_address = 0x70,
-      cmos_data    = 0x71
-};
+#define CMOS_SELECT 0x70
+#define CMOS_DATA 0x71
  
-int get_update_in_progress_flag() {
-      sys_outb(cmos_address, 0x0A);
-      return (sys_inb(cmos_data) & 0x80);
+int is_rdt_updating() {
+      sys_outb(CMOS_SELECT, 0x0A);
+      return (sys_inb(CMOS_DATA) & 0x80);
 }
  
-unsigned char get_RTC_register(int reg) {
-      sys_outb(cmos_address, reg);
-      return sys_inb(cmos_data);
+uint8_t read_rtc(int reg) {
+      sys_outb(CMOS_SELECT, reg);
+      return sys_inb(CMOS_DATA);
 }
  
 void read_rtc() {
-      unsigned char last_second;
-      unsigned char last_minute;
-      unsigned char last_hour;
-      unsigned char last_day;
-      unsigned char last_month;
-      unsigned char last_year;
-      unsigned char registerB;
+      uint8_t _sec;
+      uint8_t _min;
+      uint8_t _hour;
+      uint8_t _day;
+      uint8_t _month;
+      uint8_t _year;
+      uint8_t reg_B;
  
-      while (get_update_in_progress_flag());
-      sys_sec = get_RTC_register(0x00);
-      sys_minute = get_RTC_register(0x02);
-      sys_hour = get_RTC_register(0x04);
-      sys_day = get_RTC_register(0x07);
-      sys_month = get_RTC_register(0x08);
-      sys_year = get_RTC_register(0x09);
- 
-      do {
-            last_second = sys_sec;
-            last_minute = sys_minute;
-            last_hour = sys_hour;
-            last_day = sys_day;
-            last_month = sys_month;
-            last_year = sys_year;
- 
-            while (get_update_in_progress_flag());           // Make sure an update isn't in progress
-            sys_sec = get_RTC_register(0x00);
-            sys_minute = get_RTC_register(0x02);
-            sys_hour = get_RTC_register(0x04);
-            sys_day = get_RTC_register(0x07);
-            sys_month = get_RTC_register(0x08);
-            sys_year = get_RTC_register(0x09);
-      } while( (last_second != sys_sec) || (last_minute != sys_minute) || (last_hour != sys_hour) ||
-               (last_day != sys_day) || (last_month != sys_month) || (last_year != sys_year));
- 
-      registerB = get_RTC_register(0x0B);
- 
-      if (!(registerB & 0x04)) {
+      while (is_rdt_updating());
+      sys_sec = read_rtc(0x00);
+      sys_minute = read_rtc(0x02);
+      sys_hour = read_rtc(0x04);
+      sys_day = read_rtc(0x07);
+      sys_month = read_rtc(0x08);
+      sys_year = read_rtc(0x09);
+      _sec = sys_sec;
+      _min = sys_minute;
+      _hour = sys_hour;
+      _day = sys_day;
+      _month = sys_month;
+      _year = sys_year;
+      while( (_sec != sys_sec) || (_min != sys_minute) || (_hour != sys_hour) ||
+               (_day != sys_day) || (_month != sys_month) || (_year != sys_year))
+      {
+            _sec = sys_sec;
+            _min = sys_minute;
+            _hour = sys_hour;
+            _day = sys_day;
+            _month = sys_month;
+            _year = sys_year;
+            while (is_rdt_updating());
+            sys_sec = read_rtc(0x00);
+            sys_minute = read_rtc(0x02);
+            sys_hour = read_rtc(0x04);
+            sys_day = read_rtc(0x07);
+            sys_month = read_rtc(0x08);
+            sys_year = read_rtc(0x09);
+      }
+      reg_B = read_rtc(0x0B);
+      // Unpack BCD
+      if (!(reg_B & 0x04)) {
             sys_sec = (sys_sec & 0x0F) + ((sys_sec / 16) * 10);
             sys_minute = (sys_minute & 0x0F) + ((sys_minute / 16) * 10);
             sys_hour = ( (sys_hour & 0x0F) + (((sys_hour & 0x70) / 16) * 10) ) | (sys_hour & 0x80);
@@ -95,8 +97,7 @@ void read_rtc() {
             sys_month = (sys_month & 0x0F) + ((sys_month / 16) * 10);
             sys_year = (sys_year & 0x0F) + ((sys_year / 16) * 10);
       }
- 
-      if (!(registerB & 0x02) && (sys_hour & 0x80)) {
+      if (!(reg_B & 0x02) && (sys_hour & 0x80)) {
             sys_hour = ((sys_hour & 0x7F) + 12) % 24;
       }
  

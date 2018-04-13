@@ -31,9 +31,6 @@ int scanf( const char* format, ... );
 
 int scanf( const char* format, ... );
 
-int rand();
-void srand( unsigned seed );
-
 #ifndef __cplusplus
 }
 #endif

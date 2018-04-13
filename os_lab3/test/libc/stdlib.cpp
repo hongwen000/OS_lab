@@ -157,7 +157,16 @@ long strtol( const char *str, char **str_end, int base )
     ret *= sign;
     return ret;
 }
-
+unsigned long int __LIBC__RAND_NEXT__ = 1;
+int rand()
+{
+    __LIBC__RAND_NEXT__ = __LIBC__RAND_NEXT__ * 1103515245 + 12345;
+    return ((unsigned int)(__LIBC__RAND_NEXT__ / 65536) % 32768);
+}
+void srand(unsigned int seed)
+{
+    __LIBC__RAND_NEXT__ = seed;
+}
 #ifdef _HHOS_LIBC_TEST
 }
 #endif
