@@ -12,6 +12,7 @@
 [extern sys_getchar]
 [extern kb_handler]
 [extern sys_current_tty_putchar]
+[extern sys_get_timestamp]
 [extern system_call_getchar]
 [extern fun_in_c]
 [extern interrupt_33h_c]
@@ -213,9 +214,9 @@ panic_21h_func_not_impl:
 
 interrupt_98h:
       cli
+func_00:
       cmp ah, 0h
       jnz func_01
-func_00:
       call dword sys_getchar
       jmp int_98h_end
 func_01:
@@ -244,8 +245,19 @@ func_02:
       popa
       pop es
       jmp int_98h_end
-
 func_03:
+    cmp ah, 3h
+    jnz func_04
+    mov ax, cs
+    mov ds, ax
+    mov es, ax
+    push es
+    push ds
+    call dword sys_get_timestamp
+    pop es
+    pop ds
+    jmp int_98h_end
+func_04:
 
 int_98h_end:
       iret

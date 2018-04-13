@@ -55,11 +55,23 @@ static inline void system_call_putchar(int ch)
     "movb %0, %%al\n\t"
     "movb $1, %%ah\n\t"
     INVOKE_INT_SAFE(98)
-
     :
     :"r"(c)
     :"%eax", "ebx"
     );
     //TODO
+}
+static inline uint32_t system_call_get_timestamp()
+{
+    uint32_t ret;
+    asm volatile(
+            "movb $3, %%ah\n\t"
+            INVOKE_INT_SAFE(98)
+            "movl %%eax, %0"
+            :"=r"(ret)
+            :
+            :"%eax", "%ebx", "%ecx"
+            );
+    return ret;
 }
 #endif

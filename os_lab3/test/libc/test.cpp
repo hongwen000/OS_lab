@@ -116,6 +116,22 @@ TEST(stdio, sscanf) {
     EXPECT_EQ(n2, 16);
     EXPECT_EQ(n3, 15);
 
+    char * sys_internal_time_str = "2018/4/12-23:39:57";
+    int sys_internal_second = 0;
+    int sys_internal_minute = 0;
+    int sys_internal_hour = 0;
+    int sys_internal_day = 0;
+    int sys_internal_month = 0;
+    int sys_internal_year = 0;
+    sscanf(sys_internal_time_str,"%d/%d/%d-%d:%d:%d", 
+            &sys_internal_year, &sys_internal_month, &sys_internal_day,
+            &sys_internal_hour, &sys_internal_minute, &sys_internal_second);
+    EXPECT_EQ(sys_internal_year, 2018);
+    EXPECT_EQ(sys_internal_month, 4);
+    EXPECT_EQ(sys_internal_day, 12);
+    EXPECT_EQ(sys_internal_hour, 23);
+    EXPECT_EQ(sys_internal_minute, 39);
+    EXPECT_EQ(sys_internal_second, 57);
 }
 
 int main(int argc, char** argv) {  

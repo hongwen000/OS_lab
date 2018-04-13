@@ -84,7 +84,8 @@ include basic_lib/Makefrag
 libc_obj = $(build_dir)/libc/string.o \
 		   $(build_dir)/libc/ctype.o \
 		   $(build_dir)/libc/stdlib.o \
-		   $(build_dir)/libc/stdio.o
+		   $(build_dir)/libc/stdio.o \
+		   $(build_dir)/libc/time.o
 
 
 libc = $(build_dir)/libc/libc.a
@@ -117,19 +118,20 @@ disk_index = 64
 
 define DO_write
 dd if=$(strip $(1)) of=$(floppyfile) bs=512 seek=$(strip $(disk_index)) conv=notrunc
-$(eval disk_index = $(call plus,$(disk_index),20))
+$(eval disk_index = $(call plus,$(disk_index),64))
 
 endef
 
 include usr/Makefrag
 
+#$(build_dir)/usr/user1.bin  \
+#$(build_dir)/usr/user2.bin  \
+#$(build_dir)/usr/user3.bin  \
+#$(build_dir)/usr/user4.bin  \
+#$(build_dir)/usr/user5.bin  \
+
 user_bin = $(build_dir)/usr/help.bin   \
            $(build_dir)/usr/record.bin \
-           $(build_dir)/usr/user1.bin  \
-           $(build_dir)/usr/user2.bin  \
-           $(build_dir)/usr/user3.bin  \
-           $(build_dir)/usr/user4.bin  \
-           $(build_dir)/usr/user5.bin  \
            $(build_dir)/usr/bc.bin \
            $(build_dir)/usr/sleep.bin  \
            $(build_dir)/usr/int.bin 
