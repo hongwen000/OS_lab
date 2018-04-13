@@ -14,7 +14,7 @@
 #include "../libc/sys/hhos.h"
 #include "../libc/ctype.h"
 #define HELP_FILE_SECTOR 64
-#define REC_FILE_SECTOR 84
+#define REC_FILE_SECTOR 128
 
 class sh{
 private:
@@ -99,7 +99,7 @@ private:
         else if (is_command(input_cmd, "date"))
         {
             read_rtc();
-            printf("%s", sys_internal_time_str);
+            printf("%s\n", sys_internal_time_str);
         }
         else {
             bool found = false;
@@ -109,7 +109,8 @@ private:
                 {
                     found = true;
                     bin_loader::load_binary_from_floppy(progs[i].lba);
-                    if(!(strlen(progs[i].name) > 2 && progs[i].name[0] == 'c' && progs[i].name[1] == '_'))
+                    //if(!(strlen(progs[i].name) > 2 && progs[i].name[0] == 'c' && progs[i].name[1] == '_'))
+                    if(false)
                     {
                         sys_bios_clear_screen();
                         sys_get_current_tty()->tty_init();
