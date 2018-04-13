@@ -13,6 +13,7 @@
 #include "bin_loader.h"
 #include "../libc/sys/hhos.h"
 #include "../libc/ctype.h"
+#include "kb.h"
 #define HELP_FILE_SECTOR 64
 #define REC_FILE_SECTOR 128
 
@@ -245,7 +246,27 @@ public:
         printf("%s", prompt);
         while(true)
         {
-            char in = getchar();
+            unsigned char in = getchar();
+            if (in == KEY_UP)
+            {
+                printf("KEY UP PRESSED\n");
+                continue;
+            }
+            if (in == KEY_DN)
+            {
+                printf("KEY DOWN PRESSED\n");
+                continue;
+            }
+            if (in == C('C'))
+            {
+                printf("Ctrl-C PRESSED\n");
+                continue;
+            }
+            if (in == C('D'))
+            {
+                printf("Ctrl-D PRESSED\n");
+                continue;
+            }
             if (in == '\b')
             {
                 if(pos != 0){

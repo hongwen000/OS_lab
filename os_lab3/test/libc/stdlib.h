@@ -21,6 +21,8 @@ ldiv_t ldiv( long x, long y );
 int atoi(const char* s);
 long atol(const char* s);
 long strtol( const char *str, char **str_end, int base );
+int rand();
+void srand(unsigned int seed);
 #ifndef __cplusplus
 }
 #endif

@@ -1,13 +1,3 @@
-// #define __LOG_ON 1
-
-/* kb.c 
- * This file is modified form Bram's Kernel Development Tutorial
- * enable keyboard and retive message by IRQ
- * October is bad :(
- * http://bbs.chinaunix.net/thread-1999379-1-1.html
- * borrow code form: https://github.com/Fleurer/fleurix/blob/master/src/chr/keybd.c
- */
-// std
 #include "kb.h"
 #define NO 0
 typedef unsigned long size_t;
@@ -132,7 +122,7 @@ unsigned char kb_buf_out()
 
 uint32_t kb_mode = 0;
 
-unsigned char shiftcode[256] =
+unsigned char combine_key[256] =
 {
   [0x1D] = CTRL,
   [0x2A] = SHIFT,
@@ -231,47 +221,6 @@ unsigned char dect_mode(char sc){
     return 0;
 }
 
-//void kb_handler(){
-//    unsigned char sc, m;
-//    unsigned char ch;
-//
-//    //sc = sys_get_scancode();
-//    if((sys_inb(0x64) & KB_STAT_OBF) == 0){
-//        return;
-//    }
-//    sc = sys_inb(0x60);
-//
-//    if (KB_IS_ESCAPE(sc)){
-//        kb_mode |= E0ESC;
-//        return;
-//    } 
-//    
-//    if ((m = dect_mode(sc))){
-//        if (KB_IS_RELEASE(sc)){
-//            kb_mode &= ~m;
-//        } else {
-//            kb_mode |= m;
-//        }
-//        return;
-//    }
-//
-//    if (kb_mode & SHIFT){
-//        ch = kb_shift_map[sc & 0x7F];
-//    } else if (kb_mode & CTRL) {
-//        ch = CTRLmap[sc & 0x7F];
-//    } else {
-//        ch = kb_map[sc & 0x7F];
-//    }
-//
-//    if (KB_IS_RELEASE(sc)){
-//        kb_mode &= ~E0ESC;
-//    } 
-//    else if (ch != 0) {
-//        if (kb_buf_in(ch) < 0){
-//        }
-//    }
-//}
-//
 unsigned int ctrl_shift_status;
 unsigned char *charcode[4] = {
   kb_map, kb_shift_map, kb_ctrl_map, kb_ctrl_map
@@ -279,26 +228,27 @@ unsigned char *charcode[4] = {
 void kb_handler() {
   unsigned int st, data, c;
 
-  st = sys_inb(KBSTATP);
-  if((st & KBS_DIB) == 0)
+  st = sys_inb(0x64);
+  if((st & 0x01) == 0)
     return;
-  data = sys_inb(KBDATAP);
-
+  data = sys_inb(0x60);
   if(data == 0xE0){
+    //如果是第一次发送过来的扩展键标志，记录并返回
     ctrl_shift_status |= E0ESC;
     return;
   } else if(data & 0x80){
-    // Key released
+    //可能是组合键的断码，需要特别考虑并清除该组合键状态
     data = (ctrl_shift_status & E0ESC ? data : data & 0x7F);
-    ctrl_shift_status &= ~(shiftcode[data] | E0ESC);
+    ctrl_shift_status &= ~(combine_key[data] | E0ESC);
     return;
   } else if(ctrl_shift_status & E0ESC){
-    // Last character was an E0 escape; or with 0x80
+    //进入这里说明上次按键是扩展键标志
     data |= 0x80;
-    ctrl_shift_status &= ~E0ESC;
+    ctrl_shift_status &= ~E0ESC;//扩展键低位读取到结束，清除扩展位标志
   }
-
-  ctrl_shift_status |= shiftcode[data];
+  //添加组合键状态
+  ctrl_shift_status |= combine_key[data];
+  //决定状态键状态(使用异或来回切换)
   ctrl_shift_status ^= togglecode[data];
   c = charcode[ctrl_shift_status & (CTRL | SHIFT)][data];
   if(ctrl_shift_status & CAPSLOCK){
