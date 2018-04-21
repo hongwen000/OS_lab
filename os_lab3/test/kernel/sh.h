@@ -13,6 +13,7 @@
 #include "bin_loader.h"
 #include "../libc/sys/hhos.h"
 #include "../libc/ctype.h"
+#include "ide.h"
 #include "kb.h"
 #define HELP_FILE_SECTOR 64
 #define REC_FILE_SECTOR 128
@@ -102,6 +103,12 @@ private:
             read_rtc();
             printf("%s\n", sys_internal_time_str);
         }
+#ifdef IDE_TEST
+        else if (is_command(input_cmd, "ide"))
+        {
+            ide_test();
+        }
+#endif
         else {
             bool found = false;
             for(size_t i = 0; i < prog_cnt; ++i)
@@ -126,7 +133,7 @@ private:
     }
     void read_prog_record()
     {
-        sys_read_disk(0, (uint32_t)record_buf, REC_FILE_SECTOR, 1);
+        sys_read_hard_disk(0, (uint32_t)record_buf, REC_FILE_SECTOR, 1);
         char buf1[32];
         char buf2[32];
         char buf3[32];
@@ -144,7 +151,7 @@ private:
     }
     void read_help_file()
     {
-        sys_read_disk(0, (uint32_t)help, HELP_FILE_SECTOR, 1);
+        sys_read_hard_disk(0, (uint32_t)help, HELP_FILE_SECTOR, 1);
     }
     int split_input(char* buf)
     {

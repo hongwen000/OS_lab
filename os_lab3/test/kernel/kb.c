@@ -109,14 +109,18 @@ int kb_buf_in(unsigned char ch)
 }
 unsigned char kb_buf_out()
 {
-    int val = __sync_add_and_fetch(&buf_pos, 0);
-    asm volatile("sti\n\t");
-    while(val == 0){
-        val = __sync_add_and_fetch(&buf_pos, 0);
+    unsigned char ch = 0;
+    while(ch == 0)
+    {
+        int val = __sync_add_and_fetch(&buf_pos, 0);
+        asm volatile("sti\n\t");
+        while(val == 0){
+            val = __sync_add_and_fetch(&buf_pos, 0);
+        }
+        asm volatile("cli\n\t");
+        ch = kb_buf[val-1];
+        __sync_fetch_and_sub(&buf_pos, 1);
     }
-    asm volatile("cli\n\t");
-    unsigned char ch = kb_buf[val-1];
-    __sync_fetch_and_sub(&buf_pos, 1);
     return ch;
 }
 

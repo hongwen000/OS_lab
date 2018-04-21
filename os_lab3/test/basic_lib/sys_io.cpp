@@ -1,5 +1,6 @@
 #include "sys_lib.h"
 #include "../kernel/kb.h"
+#include "../kernel/ide.h"
 
 extern "C" int sys_getchar()
 {
@@ -75,6 +76,9 @@ void sys_print_int(int num, int x, int y)
 
 void sys_putchar(int c, int color, int x, int y)
 {
+#ifdef USE_BOCHS_DEBUG_OUTPUT
+    sys_dbg_bochs_putc(c);
+#endif
     int offset = (x * 80 + y)*2;
     uint16_t ch = c | (color << 8);
     asm volatile (".intel_syntax noprefix\n\t"
@@ -139,6 +143,32 @@ void sys_outb(uint16_t port, uint8_t data)
                    : 
                    : "a"(data), "Nd"(port) );
 }
+
+void sys_outsl(uint32_t port, const void *addr, uint32_t cnt)
+{
+    asm volatile ("cld; rep outsl"
+    : "=S" (addr), "=c" (cnt)
+    : "d" (port), "0" (addr), "1" (cnt)
+    : "cc"
+    );
+}
+
+void sys_insl(uint32_t port, void *addr, uint32_t cnt){
+    asm volatile ("cld; rep insl"
+    : "=D" (addr), "=c" (cnt)
+    : "d" (port), "0" (addr), "1" (cnt)
+    : "memory", "cc"
+    );
+}
+
+
+void sys_outw(uint16_t port, uint16_t data)
+{
+    asm volatile ("outw %0, %1"
+                  :
+                  :"a"(data), "Nd"(port));
+}
+
 // uint8_t sys_inb(uint16_t port)
 // {
 //     uint8_t ret;
@@ -151,6 +181,7 @@ void sys_outb(uint16_t port, uint8_t data)
 void sys_dbg_bochs_putc(char c){
     sys_outb(0xe9, (uint8_t)c);
 }
+
 
 char sys_get_scancode()
 {
@@ -181,7 +212,31 @@ void sys_read_disk(uint32_t segment, uint32_t address, uint16_t logical_start_se
      "pop %%es\n\t"
      : :"g"(segment), "g"(address), "g"(head), "g"(_cx), "g" (secotr_cnt));
 }
-
+void sys_read_hard_disk(uint32_t segment, uint32_t address, uint16_t logical_start_sector, uint8_t secotr_cnt)
+{
+    ide_request buf;
+    for (int i = logical_start_sector; i < logical_start_sector + secotr_cnt; ++i) {
+        buf.reset(i);
+        ide_rw(&buf);
+#ifdef IDE_TEST
+        ide_print_blk(&buf);
+#endif
+        asm volatile(
+        "cld\n\t"
+        "movl $0x200, %%ecx\n\t"
+        "push %%es\n\t"
+        "movw %0, %%es\n\t"
+        "movl %1, %%edi\n\t"
+        "movl %2, %%esi\n\t"
+        "rep movsb\n\t"
+        "pop %%es\n\t"
+        :
+        :"r"(segment), "r"(address), "r"(buf.buf)
+        :"%esi", "%edi", "%ecx"
+        );
+        address += 0x200;
+    }
+}
 extern "C" void interrupt_33h_c() {
     const char* l11 = " _____      _     _____  _____ ";
     const char* l12 = "|_   _|    | |   |____ ||____ |";

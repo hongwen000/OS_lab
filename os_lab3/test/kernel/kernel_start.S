@@ -13,6 +13,7 @@
 [extern kb_handler]
 [extern sys_current_tty_putchar]
 [extern sys_get_timestamp]
+[extern sys_ide_handler]
 [extern system_call_getchar]
 [extern fun_in_c]
 [extern interrupt_33h_c]
@@ -61,6 +62,11 @@ kernel_start:
 
     push interrupt_34h
     push 34h * 4
+    call install_int
+    add sp, 4
+
+    push interrupt_76h
+    push 76h * 4
     call install_int
     add sp, 4
 
@@ -269,3 +275,21 @@ interrupt_33h:
 interrupt_34h:
     call dword interrupt_34h_c
     iret
+
+interrupt_76h:
+    cli
+    pusha
+    push ds
+    push es
+    mov ax, cs
+    mov ds, ax
+    mov es, ax
+    call dword sys_ide_handler
+    pop es
+    pop ds
+	mov al,0x20
+	out 0x20,al
+	out 0xA0,al
+    popa
+	sti
+	iret
