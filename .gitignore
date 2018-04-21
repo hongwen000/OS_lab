@@ -48,3 +48,9 @@ OStoolsDOS
 /*/.idea/*
 kernel_bin_dump
 kernel_elf_dump
+os_lab3/test/.idea/misc.xml
+os_lab3/test/.idea/modules.xml
+os_lab3/test/.idea/test.iml
+os_lab3/test/.idea/workspace.xml
+os_lab3/test/.idea/codeStyles/Project.xml
+os_lab3/test/cmake-build-debug/CMakeFiles/clion-log.txt

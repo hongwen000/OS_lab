@@ -58,7 +58,8 @@ include boot/Makefrag
 
 kernel_obj = $(build_dir)/kernel/kernel_start.o \
 			 $(build_dir)/kernel/kernel_main.o \
-			 $(build_dir)/kernel/kb.o 
+			 $(build_dir)/kernel/kb.o \
+			 $(build_dir)/kernel/ide.o
 
 
 include kernel/Makefrag
@@ -117,7 +118,7 @@ rm_kernel:
 disk_index = 64
 
 define DO_write
-dd if=$(strip $(1)) of=$(floppyfile) bs=512 seek=$(strip $(disk_index)) conv=notrunc
+dd if=$(strip $(1)) of=$(hard_disk_file) bs=512 seek=$(strip $(disk_index)) conv=notrunc
 $(eval disk_index = $(call plus,$(disk_index),64))
 
 endef
@@ -141,10 +142,12 @@ write_usr_progs: $(user_bin)
 	$(foreach user_prog, $(user_bin), $(call DO_write, $(user_prog)))
 
 floppyfile = $(build_dir)/disk.img
+hard_disk_file = $(build_dir)/hard_disk.img
 
 clean_disk:
 	@mkdir -p build
 	dd if=/dev/zero of=$(floppyfile) bs=512 count=2880
+	bximage $(hard_disk_file) -hd=10M -imgmode=flat -mode=create -q
 
 write_kernel: clean_disk kernel_img $(bootloader_bin)
 	dd if=$(bootloader_bin) of=$(floppyfile) conv=notrunc
