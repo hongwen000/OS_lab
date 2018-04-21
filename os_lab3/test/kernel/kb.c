@@ -33,6 +33,7 @@ int buf_pos = 0;
 
 extern void sys_bios_print_string(const char* str, unsigned int len, int color, int pos);
 
+
 static char *itoa(unsigned char val, char *buf, unsigned radix)
 {
     char   *p;

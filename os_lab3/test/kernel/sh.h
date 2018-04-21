@@ -75,7 +75,7 @@ private:
         }
         else if (is_command(input_cmd, "cls") || is_command(input_cmd, "clear"))
         {
-            sys_bios_clear_screen();
+            sys_clear_screen();
             sys_get_current_tty()->tty_init();
         }
         else if (is_command(input_cmd, "help"))
@@ -120,7 +120,7 @@ private:
                     //if(!(strlen(progs[i].name) > 2 && progs[i].name[0] == 'c' && progs[i].name[1] == '_'))
                     if(false)
                     {
-                        sys_bios_clear_screen();
+                        sys_clear_screen();
                         sys_get_current_tty()->tty_init();
                     }
                     break;
