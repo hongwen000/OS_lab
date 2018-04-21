@@ -18,7 +18,7 @@ private:
 #endif
 public:
     tty() {
-        sys_bios_clear_screen();
+        sys_clear_screen();
         tty_init();
     }
     void tty_init()
@@ -67,7 +67,7 @@ public:
     {
         if (cur_x >= 25)
         {
-            sys_bios_scroll_up(color);
+            sys_scroll_up();
             --cur_x;
         }
     }

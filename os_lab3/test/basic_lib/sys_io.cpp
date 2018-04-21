@@ -2,6 +2,7 @@
 #include "../kernel/kb.h"
 #include "../kernel/ide.h"
 
+extern "C" void sys_bios_print_string(const char* str, unsigned int len, int color, int pos);
 extern "C" int sys_getchar()
 {
     unsigned char ch = kb_buf_out();
@@ -21,16 +22,17 @@ void sys_bios_print_int(int num, int color, int pos)
     sys_bios_print_string(arr, len, color, pos);
 }
 
-void sys_print_string(const char* str, unsigned int len, int x, int y)
+void sys_print_string(const char* str, unsigned int len, int color, int pos)
 {
-    int color = MAKE_COLOR(VGA_BLACK, VGA_WHITE);
+    uint8_t x = (pos >> 8) & 0xFF;
+    uint8_t y = (pos & 0xFF);
     for(unsigned int i = 0; i < len; ++i)
     {
         sys_putchar(str[i], color, x, y + i);
     }
 }
 
-void sys_print_int(int num, int x, int y)
+void sys_print_int(int num, int color, int pos)
 {
     int num_ = num;
     int len = 1;
@@ -40,7 +42,7 @@ void sys_print_int(int num, int x, int y)
     for(int i = 0; i < len; ++i, power *= 10)
         arr[len - i - 1] = '0' + ((num / power) % 10);
     arr[len] = '\0';
-    sys_print_string(arr, len, x, y); 
+    sys_print_string(arr, len, color, pos);
 }
 //void sys_putchar(char c, int color, int x, int y)
 //{
@@ -94,6 +96,33 @@ void sys_putchar(int c, int color, int x, int y)
     :"%ecx");
 }
 
+void sys_scroll_up()
+{
+    asm volatile(
+    "cld\n\t"
+    "movl $0xF00, %%ecx\n\t"
+    "movl $0x0, %%esi\n\t"
+    "scroll_up_loop:\n\t"
+    "movb %%gs:0xA0(%%esi), %%al\n\t"
+    "movb %%al, %%gs:(%%esi)\n\t"
+    "inc %%esi\n\t"
+    "loop scroll_up_loop\n\t"
+    :
+    :
+    :"%esi", "%al", "%ecx"
+    );
+}
+
+void sys_clear_screen()
+{
+    for(int i = 0; i < 25; ++i)
+    {
+        for(int j = 0; j <80; ++j)
+        {
+            sys_putchar(' ', MAKE_COLOR(VGA_BLACK, VGA_WHITE), i, j);
+        }
+    }
+}
 void sys_bios_scroll_up(int color)
 {
     //这里pusha和popa是必要的，不然会错误！！！（一小时）
@@ -244,12 +273,12 @@ extern "C" void interrupt_33h_c() {
     const char* l14 = "  | || '_ \\| __|     \\ \\    \\ \\";
     const char* l15 = " _| || | | | |_  .___/ /.___/ /";
     const char* l16 = " \\___/_| |_|\\__| \\____/ \\____/ ";
-    sys_bios_print_string(l11, 31, MAKE_COLOR(VGA_BLACK, VGA_CYAN), MAKE_POS(0, 0));
-    sys_bios_print_string(l12, 31, MAKE_COLOR(VGA_BLACK, VGA_CYAN), MAKE_POS(1, 0));
-    sys_bios_print_string(l13, 31, MAKE_COLOR(VGA_BLACK, VGA_CYAN), MAKE_POS(2, 0));
-    sys_bios_print_string(l14, 31, MAKE_COLOR(VGA_BLACK, VGA_CYAN), MAKE_POS(3, 0));
-    sys_bios_print_string(l15, 31, MAKE_COLOR(VGA_BLACK, VGA_CYAN), MAKE_POS(4, 0));
-    sys_bios_print_string(l16, 31, MAKE_COLOR(VGA_BLACK, VGA_CYAN), MAKE_POS(5, 0));
+    sys_print_string(l11, 31, MAKE_COLOR(VGA_BLACK, VGA_CYAN), MAKE_POS(0, 0));
+    sys_print_string(l12, 31, MAKE_COLOR(VGA_BLACK, VGA_CYAN), MAKE_POS(1, 0));
+    sys_print_string(l13, 31, MAKE_COLOR(VGA_BLACK, VGA_CYAN), MAKE_POS(2, 0));
+    sys_print_string(l14, 31, MAKE_COLOR(VGA_BLACK, VGA_CYAN), MAKE_POS(3, 0));
+    sys_print_string(l15, 31, MAKE_COLOR(VGA_BLACK, VGA_CYAN), MAKE_POS(4, 0));
+    sys_print_string(l16, 31, MAKE_COLOR(VGA_BLACK, VGA_CYAN), MAKE_POS(5, 0));
 }
 
 extern "C" void interrupt_34h_c() {
@@ -264,13 +293,13 @@ extern "C" void interrupt_34h_c() {
     const char * l18 = "| $$  | $$| $$  | $$ \\$$    $$ \\$$    $$";
     const char * l19 = " \\$$   \\$$ \\$$   \\$$  \\$$$$$$   \\$$$$$$ ";
 
-    sys_bios_print_string(l11, 40, MAKE_COLOR(VGA_BLACK, VGA_BRIGHT_CYAN), MAKE_POS(0, 40));
-    sys_bios_print_string(l12, 40, MAKE_COLOR(VGA_BLACK, VGA_BRIGHT_CYAN), MAKE_POS(1, 40));
-    sys_bios_print_string(l13, 40, MAKE_COLOR(VGA_BLACK, VGA_BRIGHT_CYAN), MAKE_POS(2, 40));
-    sys_bios_print_string(l14, 40, MAKE_COLOR(VGA_BLACK, VGA_BRIGHT_CYAN), MAKE_POS(3, 40));
-    sys_bios_print_string(l15, 40, MAKE_COLOR(VGA_BLACK, VGA_BRIGHT_CYAN), MAKE_POS(4, 40));
-    sys_bios_print_string(l16, 40, MAKE_COLOR(VGA_BLACK, VGA_BRIGHT_CYAN), MAKE_POS(5, 40));
-    sys_bios_print_string(l17, 40, MAKE_COLOR(VGA_BLACK, VGA_BRIGHT_CYAN), MAKE_POS(6, 40));
-    sys_bios_print_string(l18, 40, MAKE_COLOR(VGA_BLACK, VGA_BRIGHT_CYAN), MAKE_POS(7, 40));
-    sys_bios_print_string(l19, 40, MAKE_COLOR(VGA_BLACK, VGA_BRIGHT_CYAN), MAKE_POS(8, 40));
+    sys_print_string(l11, 40, MAKE_COLOR(VGA_BLACK, VGA_BRIGHT_CYAN), MAKE_POS(0, 40));
+    sys_print_string(l12, 40, MAKE_COLOR(VGA_BLACK, VGA_BRIGHT_CYAN), MAKE_POS(1, 40));
+    sys_print_string(l13, 40, MAKE_COLOR(VGA_BLACK, VGA_BRIGHT_CYAN), MAKE_POS(2, 40));
+    sys_print_string(l14, 40, MAKE_COLOR(VGA_BLACK, VGA_BRIGHT_CYAN), MAKE_POS(3, 40));
+    sys_print_string(l15, 40, MAKE_COLOR(VGA_BLACK, VGA_BRIGHT_CYAN), MAKE_POS(4, 40));
+    sys_print_string(l16, 40, MAKE_COLOR(VGA_BLACK, VGA_BRIGHT_CYAN), MAKE_POS(5, 40));
+    sys_print_string(l17, 40, MAKE_COLOR(VGA_BLACK, VGA_BRIGHT_CYAN), MAKE_POS(6, 40));
+    sys_print_string(l18, 40, MAKE_COLOR(VGA_BLACK, VGA_BRIGHT_CYAN), MAKE_POS(7, 40));
+    sys_print_string(l19, 40, MAKE_COLOR(VGA_BLACK, VGA_BRIGHT_CYAN), MAKE_POS(8, 40));
 }
