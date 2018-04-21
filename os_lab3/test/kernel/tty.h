@@ -117,6 +117,9 @@ public:
             }
             case '\n':
             {
+#ifdef USE_BOCHS_DEBUG_OUTPUT
+                sys_dbg_bochs_putc('\n');
+#endif
                 cur_x++;
                 cur_y = 0;
                 break;

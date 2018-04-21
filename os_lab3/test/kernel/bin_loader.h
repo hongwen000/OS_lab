@@ -13,7 +13,7 @@ class bin_loader
 public:
     static void load_binary_from_floppy(int n)
     {
-        sys_read_disk(user_prog_segment, user_prog_load_addr, n, 30);
+        sys_read_hard_disk(user_prog_segment, user_prog_load_addr, n, 40);
         sys_execve_bin();
     }
 
