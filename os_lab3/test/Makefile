@@ -26,7 +26,7 @@ GCC_PREFIX = /opt/cross/gcc-i386/bin/i386-elf-
 OBJDUMP = $(GCC_PREFIX)objdump
 
 CC = $(GCC_PREFIX)gcc
-CFLAGS =  	-m16 -march=i486 \
+CFLAGS =  	-m32 -march=i486 \
 			-nostdlib -ffreestanding \
 			-mpreferred-stack-boundary=2 -lgcc \
 			-fno-builtin -Os -fno-omit-frame-pointer \
@@ -37,7 +37,7 @@ CFLAGS =  	-m16 -march=i486 \
 
 CXX = $(GCC_PREFIX)g++
 
-CXXFLAGS =  -m16 -march=i386 \
+CXXFLAGS =  -m32 -march=i386 \
 			-nostdlib -ffreestanding \
 			-mpreferred-stack-boundary=2 -lgcc \
 			-fno-builtin -Os -fno-omit-frame-pointer \
@@ -57,9 +57,11 @@ bootloader_bin = $(build_dir)/$(bootloader_src:.asm=.bin)
 include boot/Makefrag
 
 kernel_obj = $(build_dir)/kernel/kernel_start.o \
-			 $(build_dir)/kernel/kernel_main.o \
-			 $(build_dir)/kernel/kb.o \
-			 $(build_dir)/kernel/ide.o
+			 $(build_dir)/kernel/kernel_pm_setup.o
+
+#			 $(build_dir)/kernel/kernel_main.o \
+#			 $(build_dir)/kernel/kb.o \
+#			 $(build_dir)/kernel/ide.o
 
 
 include kernel/Makefrag
@@ -68,25 +70,34 @@ include kernel/Makefrag
 
 kernel_bin = $(build_dir)/kernel/kernel.bin
 
-asm_src = basic_lib/asm_lib.asm
+# asm_src = kernel_lib/asm_lib.asm
 
-asm_obj = $(build_dir)/$(asm_src:.asm=.o)
+# asm_obj = $(build_dir)/$(asm_src:.asm=.o)
 
-c_obj   = $(build_dir)/basic_lib/sys_io.o \
-		  $(build_dir)/basic_lib/cmos.o
+# c_obj   = $(build_dir)/kernel_lib/sys_io.o \
+# 		  $(build_dir)/kernel_lib/cmos.o
 
-basic_lib = $(build_dir)/basic_lib/libbasic.a
+kernel_lib_obj = $(build_dir)/kernel_lib/pm_utility.o \
+				 $(build_dir)/kernel_lib/gdt.o \
+				 $(build_dir)/kernel_lib/idt.o
 
-$(basic_lib): $(asm_obj) $(c_obj)
-	$(AR) rcs $@ $(asm_obj) $(c_obj)
 
-include basic_lib/Makefrag
+kernel_lib = $(build_dir)/kernel_lib/libkernel.a
+
+# $(kernel_lib): $(asm_obj) $(c_obj)
+# 	$(AR) rcs $@ $(asm_obj) $(c_obj)
+
+$(kernel_lib): $(kernel_lib_obj)
+	$(AR) rcs $@ $(kernel_lib_obj)
+
+include kernel_lib/Makefrag
 
 libc_obj = $(build_dir)/libc/string.o \
-		   $(build_dir)/libc/ctype.o \
-		   $(build_dir)/libc/stdlib.o \
-		   $(build_dir)/libc/stdio.o \
-		   $(build_dir)/libc/time.o
+		   $(build_dir)/libc/ctype.o
+
+		#    $(build_dir)/libc/stdlib.o \
+		#    $(build_dir)/libc/stdio.o \
+		#    $(build_dir)/libc/time.o
 
 
 libc = $(build_dir)/libc/libc.a
@@ -98,11 +109,11 @@ include libc/Makefrag
 
 obj_link_list:= $(kernel_obj)
 
-lib_ar_list := $(libc) $(basic_lib)
+lib_ar_list := $(libc) $(kernel_lib)
 
-LDFLAGS += -L $(build_dir)/libc -L $(build_dir)/basic_lib
+LDFLAGS += -L $(build_dir)/libc -L $(build_dir)/kernel_lib
 
-LDFLAGS_LIB =  -lbasic -lc
+LDFLAGS_LIB =  -lkernel -lc
 
 kernel_mod : $(wildcard kernel/*.h)
 
@@ -131,11 +142,11 @@ include usr/Makefrag
 #$(build_dir)/usr/user4.bin  \
 #$(build_dir)/usr/user5.bin  \
 
-user_bin = $(build_dir)/usr/help.bin   \
-           $(build_dir)/usr/record.bin \
-           $(build_dir)/usr/bc.bin \
-           $(build_dir)/usr/sleep.bin  \
-           $(build_dir)/usr/test.bin 
+# user_bin = $(build_dir)/usr/help.bin   \
+#            $(build_dir)/usr/record.bin \
+#            $(build_dir)/usr/bc.bin \
+#            $(build_dir)/usr/sleep.bin  \
+#            $(build_dir)/usr/test.bin 
 
 
 write_usr_progs: $(user_bin)
