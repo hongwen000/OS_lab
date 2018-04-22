@@ -1,14 +1,14 @@
-#ifndef _BASIC_DEFINE_
-#define _BASIC_DEFINE_
+#ifndef _HHOS_BASIC_DEFINE_
+#define _HHOS_BASIC_DEFINE_
 
 
 
 #ifndef _HHOS_LIBC_TEST
 
-#ifndef _CODE16GCC_H_
-#define _CODE16GCC_H_
-__asm__(".code16gcc\n");
-#endif
+// #ifndef _CODE16GCC_H_
+// #define _CODE16GCC_H_
+// __asm__(".code16gcc\n");
+// #endif
 
 typedef __builtin_va_list va_list;
 
