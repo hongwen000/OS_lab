@@ -5,7 +5,6 @@ org    0x7c00
 jmp entry
 
 %define KERNEL_ENTRY_ADDR 0x00008000
-times 18 db 0
 
 temp_print16:
 loop:
@@ -37,24 +36,24 @@ entry:
 
 ;============================================================
 ; get memory info 
-ADRS equ 0x500
-MCR_count equ 0x400
+ADRS equ 0x500             ;储存"地址范围描述符"的地址
+MCR_count equ 0x400        ;储存"内存分段数计数器"的地址
 get_mem_map:
     mov dword [MCR_count], 0
     mov ax, 0
     mov es, ax
     xor ebx, ebx
-    mov di,ADRS
+    mov di,ADRS            ; ADRS将被写入到该地址
 
 get_mem_map_loop:
-    mov eax, 0xe820
-    mov ecx, 20
+    mov eax, 0xe820        ; Traverse all memory
+    mov ecx, 20            ; ARDS 的大小
     mov edx, 0x534D4150    ; edx = "SMAP"
     int 0x15
-    jc get_mem_map_fail
+    jc get_mem_map_fail    ;int 15设置cf则失败了
     add di, 20
-    inc dword [MCR_count]
-    cmp ebx, 0
+    inc dword [MCR_count]  ;分段数加一
+    cmp ebx, 0             ;如果内存区域扫描完毕，则ebx == 0
     jne get_mem_map_loop 
     jmp get_mem_map_ok
 
@@ -88,43 +87,43 @@ readloop:
 
 retry:
     mov ah,0x02 ; int 0x13  ah = 0x02 read sector form dirve
-    mov al, 1; read 1 sector 
+    mov al, 1   ; read 1 sector 
     int 0x13
-    jnc next
-    add si,1
-    cmp si,5    
-    jae error
-    mov ah,0x00
-    mov dl,0x00 ; driver a
-    int 0x13    ; reset
-    jmp next 
+;     jnc next    ;cf is set when error occur
+;     add si,1    ;error counter + 1
+;     cmp si,5    
+;     jae error
+;     mov ah,0x00
+;     mov dl,0x00 ; driver a
+;     int 0x13    ; reset
+;     jmp next 
 
-next: 
+; next: 
     mov ax, es
     add ax, 0x20    ; 0x200 size of a sector
-    mov es, ax
+    mov es, ax  ; write address += 0x200
 
     add cl, 1   ; sector + 1
     cmp cl, 18  ; 18 sector
     jbe readloop
 
     mov cl, 1
-    add dh, 1   ; head + 1
+    add dh, 1   ; head <- 1
     cmp dh, 1
     jbe readloop
 
-    mov dh, 0
+    mov dh, 0   ; head <- 0
     add ch, 1   ; cylinder + 1
     cmp ch, 20
     jbe readloop
-    jmp succ
+    ; jmp succ
 
-error:        
-    mov  si,msg_err
-    call temp_print16
-    jmp $
+; error:        
+;     mov  si,msg_err
+;     call temp_print16
+;     jmp $
 
-succ:    
+; succ:    
     mov si,msg_succ
     call temp_print16
 

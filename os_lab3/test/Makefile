@@ -28,7 +28,7 @@ OBJDUMP = $(GCC_PREFIX)objdump
 CC = $(GCC_PREFIX)gcc
 CFLAGS =  	-m32 -march=i486 \
 			-nostdlib -ffreestanding \
-			-mpreferred-stack-boundary=2 -lgcc \
+			-lgcc \
 			-fno-builtin -Os -fno-omit-frame-pointer \
 			-Wall -Wno-format -Wno-unused -Wno-write-strings -Werror \
 			-fno-tree-ch -fno-stack-protector \
@@ -39,7 +39,7 @@ CXX = $(GCC_PREFIX)g++
 
 CXXFLAGS =  -m32 -march=i386 \
 			-nostdlib -ffreestanding \
-			-mpreferred-stack-boundary=2 -lgcc \
+			-lgcc \
 			-fno-builtin -Os -fno-omit-frame-pointer \
 			-Wall -Wno-format -Wno-unused -Wno-write-strings -Werror \
 			-fno-tree-ch -fno-stack-protector \
@@ -57,14 +57,15 @@ bootloader_bin = $(build_dir)/$(bootloader_src:.asm=.bin)
 include boot/Makefrag
 
 kernel_obj = $(build_dir)/kernel/kernel_start.o \
-			 $(build_dir)/kernel/kernel_pm_setup.o
-
-#			 $(build_dir)/kernel/kernel_main.o \
-#			 $(build_dir)/kernel/kb.o \
-#			 $(build_dir)/kernel/ide.o
+			 $(build_dir)/kernel/kernel_main.o \
+			 $(build_dir)/driver/vga.o \
+			 $(build_dir)/driver/kb.o \
+			 $(build_dir)/driver/ide.o \
+			 $(build_dir)/driver/cmos.o
 
 
 include kernel/Makefrag
+include driver/Makefrag
 
 -include $(wildcard $(build_dir)/kernel/*.d)
 
@@ -78,8 +79,16 @@ kernel_bin = $(build_dir)/kernel/kernel.bin
 # 		  $(build_dir)/kernel_lib/cmos.o
 
 kernel_lib_obj = $(build_dir)/kernel_lib/pm_utility.o \
+		         $(build_dir)/kernel_lib/debug_printf.o \
 				 $(build_dir)/kernel_lib/gdt.o \
-				 $(build_dir)/kernel_lib/idt.o
+				 $(build_dir)/kernel_lib/idt.o \
+				 $(build_dir)/kernel_lib/isr.o \
+				 $(build_dir)/kernel_lib/irq.o \
+				 $(build_dir)/kernel_lib/fault.o \
+				 $(build_dir)/kernel_lib/sys_utility.o \
+				 $(build_dir)/kernel_lib/sys_utility_asm.o
+
+
 
 
 kernel_lib = $(build_dir)/kernel_lib/libkernel.a
@@ -93,11 +102,10 @@ $(kernel_lib): $(kernel_lib_obj)
 include kernel_lib/Makefrag
 
 libc_obj = $(build_dir)/libc/string.o \
-		   $(build_dir)/libc/ctype.o
-
-		#    $(build_dir)/libc/stdlib.o \
-		#    $(build_dir)/libc/stdio.o \
-		#    $(build_dir)/libc/time.o
+		   $(build_dir)/libc/ctype.o \
+		   $(build_dir)/libc/stdlib.o \
+		   $(build_dir)/libc/stdio.o \
+		   $(build_dir)/libc/time.o
 
 
 libc = $(build_dir)/libc/libc.a
@@ -117,9 +125,13 @@ LDFLAGS_LIB =  -lkernel -lc
 
 kernel_mod : $(wildcard kernel/*.h)
 
+NM = $(GCC_PREFIX)nm
+kernel_sym = $(build_dir)/kernel/kernel.map
+
 kernel_img : $(kernel_mod) $(obj_link_list) $(lib_ar_list)
 	$(LD)  $(LDFLAGS) -Tlinker.ld --oformat binary $(obj_link_list) $(LDFLAGS_LIB) -o $(kernel_bin)
 	$(LD)  $(LDFLAGS) -Tlinker.ld $(lib_search_list) $(obj_link_list) $(LDFLAGS_LIB) -o $(kernel_bin).elf
+	$(NM)  $(kernel_bin).elf | awk '{print "0x"$$1,$$3}' > $(kernel_sym)
 	$(OBJDUMP) --adjust-vma=0x7e00 -D -Mintel,i386 -b binary -m i386 $(kernel_bin) >kernel_bin_dump
 	$(OBJDUMP) -S $(kernel_bin).elf > kernel_elf_dump
 rm_kernel:
@@ -142,11 +154,11 @@ include usr/Makefrag
 #$(build_dir)/usr/user4.bin  \
 #$(build_dir)/usr/user5.bin  \
 
-# user_bin = $(build_dir)/usr/help.bin   \
-#            $(build_dir)/usr/record.bin \
-#            $(build_dir)/usr/bc.bin \
-#            $(build_dir)/usr/sleep.bin  \
-#            $(build_dir)/usr/test.bin 
+user_bin = $(build_dir)/usr/help.bin   \
+           $(build_dir)/usr/record.bin \
+           $(build_dir)/usr/bc.bin \
+           $(build_dir)/usr/sleep.bin  \
+           $(build_dir)/usr/test.bin 
 
 
 write_usr_progs: $(user_bin)
@@ -158,6 +170,7 @@ hard_disk_file = $(build_dir)/hard_disk.img
 clean_disk:
 	@mkdir -p build
 	dd if=/dev/zero of=$(floppyfile) bs=512 count=2880
+	rm -f $(hard_disk_file)
 	bximage $(hard_disk_file) -hd=10M -imgmode=flat -mode=create -q
 
 write_kernel: clean_disk kernel_img $(bootloader_bin)
@@ -183,7 +196,7 @@ CPUS := 1
 endif
 
 #qemu执行参数
-QEMUOPTS = -fda $(floppyfile) -smp $(CPUS) -m 4 $(QEMUEXTRA)
+QEMUOPTS = -fda $(floppyfile) -hda $(hard_disk_file) -smp $(CPUS) -m 32 $(QEMUEXTRA)
 
 #执行qemu虚拟机
 qemu: write_all_progs
@@ -199,7 +212,7 @@ qemu-nox: write_all_progs
 	sed "s/localhost:1234/localhost:$(GDBPORT)/" < gdbinit.part >> $@
 
 #qemu连接gdb
-qemu-gdb: .gdbinit #write_all_progs 
+qemu-gdb: .gdbinit write_all_progs 
 	@echo "*** Now run 'gdb'." 1>&2
 	$(QEMU) -serial mon:stdio $(QEMUOPTS) -S $(QEMUGDB)
 

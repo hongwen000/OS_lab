@@ -1,9 +1,9 @@
-[BITS 16]
+[BITS 32]
 [section .text]
 [global _start]
 [extern main]
 _start:
-    call dword main
+    call main
 	mov ah, 4ch
-	int 21h
+	int 91h
 

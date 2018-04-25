@@ -3,7 +3,7 @@
 //
 #include "./ide.h"
 #include "../include/defines.h"
-#include "../basic_lib/sys_lib.h"
+#include "../kernel_lib/sys_utility.h"
 
 #ifdef IDE_TEST
 
@@ -113,7 +113,7 @@ void ide_print_blk(ide_request *b){
             if (b->cmd & B_VALID) //printl("B_VALID");
                 printf("\n");
     int i,j;
-    for (i = 0; i < IDE_BUF_SIZE/8; i += 32){
+    for (i = 0; i < IDE_BUF_SIZE/16; i += 32){
         for (j = i; j < i + 32; j++){
             printf("%c",b->buf[j]);
         }
@@ -124,7 +124,7 @@ void ide_print_blk(ide_request *b){
 ide_request buffer;  // used for test
 void ide_test(){
     buffer.dev = 0;
-    buffer.lba= 64;
+    buffer.lba= 0;
     buffer.cmd = B_BUSY;
     ide_rw(&buffer);
     printf("Read hard disk over\n");

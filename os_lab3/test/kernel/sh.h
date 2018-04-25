@@ -8,13 +8,12 @@
 #include "../libc/stdio.h"
 #include "../libc/string.h"
 #include "../libc/stdlib.h"
-#include "../basic_lib/sys_lib.h"
-#include "../basic_lib/sys_lib.h"
+#include "../kernel_lib/sys_utility.h"
 #include "bin_loader.h"
 #include "../libc/sys/hhos.h"
 #include "../libc/ctype.h"
-#include "ide.h"
-#include "kb.h"
+#include "../driver/ide.h"
+#include "../driver/kb.h"
 #define HELP_FILE_SECTOR 64
 #define REC_FILE_SECTOR 128
 
@@ -98,6 +97,10 @@ private:
                 printf("%s\n", histroy[i]);
             }
         }
+        else if (is_command(input_cmd, "crash"))
+        {
+            asm volatile("int $0x13");
+        }
         else if (is_command(input_cmd, "date"))
         {
             read_rtc();
@@ -116,7 +119,7 @@ private:
                 if (is_command(input_cmd, progs[i].name))
                 {
                     found = true;
-                    bin_loader::load_binary_from_floppy(progs[i].lba);
+                    bin_loader::load_binary_from_disk(progs[i].lba);
                     //if(!(strlen(progs[i].name) > 2 && progs[i].name[0] == 'c' && progs[i].name[1] == '_'))
                     if(false)
                     {
@@ -133,7 +136,7 @@ private:
     }
     void read_prog_record()
     {
-        sys_read_hard_disk(0, (uint32_t)record_buf, REC_FILE_SECTOR, 1);
+        sys_read_hard_disk(SEL_KERN_DATA, (uint32_t)record_buf, REC_FILE_SECTOR, 1);
         char buf1[32];
         char buf2[32];
         char buf3[32];
@@ -151,7 +154,7 @@ private:
     }
     void read_help_file()
     {
-        sys_read_hard_disk(0, (uint32_t)help, HELP_FILE_SECTOR, 1);
+        sys_read_hard_disk(SEL_KERN_DATA, (uint32_t)help, HELP_FILE_SECTOR, 1);
     }
     int split_input(char* buf)
     {

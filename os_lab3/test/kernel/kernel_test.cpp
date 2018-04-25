@@ -29,7 +29,7 @@ extern "C" void kernel_main()
     // :
     // :"a"(ch),"b"(offset)
     // :"%ecx");
-    //sys_putchar('\t', MAKE_COLOR(VGA_BLACK, VGA_WHITE), 0, 0);
+    //vga_putchar('\t', MAKE_COLOR(VGA_BLACK, VGA_WHITE), 0, 0);
     //tty tty1;
     //tty1.tty_init();
     //current_tty = &tty1;

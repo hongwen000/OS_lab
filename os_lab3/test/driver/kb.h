@@ -1,6 +1,5 @@
 #ifndef __KB_H
 #define __KB_H
-
 #define KBSTATP     0x64
 #define KBS_DIB     0x01
 #define KBDATAP     0x60

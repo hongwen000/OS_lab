@@ -4,7 +4,7 @@
 
 #ifndef HHOS_IDE_H
 #define HHOS_IDE_H
-#undef IDE_TEST
+//#define IDE_TEST
 /* Ref:
  * http://wiki.osdev.org/IDE
  * http://lxr.oss.org.cn/source/drivers/block/hd.c

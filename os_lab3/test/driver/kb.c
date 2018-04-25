@@ -1,106 +1,30 @@
 #include "kb.h"
+
 #define NO 0
+
 typedef unsigned long size_t;
 typedef unsigned char uint8_t;
 typedef unsigned short uint16_t;
 typedef unsigned int uint32_t;
-
 static inline uint8_t sys_inb(uint16_t port)
 {
     uint8_t ret;
     asm volatile ( "inb %1, %0"
-                   : "=a"(ret)
-                   : "Nd"(port) );
+    : "=a"(ret)
+    : "Nd"(port) );
     return ret;
 }
 
 static inline void sys_outb(uint16_t port, uint8_t data)
 {
     asm volatile ( "outb %0, %1"
-                   : 
-                   : "a"(data), "Nd"(port) );
-}
-
-static inline char sys_get_scancode()
-{
-    while (!(sys_inb(0x64) & 1));
-    return sys_inb(0x60);
+    :
+    : "a"(data), "Nd"(port) );
 }
 
 unsigned char kb_buf[KB_BUF_LEN];
 
 int buf_pos = 0;
-
-extern void sys_bios_print_string(const char* str, unsigned int len, int color, int pos);
-
-
-static char *itoa(unsigned char val, char *buf, unsigned radix)
-{
-    char   *p;
-    char   *firstdig;
-    char   temp;
-    unsigned   digval;
-    p = buf;
-    if(val <0)
-    {
-        *p++ = '-';
-        val = (unsigned long)(-(long)val);
-    }
-    firstdig = p;
-    do{
-        digval = (unsigned)(val % radix);
-        val /= radix;
-
-        if  (digval > 9)
-            *p++ = (char)(digval - 10 + 'a');
-        else
-            *p++ = (char)(digval + '0');
-    }while(val > 0);
-
-    *p-- = '\0';
-    do{
-        temp = *p;
-        *p = *firstdig;
-        *firstdig = temp;
-        --p;
-        ++firstdig;
-    }while(firstdig < p);
-    return buf;
-}
-static inline void sys_bios_print_int(unsigned char num, int color, int pos)
-{
-    unsigned char num_ = num;
-    int len = 1;
-    while(num_ /= 10) len++;
-    char arr[len + 1];
-    itoa(num, arr, 10);
-    sys_bios_print_string(arr, len, color, pos);
-}
-
-#define MAKE_COLOR(BACKG, FOREG) \
-    (((BACKG << 4) | (FOREG & 0x0F)))
-
-#define MAKE_POS(ROW, COLUMN) \
-    ((ROW << 8) | (COLUMN & 0xFF))
-
-enum VGA_COLOR{
-    VGA_BLACK           =   0x00,    
-    VGA_BLUE            =   0x01,    
-    VGA_GREEN           =   0x02,    
-    VGA_CYAN            =   0x03,    
-    VGA_RED             =   0x04,    
-    VGA_MAGENTA         =   0x05,    
-    VGA_BROWN           =   0x06,    
-    VGA_WHITE           =   0x07,     
-    VGA_GRAY			=   0x08,
-    VGA_BRIGHT_BLUE		=   0x09,
-    VGA_BRIGHT_GREEN	=   0x0A,
-    VGA_BRIGHT_CYAN		=   0x0B,
-    VGA_BRIGHT_RED		=   0x0C,
-    VGA_BRIGHT_MAGENTA	=   0x0D,
-    VGA_YELLOW			=   0x0E,
-    VGA_BRIGHT_WHITE	=   0x0F
-};
 
 int kb_buf_in(unsigned char ch)
 {

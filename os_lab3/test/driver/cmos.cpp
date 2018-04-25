@@ -1,7 +1,8 @@
-#include "sys_lib.h"
+#include "../kernel_lib/sys_utility.h"
 #include "../libc/stdio.h"
 #include "../libc/string.h"
 #include "../libc/stdlib.h"
+#include "./cmos.h"
 void read_cmos (unsigned char array [])
 {
    unsigned char tvalue, index;
@@ -112,7 +113,7 @@ static bool is_leap_year(uint16_t year)
     return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
 }
 
-extern "C" uint32_t sys_get_timestamp()
+uint32_t sys_get_timestamp()
 {
     read_rtc();
     int sys_sec = 0;

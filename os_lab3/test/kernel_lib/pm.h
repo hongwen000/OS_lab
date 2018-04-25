@@ -21,20 +21,25 @@
 #define AC_DPL_KERN 0x0  // RING 0 kernel level
 #define AC_DPL_USER 0x60 // RING 3 user level
 
-#define GDT_GR  0x8     // limit in 4k blocks
-#define GDT_SZ  0x4     // 32 bit protect mode
+#define GDT_GR  0x8     // Granularity bit : limit in 4k blocks
+#define GDT_SZ  0x4     // Default Operation Size : 32 bit protect mode
 
 #define NGDT 256
 
 // gdt selector 
 #define SEL_KCODE   0x1
 #define SEL_KDATA   0x2
-#define SEL_UCODE   0x3
-#define SEL_UDATA   0x4
-#define SEL_TSS     0x5
-
+#define SEL_VIDEO   0x3
+#define SEL_STACK   0x4
+#define SEL_UCODE   0x5
+#define SEL_UDATA   0x6
+#define SEL_TSS     0x7
 #define RPL_KERN    0x0
 #define RPL_USER    0x3
+
+#define SEL_KERN_CODE 0x8
+#define SEL_KERN_DATA 0x10
+#define SEL_KERN_VIDEO 0x18
 
 #define CPL_KERN    0x0
 #define CPL_USER    0x3
@@ -118,4 +123,6 @@ void tss_set(uint16_t ss0, uint32_t esp0);
 extern "C" void idt_init();
 void idt_install(uint8_t num, uint32_t base, uint16_t selector, uint8_t gate, uint8_t flags);
 
+#define USER_PROG_LOAD_ADDR 0x200100
+#define USER_PROG_LOAD_SEG SEL_KERN_DATA
 #endif
