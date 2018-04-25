@@ -57,10 +57,26 @@ void gdt_init(){
     /* user code segment type: code addr: 0 limit: 4G gran: 4KB sz: 32bit */
     gdt_install(SEL_UCODE, 0, 0xfffff, AC_RW|AC_EX|AC_DPL_USER|AC_PR, GDT_GR|GDT_SZ); 
     /* user code segment type: data addr: 0 limit: 4G gran: 4KB sz: 32bit */
-    gdt_install(SEL_UDATA, 0, 0xfffff, AC_RW|AC_DPL_USER|AC_PR, GDT_GR|GDT_SZ); 
+    gdt_install(SEL_UDATA, 0, 0xfffff, AC_RW|AC_DPL_USER|AC_PR, GDT_GR|GDT_SZ);
     gdt_install(SEL_TSS, (uint32_t)&tss, sizeof(tss),AC_PR|AC_AC|AC_EX, GDT_GR); 
     /* for tss, access_reverse bit is 1 */
     gdt[SEL_TSS].access &= ~AC_RE;
+    /* user code segment type: code addr: 0 limit: 4G gran: 4KB sz: 32bit */
+    gdt_install(SEL_UCODE0, 0x200000, 0x1ffff, AC_RW|AC_EX|AC_DPL_KERN|AC_PR, GDT_GR|GDT_SZ);
+    /* user code segment type: data addr: 0 limit: 4G gran: 4KB sz: 32bit */
+    gdt_install(SEL_UDATA0, 0x200000, 0x1ffff, AC_RW|AC_DPL_KERN|AC_PR, GDT_GR|GDT_SZ);
+    /* user code segment type: code addr: 0 limit: 4G gran: 4KB sz: 32bit */
+    gdt_install(SEL_UCODE1, 0x300000, 0x1ffff, AC_RW|AC_EX|AC_DPL_KERN|AC_PR, GDT_GR|GDT_SZ);
+    /* user code segment type: data addr: 0 limit: 4G gran: 4KB sz: 32bit */
+    gdt_install(SEL_UDATA1, 0x300000, 0x1ffff, AC_RW|AC_DPL_KERN|AC_PR, GDT_GR|GDT_SZ);
+    /* user code segment type: code addr: 0 limit: 4G gran: 4KB sz: 32bit */
+    gdt_install(SEL_UCODE2, 0x400000, 0x1ffff, AC_RW|AC_EX|AC_DPL_KERN|AC_PR, GDT_GR|GDT_SZ);
+    /* user code segment type: data addr: 0 limit: 4G gran: 4KB sz: 32bit */
+    gdt_install(SEL_UDATA2, 0x400000, 0x1ffff, AC_RW|AC_DPL_KERN|AC_PR, GDT_GR|GDT_SZ);
+    /* user code segment type: code addr: 0 limit: 4G gran: 4KB sz: 32bit */
+    gdt_install(SEL_UCODE3, 0x500000, 0x1ffff, AC_RW|AC_EX|AC_DPL_KERN|AC_PR, GDT_GR|GDT_SZ);
+    /* user code segment type: data addr: 0 limit: 4G gran: 4KB sz: 32bit */
+    gdt_install(SEL_UDATA3, 0x500000, 0x1ffff, AC_RW|AC_DPL_KERN|AC_PR, GDT_GR|GDT_SZ);
 
     gdt_flush();
     tss_install();

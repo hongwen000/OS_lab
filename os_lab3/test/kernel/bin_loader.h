@@ -12,15 +12,15 @@
 class bin_loader
 {
 public:
-    static void load_binary_from_disk(int n)
+    static void load_binary_from_disk(uint32_t SEL_CODE, uint32_t SEL_DATA, int n)
     {
-        sys_read_hard_disk(user_prog_segment, user_prog_load_addr, n, 40);
-        sys_execve_bin();
+        sys_read_hard_disk(SEL_DATA, user_prog_load_addr, n, 40);
+        sys_execve_bin(SEL_CODE, SEL_DATA);
     }
 
 private:
     static constexpr uint32_t user_prog_load_addr = USER_PROG_LOAD_ADDR;
-    static constexpr uint32_t user_prog_segment = USER_PROG_LOAD_SEG;
+//    static constexpr uint32_t user_prog_segment = USER_PROG_LOAD_SEG;
 };
 
 #endif //TEST_BIN_LOADER_H

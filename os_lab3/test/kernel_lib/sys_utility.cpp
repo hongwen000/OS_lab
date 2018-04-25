@@ -200,8 +200,8 @@ void sys_read_hard_disk(uint32_t segment, uint32_t address, uint16_t logical_sta
         :"%esi", "%edi", "%ecx"
         );
         address += 0x200;
-        debug_printf("Read block %d OK\n", i);
     }
+    debug_printf("Read block OK\n");
 }
 
 //extern "C" void interrupt_33h_c() {
@@ -219,7 +219,7 @@ void sys_read_hard_disk(uint32_t segment, uint32_t address, uint16_t logical_sta
 //    sys_print_string(l16, 31, MAKE_COLOR(VGA_BLACK, VGA_CYAN), MAKE_POS(5, 0));
 //}
 
-void interrupt_97h_c() {
+extern "C" void interrupt_97h_c() {
 
     const char * l11 = " __    __  __    __   ______    ______  ";
     const char * l12 = "|  \\  |  \\|  \\  |  \\ /      \\  /      \\ ";

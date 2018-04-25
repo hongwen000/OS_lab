@@ -9,7 +9,7 @@ SEL_KERN_VIDEO  EQU 0x18
 SEL_KERN_STACK  EQU 0x20
 USER_BASE       EQU 0xc0000000
 
-%define USER_LOAD_ADDR 0x200100
+%define USER_LOAD_ADDR 0x00A100
 %define LEN_PSP 0x100
 %define USER_CODE_SEL  SEL_KERN_CODE
 %define USER_DATA_SEL  SEL_KERN_DATA
@@ -28,8 +28,9 @@ USER_BASE       EQU 0xc0000000
         mov ax, SEL_KERN_DATA
         mov ds, ax
         mov es, ax
+;        mov ss, ax
         mov fs, ax
-        mov ss, ax
+;        mov ss, ax
         mov ax, SEL_KERN_VIDEO
         mov gs, ax
         pop ax

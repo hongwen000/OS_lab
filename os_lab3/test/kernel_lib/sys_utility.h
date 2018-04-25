@@ -14,7 +14,7 @@ extern "C"{
     void sys_current_tty_putchar(int ch);
     int  sys_current_tty_get_color();
     void sys_current_tty_set_color(int color);
-    void sys_execve_bin();
+    void sys_execve_bin(uint32_t SEL_CODE, uint32_t SEL_DATA);
     void sys_dbg_bochs_putc(char c);
 
     /* vga */
@@ -37,7 +37,6 @@ extern "C"{
     void sys_sleep(int n);
     void read_rtc();
     extern char sys_internal_time_str[20];
-    void interrupt_97h_c();
     #define bochs_break()       \
         sys_outw(0x8A00,0x8A00);    \
         sys_outw(0x8A00,0x08AE0);

@@ -18,19 +18,26 @@ void vga_putchar(int c, int color, int x, int y)
 
 void vga_scroll_up()
 {
-    asm volatile(
-    "cld\n\t"
-            "movl $0xF00, %%ecx\n\t"
-            "movl $0x0, %%esi\n\t"
-            "scroll_up_loop:\n\t"
-            "movb %%gs:0xA0(%%esi), %%al\n\t"
-            "movb %%al, %%gs:(%%esi)\n\t"
-            "inc %%esi\n\t"
-            "loop scroll_up_loop\n\t"
-    :
-    :
-    :"%esi", "%al", "%ecx"
-    );
+//    asm volatile(
+//    "cld\n\t"
+//            "movl $0xF00, %%ecx\n\t"
+//            "movl $0x0, %%esi\n\t"
+//            "scroll_up_loop:\n\t"
+//            "movb %%gs:0xA0(%%esi), %%al\n\t"
+//            "movb %%al, %%gs:(%%esi)\n\t"
+//            "inc %%esi\n\t"
+//            "loop scroll_up_loop\n\t"
+//    :
+//    :
+//    :"%esi", "%al", "%ecx"
+//    );
+    volatile uint16_t * pVRAM = (volatile uint16_t *) 0xB8000;
+    for(int x = 0; x < 24; ++x)
+        for(int y = 0; y < 80; ++y)
+            *(pVRAM + (x * 80 + y)) = *(pVRAM + ((x + 1)* 80 + y));
+    uint16_t white = (uint16_t)(MAKE_COLOR(VGA_BLACK, VGA_WHITE) << 8) | (uint16_t)(' ');
+    for(int i = 0; i < 80; ++i)
+        *(pVRAM + (24 * 80 + i)) = white;
 }
 
 void vga_clear_screen()

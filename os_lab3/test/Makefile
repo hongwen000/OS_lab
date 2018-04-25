@@ -17,8 +17,9 @@ ASELF = -f elf32
 AR = $(GCC_PREFIX)ar
 
 all:
-	make clean
-	make bochs
+#	make clean
+	#make bochs
+	make write_all_progs
 
 
 GCC_PREFIX = /opt/cross/gcc-i386/bin/i386-elf-
@@ -29,7 +30,7 @@ CC = $(GCC_PREFIX)gcc
 CFLAGS =  	-m32 -march=i486 \
 			-nostdlib -ffreestanding \
 			-lgcc \
-			-fno-builtin -Os -fno-omit-frame-pointer \
+			-fno-builtin -O0 -fno-omit-frame-pointer \
 			-Wall -Wno-format -Wno-unused -Wno-write-strings -Werror \
 			-fno-tree-ch -fno-stack-protector \
 			-std=gnu11  -g \
@@ -40,7 +41,7 @@ CXX = $(GCC_PREFIX)g++
 CXXFLAGS =  -m32 -march=i386 \
 			-nostdlib -ffreestanding \
 			-lgcc \
-			-fno-builtin -Os -fno-omit-frame-pointer \
+			-fno-builtin -O0 -fno-omit-frame-pointer \
 			-Wall -Wno-format -Wno-unused -Wno-write-strings -Werror \
 			-fno-tree-ch -fno-stack-protector \
 			-std=c++17  -g \

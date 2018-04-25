@@ -13,6 +13,7 @@ extern "C" void interrupt_kb();
 extern "C" void interrupt_ide();
 extern "C" void interrupt_90h();
 extern "C" void interrupt_91h();
+extern "C" void interrupt_97h();
 extern "C" void interrupt_system_call();
 static tty* current_tty = nullptr;
 tty* sys_get_current_tty(){return current_tty;}
@@ -76,7 +77,7 @@ extern "C" void kernel_main()
     print_ok("Keyboard");
     idt_install(ISR_IRQ0 + IRQ_IDE, (uint32_t)interrupt_ide, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
     print_ok("IDE Disk");
-    idt_install(0x97, (uint32_t)interrupt_97h_c, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
+    idt_install(0x97, (uint32_t)interrupt_97h, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
     idt_install(0x90, (uint32_t)interrupt_90h, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
     idt_install(0x91, (uint32_t)interrupt_91h, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
     asm volatile("sti");
