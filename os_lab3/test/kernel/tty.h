@@ -1,6 +1,8 @@
 #ifndef _TTY_H_
 #define _TTY_H_
-#include "../basic_lib/sys_lib.h"
+
+#include "../driver/vga.h"
+#include "../kernel_lib/sys_utility.h"
 #include "../libc/string.h"
 
 class tty{
@@ -17,8 +19,9 @@ private:
     char tty_mem[80*25*2];
 #endif
 public:
-    tty() {
-        sys_clear_screen();
+    tty(bool clear) {
+        if(clear)
+            sys_clear_screen();
         tty_init();
     }
     void tty_init()
@@ -57,11 +60,7 @@ public:
     }
     void move_cursor(int x, int y)
     {
-        uint16_t pos = x * 80 + y;
-        sys_outb(0x3D4, 0x0F);
-        sys_outb(0x3D5, (uint8_t) (pos & 0xFF));
-        sys_outb(0x3D4, 0x0E);
-        sys_outb(0x3D5, (uint8_t) ((pos >> 8) & 0xFF));
+        vga_move_cursor(x, y);
     }
     void scroll_up()
     {
@@ -77,7 +76,7 @@ public:
         tty_mem[y + 80 * x] = c;
         tty_mem[y + 80 * x + 1] = color;
 #endif
-        sys_putchar(c, color, x, y);
+        vga_putchar(c, color, x, y);
     }
     void putchar(int c)
     {

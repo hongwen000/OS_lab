@@ -21,7 +21,7 @@ typedef __builtin_va_list va_list;
 #include <stdarg.h>
 #endif
 
-#define USE_BOCHS_DEBUG_OUTPUT
+//#define USE_BOCHS_DEBUG_OUTPUT
 
 using size_t = unsigned long;
 using uint8_t = unsigned char;

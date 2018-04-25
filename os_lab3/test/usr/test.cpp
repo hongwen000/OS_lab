@@ -6,12 +6,10 @@
 #include "../libc/stdlib.h"
 extern "C" void main()
 {
-    asm volatile(
-        INVOKE_INT_SAFE(33):::"%ebx"
-            );
-    asm volatile(
-        INVOKE_INT_SAFE(34):::"%ebx"
-            );
+        //    asm volatile(
+        //        INVOKE_INT_SAFE(33):::"%ebx"
+        //            );
+    asm volatile("int $0x97");
     printf("In int test program\n");
     printf("Current unix timestamp is %u\n", time(nullptr));
     printf("Current datetime is %s\n", asctime(gmtime(time(nullptr))));

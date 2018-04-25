@@ -41,22 +41,26 @@ void gdt_install(uint8_t num, uint32_t base, uint32_t limit, uint8_t access, uin
 
 void gdt_init(){
     /* Setup the GDT pointer and limit */
-    gp.limit = (sizeof(struct gdt_entry) * NGDT) - 1;
+    gp.limit = (sizeof(struct gdt_entry) * NGDT) - 1; //gdtr limit <- size of gdt table - 1
     gp.base = (uint32_t)&gdt;
 
     /* null descriptor */
     gdt_install(0, 0, 0, 0, 0);  
-    /* kernel code segment type: code addr: 0 limit: 4G gran: 4KB sz: 32bit */
+    /* kernel codenfo segment type: code addr: 0 limit: 4G gran: 4KB sz: 32bit */
     gdt_install(SEL_KCODE, 0, 0xfffff, AC_RW|AC_EX|AC_DPL_KERN|AC_PR, GDT_GR|GDT_SZ);
     /* kernel data segment type: data addr: 0 limit: 4G gran: 4KB sz: bit 32bit */
-    gdt_install(SEL_KDATA, 0, 0xfffff, AC_RW|AC_DPL_KERN|AC_PR, GDT_GR|GDT_SZ); 
+    gdt_install(SEL_KDATA, 0, 0xfffff, AC_RW|AC_DPL_KERN|AC_PR, GDT_GR|GDT_SZ);
+    /* kernel video segment type: data addr: 0xB8000 limit: 1Mb gran: 1byte sz: 32bit */
+    gdt_install(SEL_VIDEO, 0xB8000, 0xfffff, AC_RW|AC_DPL_KERN|AC_PR, GDT_SZ);
+    /* kernel stack segment type: data addr: 0x6C00-0x7C00 direction: down limit: 4Kb gran: 4Kb sz: 32bit */
+    gdt_install(SEL_STACK, 0, 0xfffff, AC_RW|AC_DPL_KERN|AC_PR, GDT_GR|GDT_SZ);
     /* user code segment type: code addr: 0 limit: 4G gran: 4KB sz: 32bit */
     gdt_install(SEL_UCODE, 0, 0xfffff, AC_RW|AC_EX|AC_DPL_USER|AC_PR, GDT_GR|GDT_SZ); 
     /* user code segment type: data addr: 0 limit: 4G gran: 4KB sz: 32bit */
     gdt_install(SEL_UDATA, 0, 0xfffff, AC_RW|AC_DPL_USER|AC_PR, GDT_GR|GDT_SZ); 
     gdt_install(SEL_TSS, (uint32_t)&tss, sizeof(tss),AC_PR|AC_AC|AC_EX, GDT_GR); 
     /* for tss, access_reverse bit is 1 */
-    gdt[5].access &= ~AC_RE;
+    gdt[SEL_TSS].access &= ~AC_RE;
 
     gdt_flush();
     tss_install();

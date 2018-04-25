@@ -1,30 +1,40 @@
 ENTRY(_start);
+phys = 0x200100;
 SECTIONS
 {
-    . = 0xA100;
-    .text : AT(0xA100)
-    {
-        _text = .;
-        *(.text);
-        _text_end = .;
-    }
-    .data :
-    {
-        _data = .;
-        *(.bss);
-        *(.bss*);
-        *(.data);
-        *(.rodata*);
-        *(COMMON)
-        _data_end = .;
-    }
-    /DISCARD/ :
-    {
-        *(.note*);
-        *(.iplt*);
-        *(.igot*);
-        *(.rel*);
-        *(.comment);
-/* add any unwanted sections spewed out by your version of gcc and flags here */
-    }
+  .text phys : AT(phys)
+  {
+    kernstart = .;
+    code = .;
+    *(.text)
+    *(.rodata)
+    . = ALIGN(4096);
+  }
+  .data : AT(phys + (data - code))
+  {
+    data = .;
+    *(.data)
+    . = ALIGN(4096);
+  }
+  .stab : AT(phys + (stab - code))
+  {
+      stab = .;
+      *(.stab)
+      . = ALIGN(4096);
+  }
+  .stabstr : AT(phys + (stabstr - code))
+  {
+      stabstr = .;
+      *(.stabstr)
+      . = ALIGN(4096);
+  }
+  .bss : AT(phys + (bss - code))
+  {
+    bss = .;
+    *(.bss)
+    . = ALIGN(4096);
+  }
+  kernend = .;
+
+  /DISCARD/ : { *(.comment) *(.eh_frame) }
 }
