@@ -1,5 +1,5 @@
 db `3\n`
-db `c_calc\n`
+db `bc\n`
 db `192\n`
 db `sleep\n`
 db `256\n`

@@ -179,6 +179,8 @@ extern "C" void main()
 //    printf("Input q to exit\n");
 //    printf("I\n");
 //    putchar('I');
+    int n  = system_call_get_timestamp();
+    asm volatile("cli\n\thlt");
     while (true)
     {
 //        gets(infix);

@@ -5,6 +5,7 @@
 #ifndef HHOS_SH_H
 #define HHOS_SH_H
 
+#include "../include/defines.h"
 #include "../libc/stdio.h"
 #include "../libc/string.h"
 #include "../libc/stdlib.h"
@@ -99,7 +100,20 @@ private:
         }
         else if (is_command(input_cmd, "crash"))
         {
-            asm volatile("int $0x13");
+            int n = atoi(inputs[input_cmd.start + 1]);
+            printf("%d\n", n);
+            switch (n)
+            {
+                case 0: {asm volatile("int $0x0");}
+                case 1: {asm volatile("int $0x1");}
+                case 2: {asm volatile("int $0x2");}
+                case 3: {asm volatile("int $0x3");}
+                case 4: {asm volatile("int $0x4");}
+                case 5: {asm volatile("int $0x5");}
+                case 13:{asm volatile("int $0x13");}
+                default:{asm volatile("int $0x13");}
+            }
+
         }
         else if (is_command(input_cmd, "date"))
         {
@@ -119,7 +133,7 @@ private:
                 if (is_command(input_cmd, progs[i].name))
                 {
                     found = true;
-                    bin_loader::load_binary_from_disk(progs[i].lba);
+                    bin_loader::load_binary_from_disk(SEL_USER_CODE0, SEL_USER_DATA0, progs[i].lba);
                     //if(!(strlen(progs[i].name) > 2 && progs[i].name[0] == 'c' && progs[i].name[1] == '_'))
                     if(false)
                     {

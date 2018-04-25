@@ -34,12 +34,30 @@
 #define SEL_UCODE   0x5
 #define SEL_UDATA   0x6
 #define SEL_TSS     0x7
+#define SEL_UCODE0   0x8
+#define SEL_UDATA0   0x9
+#define SEL_UCODE1   0xa
+#define SEL_UDATA1   0xb
+#define SEL_UCODE2   0xc
+#define SEL_UDATA2   0xd
+#define SEL_UCODE3   0xe
+#define SEL_UDATA3   0xf
+
+
 #define RPL_KERN    0x0
 #define RPL_USER    0x3
 
 #define SEL_KERN_CODE 0x8
 #define SEL_KERN_DATA 0x10
 #define SEL_KERN_VIDEO 0x18
+#define SEL_USER_CODE0   0x8 * 0x8
+#define SEL_USER_DATA0   0x8 * 0x9
+#define SEL_USER_CODE1   0x8 * 0xa
+#define SEL_USER_DATA1   0x8 * 0xb
+#define SEL_USER_CODE2   0x8 * 0xc
+#define SEL_USER_DATA2   0x8 * 0xd
+#define SEL_USER_CODE3   0x8 * 0xe
+#define SEL_USER_DATA3   0x8 * 0xf
 
 #define CPL_KERN    0x0
 #define CPL_USER    0x3
@@ -123,6 +141,6 @@ void tss_set(uint16_t ss0, uint32_t esp0);
 extern "C" void idt_init();
 void idt_install(uint8_t num, uint32_t base, uint16_t selector, uint8_t gate, uint8_t flags);
 
-#define USER_PROG_LOAD_ADDR 0x200100
+#define USER_PROG_LOAD_ADDR 0xA100
 #define USER_PROG_LOAD_SEG SEL_KERN_DATA
 #endif

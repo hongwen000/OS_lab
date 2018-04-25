@@ -12,7 +12,9 @@ sys_execve_bin:
     push ds
     push es
     push ss
-    mov ax, USER_DATA_SEL
+
+    mov ax, [esp + 0x38]
+    mov ebx, [esp + 0x34]
     mov ds, ax
     mov es, ax
     mov ss, ax
@@ -20,8 +22,10 @@ sys_execve_bin:
     mov word[USER_LOAD_ADDR - LEN_PSP + 2], 0x90
     mov dword[PSP_USER_RETURN_ADDR], return_point
     mov word[PSP_USER_RETURN_SEG], cs
+    push ebx
+    push dword USER_LOAD_ADDR
 before_jump:
-    jmp USER_CODE_SEL:USER_LOAD_ADDR
+    retf
 return_point:
     pop eax
     mov ss, ax
@@ -31,6 +35,7 @@ return_point:
     mov ds, ax
     popa
     leave
+    add esp, 8
     ret
 
 sys_sleep:

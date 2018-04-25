@@ -204,6 +204,19 @@ interrupt_91h:
 panic_91h_func_not_impl:
       jmp $
 
+[global interrupt_97h]
+[extern interrupt_97h_c]
+interrupt_97h:
+    cli
+    __ISR_BEGIN_SAFE_ASM__
+    call interrupt_97h_c
+    __ISR_LEAVE_SAFE_ASM__
+    sti
+    iret
+
+
+
+
 [global interrupt_system_call]
 [extern sys_getchar]
 [extern sys_current_tty_putchar]

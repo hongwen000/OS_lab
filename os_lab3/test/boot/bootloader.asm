@@ -114,7 +114,7 @@ retry:
 
     mov dh, 0   ; head <- 0
     add ch, 1   ; cylinder + 1
-    cmp ch, 20
+    cmp ch, 5
     jbe readloop
     ; jmp succ
 
