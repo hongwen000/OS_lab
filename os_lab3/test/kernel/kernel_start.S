@@ -19,6 +19,7 @@ kernel_start:
     mov ss, ax
     mov esp, 0x7c00         ; memory under 0x7c00 is meaningless in PM, so can be used as stack
 
+
 ; mov the kernel to 0x100000
 [extern kernstart]
 [extern kernend]
@@ -88,9 +89,14 @@ int_08_what_to_play dw 0
 sys_timer_irq_arrive dd 0
 
 [global interrupt_timer]
+[extern schedule]
 interrupt_timer:
     cli
     __ISR_BEGIN_SAFE_ASM__
+;    mov eax, esp
+;    push eax
+;    call schedule
+;    pop eax
     mov al, 1
     xchg al, byte[sys_timer_irq_arrive]
     mov ah, 0x9
@@ -205,7 +211,7 @@ panic_91h_func_not_impl:
       jmp $
 
 [global interrupt_97h]
-[global interrupt_97h]
+[extern interrupt_97h_c]
 interrupt_97h:
     cli
     __ISR_BEGIN_SAFE_ASM__
@@ -214,6 +220,17 @@ interrupt_97h:
     sti
     iret
 
+[global interrupt_99h]
+interrupt_99h:
+    cli
+    __ISR_BEGIN_SAFE_ASM__
+    mov eax, esp
+    push eax
+    call schedule
+    pop eax
+    __ISR_LEAVE_SAFE_ASM__
+    sti
+    iret
 
 
 
@@ -260,3 +277,13 @@ int_98h_end:
     __ISR_LEAVE_SAFE_ASM__
     sti
     iret
+
+[global set_pit_freq]
+set_pit_freq:
+    mov al,34h
+    out 43h,al
+    mov ax,1193182/20
+    out 40h,al
+    mov al,ah
+    out 40h,al
+    ret

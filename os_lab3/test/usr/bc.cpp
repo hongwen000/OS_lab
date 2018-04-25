@@ -182,7 +182,8 @@ extern "C" void main()
 //    printf("I\n");
 //    putchar('I');
     printf("%s\n",asctime(gmtime(time(nullptr))));
-    sleep(50);
+    asm volatile("int $0x99");
+    while (1);
 //    while (true)
 //    {
 //        gets(infix);

@@ -35,4 +35,7 @@ struct PCB{
     uint32_t ss;    // 16 bits
 };
 
+extern "C" void schedule(PCB*);
+
+
 #endif //HHOS_PROC_H
