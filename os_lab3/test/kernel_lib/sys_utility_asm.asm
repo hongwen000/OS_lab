@@ -11,7 +11,7 @@ sys_execve_bin:
     pusha         ;这里要保护寄存器!!!
     push ds
     push es
-    push ss
+    push esp
 
     mov ax, [esp + 0x38]
     mov ebx, [esp + 0x34]
@@ -27,15 +27,15 @@ sys_execve_bin:
 before_jump:
     retf
 return_point:
-    pop eax
+    mov ax, SEL_KERN_DATA
     mov ss, ax
+    pop esp
     pop eax
     mov es, ax
     pop eax
     mov ds, ax
     popa
     leave
-    add esp, 8
     ret
 
 sys_sleep:

@@ -28,9 +28,10 @@ typedef unsigned char *va_list;
 #define va_copy(dest, src) \
     ((dest) = (va_list) (src))
 
+/*
 #define va_arg(ap, type) \
      (((ap) = (ap) + (sizeof (type))), *((type *) ((ap) - (sizeof (type)))))
-
+*/
 #else
 #include <stdarg.h>
 #endif

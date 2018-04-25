@@ -205,7 +205,7 @@ panic_91h_func_not_impl:
       jmp $
 
 [global interrupt_97h]
-[extern interrupt_97h_c]
+[global interrupt_97h]
 interrupt_97h:
     cli
     __ISR_BEGIN_SAFE_ASM__

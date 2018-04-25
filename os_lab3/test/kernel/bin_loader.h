@@ -12,9 +12,12 @@
 class bin_loader
 {
 public:
-    static void load_binary_from_disk(uint32_t SEL_CODE, uint32_t SEL_DATA, int n)
+    static void load_binary_from_disk(uint32_t SEL_DATA, int n)
     {
         sys_read_hard_disk(SEL_DATA, user_prog_load_addr, n, 40);
+    }
+    static void exec(uint32_t SEL_CODE, uint32_t SEL_DATA)
+    {
         sys_execve_bin(SEL_CODE, SEL_DATA);
     }
 

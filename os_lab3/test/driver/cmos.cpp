@@ -67,10 +67,10 @@ void read_rtc() {
       sys_day = read_rtc_part(0x07);
       sys_month = read_rtc_part(0x08);
       sys_year = read_rtc_part(0x09);
-      int nnnn = sys_year;
-      nnnn = nnnn % 10;
-      sys_dbg_bochs_putc(nnnn + '0');
-      sys_dbg_bochs_putc('\n');
+//      int nnnn = sys_year;
+//      nnnn = nnnn % 10;
+//      sys_dbg_bochs_putc(nnnn + '0');
+//      sys_dbg_bochs_putc('\n');
       _sec = sys_sec;
       _min = sys_minute;
       _hour = sys_hour;
@@ -135,35 +135,40 @@ static bool is_leap_year(uint16_t year)
     return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
 }
 
+static int local_sys_sec = 10;
+static int local_sys_minute = 11;
+static int local_sys_hour = 12;
+static int local_sys_day = 13;
+static int local_sys_month = 9;
+static int local_sys_year;
+
 uint32_t sys_get_timestamp()
 {
     read_rtc();
-    int sys_sec = 0;
-    int sys_minute = 0;
-    int sys_hour = 0;
-    int sys_day = 0;
-    int sys_month = 0;
-    int sys_year;
+
+//    printf("In sys_get_timestamp: %s\n", sys_internal_time_str);
     sscanf(sys_internal_time_str,"%d %d %d %d %d %d", 
-            &sys_year, &sys_month, &sys_day,
-            &sys_hour, &sys_minute, &sys_sec);
+            &local_sys_year, &local_sys_month, &local_sys_day,
+            &local_sys_hour, &local_sys_minute, &local_sys_sec);
+//    printf("In sys_get_timestamp:  %d %d %d %d %d %d \n", local_sys_year,
+//            local_sys_month, local_sys_day, local_sys_hour, local_sys_minute, local_sys_sec);
     uint32_t ts = 0;
     uint8_t cnt_non_leap = 0;
     uint8_t cnt_leap = 0;
-    for( uint16_t i = 1970; i < sys_year; i++ )
+    for( uint16_t i = 1970; i < local_sys_year; i++ )
     {
         is_leap_year(i) ? cnt_leap++ : cnt_non_leap++;
     }
     ts += ((cnt_non_leap*365) + (cnt_leap*366)) * 86400;
     int day_of_mon[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-    for(uint8_t i = 0; i < (sys_month - 1); i++ )
+    for(uint8_t i = 0; i < (local_sys_month - 1); i++ )
     { 
-        ts += (i == 1 && is_leap_year(sys_year)) ? 
+        ts += (i == 1 && is_leap_year(local_sys_year)) ?
             (29 * 86400) : (day_of_mon[i] * 86400);
     }
-    ts += (sys_day-1) * 86400; 
-    ts += sys_hour * 3600;
-    ts += sys_minute * 60;
-    ts += sys_sec;
+    ts += (local_sys_day-1) * 86400;
+    ts += local_sys_hour * 3600;
+    ts += local_sys_minute * 60;
+    ts += local_sys_sec;
     return ts;
 }
