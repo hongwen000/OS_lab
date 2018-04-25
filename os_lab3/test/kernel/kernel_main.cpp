@@ -8,6 +8,7 @@
 #include "../libc/sys/hhos.h"
 #include "../kernel_lib/pm.h"
 #include "../kernel_lib/isr.h"
+#include "../proc/proc.h"
 extern "C" void interrupt_timer();
 extern "C" void interrupt_kb();
 extern "C" void interrupt_ide();
@@ -16,6 +17,9 @@ extern "C" void interrupt_91h();
 extern "C" void interrupt_97h();
 extern "C" void interrupt_99h();
 extern "C" void interrupt_system_call();
+extern "C" void schedule_asm();
+extern "C" void sys_proc_schd();
+
 extern "C" void set_pit_freq();
 static tty* current_tty = nullptr;
 tty* sys_get_current_tty(){return current_tty;}
@@ -37,6 +41,7 @@ void sys_current_tty_putchar(int ch)
 {
     int mask = 0x00FF;
     ch = ch & mask;
+
     tty* _current_tty = sys_get_current_tty();
     if (_current_tty) _current_tty->putchar(ch);
     sys_dbg_bochs_putc(ch);
@@ -74,25 +79,22 @@ extern "C" void kernel_main()
     tty1.set_x(6);
     current_tty = &tty1;
     print_ok("TTY");
-    idt_install(0x99, (uint32_t)interrupt_99h, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
-
-
     idt_install(ISR_IRQ0 + IRQ_TIMER, (uint32_t)interrupt_timer, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
     print_ok("Clock");
-    idt_install(ISR_IRQ0 + IRQ_IDE, (uint32_t)interrupt_ide, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
-    print_ok("IDE Disk");
-    asm volatile("sti");
-    asm volatile("int $0x99");
-    bin_loader::load_binary_from_disk(SEL_USER_DATA0, 192);
-    bin_loader::exec(SEL_USER_CODE0, SEL_USER_DATA0);
-
     idt_install(ISR_IRQ0 + IRQ_KB, (uint32_t)interrupt_kb, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
     print_ok("Keyboard");
     idt_install(ISR_IRQ0 + IRQ_IDE, (uint32_t)interrupt_ide, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
     print_ok("IDE Disk");
+    idt_install(0x99, (uint32_t)interrupt_99h, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
     idt_install(0x97, (uint32_t)interrupt_97h, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
+    //int 90/91是退出用户程序
     idt_install(0x90, (uint32_t)interrupt_90h, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
     idt_install(0x91, (uint32_t)interrupt_91h, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
+    //int 0x92是新建进程
+    idt_install(0x92, (uint32_t)sys_new_proc, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
+    //int 0x93切换进程
+    idt_install(0x93, (uint32_t)sys_proc_schd, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
+
     set_pit_freq();
     asm volatile("sti");
     asm volatile("int $0x97");
@@ -104,6 +106,21 @@ extern "C" void kernel_main()
                pADRS->LengthHigh, pADRS->LengthLow, memory_info[pADRS->Type-1]);
         ++pADRS;
     }
+
+    sys_clear_screen();
+    proc_init();
+    print_ok("Process Management");
+    bin_loader::load_binary_from_disk(SEL_USER_DATA0, 192);
+    bin_loader::new_proc(SEL_USER_CODE0, SEL_USER_DATA0);
+    bin_loader::load_binary_from_disk(SEL_USER_DATA1, 192);
+    bin_loader::new_proc(SEL_USER_CODE1, SEL_USER_DATA1);
+    bin_loader::load_binary_from_disk(SEL_USER_DATA2, 192);
+    bin_loader::new_proc(SEL_USER_CODE2, SEL_USER_DATA2);
+    bin_loader::load_binary_from_disk(SEL_USER_DATA3, 192);
+    bin_loader::new_proc(SEL_USER_CODE3, SEL_USER_DATA3);
+    schedule_asm();
+
+    while (1);
     sh sh1;
     print_ok("Shell");
     printf("%s\n", str);

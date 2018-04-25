@@ -89,7 +89,7 @@ int_08_what_to_play dw 0
 sys_timer_irq_arrive dd 0
 
 [global interrupt_timer]
-[extern schedule]
+[extern round_robin]
 interrupt_timer:
     cli
     __ISR_BEGIN_SAFE_ASM__
@@ -221,12 +221,13 @@ interrupt_97h:
     iret
 
 [global interrupt_99h]
+[extern save]
 interrupt_99h:
     cli
     __ISR_BEGIN_SAFE_ASM__
     mov eax, esp
     push eax
-    call schedule
+    call save
     pop eax
     __ISR_LEAVE_SAFE_ASM__
     sti

@@ -3,6 +3,7 @@
 #include "../include/defines.h"
 #include "./pm.h"
 #include "./isr.h"
+#include "../proc/proc.h"
 
 #define FLOPPY_SECTOR_PER_TRACK 18
 #define FLOPPY_TRACK_PER_HEAD 80
@@ -14,7 +15,8 @@ extern "C"{
     void sys_current_tty_putchar(int ch);
     int  sys_current_tty_get_color();
     void sys_current_tty_set_color(int color);
-    void sys_execve_bin(uint32_t SEL_CODE, uint32_t SEL_DATA);
+    void sys_new_proc(uint32_t SEL_CODE, uint32_t SEL_DATA);
+    void sys_proc_save();
     void sys_dbg_bochs_putc(char c);
 
     /* vga */

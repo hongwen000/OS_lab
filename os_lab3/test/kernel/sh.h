@@ -104,10 +104,10 @@ private:
             bin_loader::load_binary_from_disk(SEL_USER_DATA1, progs[0].lba);
             bin_loader::load_binary_from_disk(SEL_USER_DATA2, progs[0].lba);
             bin_loader::load_binary_from_disk(SEL_USER_DATA3, progs[0].lba);
-            bin_loader::exec(SEL_USER_CODE0, SEL_USER_DATA0);
-            bin_loader::exec(SEL_USER_CODE1, SEL_USER_DATA1);
-            bin_loader::exec(SEL_USER_CODE2, SEL_USER_DATA2);
-            bin_loader::exec(SEL_USER_CODE3, SEL_USER_DATA3);
+//            bin_loader::exec(SEL_USER_CODE0, SEL_USER_DATA0);
+//            bin_loader::exec(SEL_USER_CODE1, SEL_USER_DATA1);
+//            bin_loader::exec(SEL_USER_CODE2, SEL_USER_DATA2);
+//            bin_loader::exec(SEL_USER_CODE3, SEL_USER_DATA3);
         }
         else if (is_command(input_cmd, "crash"))
         {
@@ -145,7 +145,7 @@ private:
                 {
                     found = true;
                     bin_loader::load_binary_from_disk(SEL_USER_DATA0, progs[i].lba);
-                    bin_loader::exec(SEL_USER_CODE0, SEL_USER_DATA0);
+//                    bin_loader::exec(SEL_USER_CODE0, SEL_USER_DATA0);
                     //if(!(strlen(progs[i].name) > 2 && progs[i].name[0] == 'c' && progs[i].name[1] == '_'))
                     if(false)
                     {

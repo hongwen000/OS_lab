@@ -181,8 +181,8 @@ extern "C" void main()
 //    printf("Input q to exit\n");
 //    printf("I\n");
 //    putchar('I');
-    printf("%s\n",asctime(gmtime(time(nullptr))));
-    asm volatile("int $0x99");
+//    printf("%s\n",asctime(gmtime(time(nullptr))));
+    puts("In User Prog\n");
     while (1);
 //    while (true)
 //    {
