@@ -14,7 +14,9 @@ extern "C" void interrupt_ide();
 extern "C" void interrupt_90h();
 extern "C" void interrupt_91h();
 extern "C" void interrupt_97h();
+extern "C" void interrupt_99h();
 extern "C" void interrupt_system_call();
+extern "C" void set_pit_freq();
 static tty* current_tty = nullptr;
 tty* sys_get_current_tty(){return current_tty;}
 
@@ -72,8 +74,18 @@ extern "C" void kernel_main()
     tty1.set_x(6);
     current_tty = &tty1;
     print_ok("TTY");
+    idt_install(0x99, (uint32_t)interrupt_99h, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
+
+
     idt_install(ISR_IRQ0 + IRQ_TIMER, (uint32_t)interrupt_timer, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
     print_ok("Clock");
+    idt_install(ISR_IRQ0 + IRQ_IDE, (uint32_t)interrupt_ide, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
+    print_ok("IDE Disk");
+    asm volatile("sti");
+    asm volatile("int $0x99");
+    bin_loader::load_binary_from_disk(SEL_USER_DATA0, 192);
+    bin_loader::exec(SEL_USER_CODE0, SEL_USER_DATA0);
+
     idt_install(ISR_IRQ0 + IRQ_KB, (uint32_t)interrupt_kb, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
     print_ok("Keyboard");
     idt_install(ISR_IRQ0 + IRQ_IDE, (uint32_t)interrupt_ide, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
@@ -81,6 +93,7 @@ extern "C" void kernel_main()
     idt_install(0x97, (uint32_t)interrupt_97h, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
     idt_install(0x90, (uint32_t)interrupt_90h, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
     idt_install(0x91, (uint32_t)interrupt_91h, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
+    set_pit_freq();
     asm volatile("sti");
     asm volatile("int $0x97");
     int* pMCR_count = (int*)0x400;

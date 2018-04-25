@@ -62,11 +62,13 @@ kernel_obj = $(build_dir)/kernel/kernel_start.o \
 			 $(build_dir)/driver/vga.o \
 			 $(build_dir)/driver/kb.o \
 			 $(build_dir)/driver/ide.o \
-			 $(build_dir)/driver/cmos.o
+			 $(build_dir)/driver/cmos.o \
+			 $(build_dir)/proc/proc.o \
 
 
 include kernel/Makefrag
 include driver/Makefrag
+include proc/Makefrag
 
 -include $(wildcard $(build_dir)/kernel/*.d)
 
