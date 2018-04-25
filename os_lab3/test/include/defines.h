@@ -10,32 +10,16 @@
 // __asm__(".code16gcc\n");
 // #endif
 
-//typedef __builtin_va_list va_list;
-//
-//#define va_start(ap, last) __builtin_va_start(ap, last)
-//
-//#define va_arg(ap, type) __builtin_va_arg(ap, type)
+typedef __builtin_va_list va_list;
 
-//#define va_end(ap) __builtin_va_end(ap)
-typedef unsigned char *va_list;
+#define va_start(ap, last) __builtin_va_start(ap, last)
 
-#define va_start(ap, last) \
-    ((ap) = ((va_list) &(last)) + (sizeof (last)))
+#define va_arg(ap, type) __builtin_va_arg(ap, type)
 
-#define va_end(ap) \
-    ((ap) = (va_list)0)
-
-#define va_copy(dest, src) \
-    ((dest) = (va_list) (src))
-
-/*
-#define va_arg(ap, type) \
-     (((ap) = (ap) + (sizeof (type))), *((type *) ((ap) - (sizeof (type)))))
-*/
+#define va_end(ap) __builtin_va_end(ap)
 #else
 #include <stdarg.h>
 #endif
-
 
 //#define USE_BOCHS_DEBUG_OUTPUT
 

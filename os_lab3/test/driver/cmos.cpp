@@ -3,7 +3,6 @@
 #include "../libc/string.h"
 #include "../libc/stdlib.h"
 #include "./cmos.h"
-#include "../kernel_lib/debug_printf.h"
 void read_cmos (unsigned char array [])
 {
    unsigned char tvalue, index;
@@ -45,10 +44,9 @@ int is_rdt_updating() {
       return (sys_inb(CMOS_DATA) & 0x80);
 }
  
-uint8_t read_rtc_part(int reg) {
+uint8_t read_rtc(int reg) {
       sys_outb(CMOS_SELECT, reg);
-      volatile uint8_t ret = sys_inb(CMOS_DATA);
-      return ret;
+      return sys_inb(CMOS_DATA);
 }
  
 void read_rtc() {
@@ -61,16 +59,12 @@ void read_rtc() {
       uint8_t reg_B;
  
       while (is_rdt_updating());
-      sys_sec = read_rtc_part(0x00);
-      sys_minute = read_rtc_part(0x02);
-      sys_hour = read_rtc_part(0x04);
-      sys_day = read_rtc_part(0x07);
-      sys_month = read_rtc_part(0x08);
-      sys_year = read_rtc_part(0x09);
-//      int nnnn = sys_year;
-//      nnnn = nnnn % 10;
-//      sys_dbg_bochs_putc(nnnn + '0');
-//      sys_dbg_bochs_putc('\n');
+      sys_sec = read_rtc(0x00);
+      sys_minute = read_rtc(0x02);
+      sys_hour = read_rtc(0x04);
+      sys_day = read_rtc(0x07);
+      sys_month = read_rtc(0x08);
+      sys_year = read_rtc(0x09);
       _sec = sys_sec;
       _min = sys_minute;
       _hour = sys_hour;
@@ -87,14 +81,14 @@ void read_rtc() {
             _month = sys_month;
             _year = sys_year;
             while (is_rdt_updating());
-            sys_sec = read_rtc_part(0x00);
-            sys_minute = read_rtc_part(0x02);
-            sys_hour = read_rtc_part(0x04);
-            sys_day = read_rtc_part(0x07);
-            sys_month = read_rtc_part(0x08);
-            sys_year = read_rtc_part(0x09);
+            sys_sec = read_rtc(0x00);
+            sys_minute = read_rtc(0x02);
+            sys_hour = read_rtc(0x04);
+            sys_day = read_rtc(0x07);
+            sys_month = read_rtc(0x08);
+            sys_year = read_rtc(0x09);
       }
-      reg_B = read_rtc_part(0x0B);
+      reg_B = read_rtc(0x0B);
       // Unpack BCD
       if (!(reg_B & 0x04)) {
             sys_sec = (sys_sec & 0x0F) + ((sys_sec / 16) * 10);
@@ -110,24 +104,8 @@ void read_rtc() {
  
       sys_year += (SYS_INTERNAL_CURRENT_YEAR / 100) * 100;
       if(sys_year < SYS_INTERNAL_CURRENT_YEAR) sys_year += 100;
-//      memset(sys_internal_time_str, 0, 20);
-//    debug_printf("before %s %d\n", sys_internal_time_str, 11233);
-
-//    debug_printf("%c%d%s%o%x",'a', 123, "string", 16, 15);
-//    char vl[100];
-//    debug_puts("address of sys_internal_time_str is ");
-//    itoa(vl, (uint32_t) sys_internal_time_str, 16);
-//    debug_puts(vl);
-//    debug_puts("\n");
-//    char buf[100];
-//    debug_sprintf(buf, "sprintf got %s", sys_internal_time_str);
-//    debug_puts(buf);
-//    debug_puts("\n");
-//    debug_puts("But system time str is");
-//    debug_puts(sys_internal_time_str);
-//    debug_puts("\n");
+      memset(sys_internal_time_str, 0, 20);
       sprintf(sys_internal_time_str,"%d %d %d %d %d %d", sys_year, sys_month, sys_day, sys_hour, sys_minute, sys_sec);
-//    debug_printf("after %s\n", sys_internal_time_str);
 }
 
 static bool is_leap_year(uint16_t year)
@@ -135,40 +113,35 @@ static bool is_leap_year(uint16_t year)
     return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
 }
 
-static int local_sys_sec = 10;
-static int local_sys_minute = 11;
-static int local_sys_hour = 12;
-static int local_sys_day = 13;
-static int local_sys_month = 9;
-static int local_sys_year;
-
 uint32_t sys_get_timestamp()
 {
     read_rtc();
-
-//    printf("In sys_get_timestamp: %s\n", sys_internal_time_str);
+    int sys_sec = 0;
+    int sys_minute = 0;
+    int sys_hour = 0;
+    int sys_day = 0;
+    int sys_month = 0;
+    int sys_year;
     sscanf(sys_internal_time_str,"%d %d %d %d %d %d", 
-            &local_sys_year, &local_sys_month, &local_sys_day,
-            &local_sys_hour, &local_sys_minute, &local_sys_sec);
-//    printf("In sys_get_timestamp:  %d %d %d %d %d %d \n", local_sys_year,
-//            local_sys_month, local_sys_day, local_sys_hour, local_sys_minute, local_sys_sec);
+            &sys_year, &sys_month, &sys_day,
+            &sys_hour, &sys_minute, &sys_sec);
     uint32_t ts = 0;
     uint8_t cnt_non_leap = 0;
     uint8_t cnt_leap = 0;
-    for( uint16_t i = 1970; i < local_sys_year; i++ )
+    for( uint16_t i = 1970; i < sys_year; i++ )
     {
         is_leap_year(i) ? cnt_leap++ : cnt_non_leap++;
     }
     ts += ((cnt_non_leap*365) + (cnt_leap*366)) * 86400;
     int day_of_mon[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-    for(uint8_t i = 0; i < (local_sys_month - 1); i++ )
+    for(uint8_t i = 0; i < (sys_month - 1); i++ )
     { 
-        ts += (i == 1 && is_leap_year(local_sys_year)) ?
+        ts += (i == 1 && is_leap_year(sys_year)) ? 
             (29 * 86400) : (day_of_mon[i] * 86400);
     }
-    ts += (local_sys_day-1) * 86400;
-    ts += local_sys_hour * 3600;
-    ts += local_sys_minute * 60;
-    ts += local_sys_sec;
+    ts += (sys_day-1) * 86400; 
+    ts += sys_hour * 3600;
+    ts += sys_minute * 60;
+    ts += sys_sec;
     return ts;
 }

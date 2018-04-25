@@ -11,13 +11,11 @@ sys_execve_bin:
     pusha         ;这里要保护寄存器!!!
     push ds
     push es
-    push esp
 
-    mov ax, [esp + 0x38]
-    mov ebx, [esp + 0x34]
+    mov ax, [esp + 0x34]
+    mov ebx, [esp + 0x30]
     mov ds, ax
     mov es, ax
-    mov ss, ax
     mov word[USER_LOAD_ADDR - LEN_PSP], OPCODE_INT
     mov word[USER_LOAD_ADDR - LEN_PSP + 2], 0x90
     mov dword[PSP_USER_RETURN_ADDR], return_point
@@ -28,8 +26,6 @@ before_jump:
     retf
 return_point:
     mov ax, SEL_KERN_DATA
-    mov ss, ax
-    pop esp
     pop eax
     mov es, ax
     pop eax
