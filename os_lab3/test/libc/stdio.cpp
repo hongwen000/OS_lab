@@ -195,6 +195,8 @@ char *gets( char *str )
 
 int vsscanf( const char* buffer, const char* format, va_list vlist )
 {
+//    printf("Input buf is %s\n", buffer);
+//    printf("Input buf addr %x\n", (uint32_t) buffer);
     auto len_fmt = strlen(format);
     auto p_fmt = format; 
     auto p_buf = buffer;
@@ -229,7 +231,9 @@ int vsscanf( const char* buffer, const char* format, va_list vlist )
                 }
                 case 'c':
                 {
-                    char* p = va_arg(vlist, char*);
+                    char * p = my_va_arg<char *>(vlist);
+                    vlist+= sizeof(char*);
+//                    char* p = va_arg(vlist, char*);
                     *p = *buffer;
                     ++buffer;
                     ++ret;
@@ -238,7 +242,9 @@ int vsscanf( const char* buffer, const char* format, va_list vlist )
                 case 's':
                 {
                     while (*buffer && isspace(*buffer)) buffer++;
-                    char* p = va_arg(vlist, char*);
+                    char * p = my_va_arg<char *>(vlist);
+                    vlist+= sizeof(char*);
+//                    char* p = va_arg(vlist, char*);
                     while(*buffer && !isspace(*buffer))
                     {
                         *(p++) = *(buffer++);
@@ -249,17 +255,25 @@ int vsscanf( const char* buffer, const char* format, va_list vlist )
                 }
                 case 'd':
                 {
-                    int* p = va_arg(vlist, int*);
+                    int* p = my_va_arg<int*>(vlist);
+                    vlist+= sizeof(int*);
+//                    printf("In real sscanf vlist is %x\n:", (uint32_t)vlist);
+//                    printf("In real sscanf value addr is %x, value is %d\n:", (uint32_t)p, *p);
+//                    int* p = va_arg(vlist, int*);
                     char* end;
                     long num = strtol(buffer, &end, 10);
+//                    printf("In real sscanf got num %d\n", (int)num);
                     *p = static_cast<int>(num);
-                    buffer = end;
+                    buffer = strtol_get_end(buffer, &end, 10);
+//                    printf("In real sscanf buf addr remain %x\n", (uint32_t)buffer);
+//                    printf("In real sscanf buf remain %s\n", buffer);
                     ++ret;
                     break;
                 }
                 case 'i':
                 {
-                    int* p = va_arg(vlist, int*);
+                    int* p = my_va_arg<int*>(vlist);
+                    vlist+= sizeof(int*);
                     char* end;
                     long num = strtol(buffer, &end, 0);
                     *p = static_cast<int>(num);
@@ -269,7 +283,9 @@ int vsscanf( const char* buffer, const char* format, va_list vlist )
                 }
                 case 'u':
                 {
-                    unsigned int* p = va_arg(vlist, unsigned int*);
+                    unsigned int* p = my_va_arg<unsigned int*>(vlist);
+                    vlist+= sizeof(unsigned int*);
+//                    unsigned int* p = va_arg(vlist, unsigned int*);
                     char* end;
                     long num = strtol(buffer, &end, 10);
                     *p = static_cast<unsigned int>(num);
@@ -279,7 +295,9 @@ int vsscanf( const char* buffer, const char* format, va_list vlist )
                 }
                 case 'o':
                 {
-                    unsigned int* p = va_arg(vlist, unsigned int*);
+                    unsigned int* p = my_va_arg<unsigned int*>(vlist);
+                    vlist+= sizeof(unsigned int*);
+//                    unsigned int* p = va_arg(vlist, unsigned int*);
                     char* end;
                     long num = strtol(buffer, &end, 8);
                     *p = static_cast<unsigned int>(num);
@@ -290,7 +308,9 @@ int vsscanf( const char* buffer, const char* format, va_list vlist )
                 case 'x':
                 case 'X':
                 {
-                    unsigned int* p = va_arg(vlist, unsigned int*);
+                    unsigned int* p = my_va_arg<unsigned int*>(vlist);
+                    vlist+= sizeof(unsigned int*);
+//                    unsigned int* p = va_arg(vlist, unsigned int*);
                     char* end;
                     long num = strtol(buffer, &end, 16);
                     *p = static_cast<unsigned int>(num);

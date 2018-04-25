@@ -5,6 +5,8 @@
 #include "../include/defines.h"
 #include "../libc/stdio.h"
 #include "../libc/ctype.h"
+#include "../libc/time.h"
+#include "../libc/unistd.h"
 
 #define SIZE 50
 template <typename T>
@@ -179,10 +181,10 @@ extern "C" void main()
 //    printf("Input q to exit\n");
 //    printf("I\n");
 //    putchar('I');
-    int n  = system_call_get_timestamp();
-    asm volatile("cli\n\thlt");
-    while (true)
-    {
+    printf("%s\n",asctime(gmtime(time(nullptr))));
+    sleep(50);
+//    while (true)
+//    {
 //        gets(infix);
 //        if (strcmp(infix, "q") == 0)
 //            break;
@@ -196,6 +198,6 @@ extern "C" void main()
 //        {
 //            printf("%d\n", c.get_result());
 //        }
-    }
+//    }
 }
 

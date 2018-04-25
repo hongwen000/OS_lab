@@ -37,6 +37,7 @@ void sys_current_tty_putchar(int ch)
     ch = ch & mask;
     tty* _current_tty = sys_get_current_tty();
     if (_current_tty) _current_tty->putchar(ch);
+    sys_dbg_bochs_putc(ch);
 }
 const char* str = "Welcome to HHOS version 1.2.0\nYou can input help to see how to use it!";
 static inline void print_ok(char * mod) {
