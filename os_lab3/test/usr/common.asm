@@ -48,13 +48,13 @@ data:
     ddelay equ 100					
 
 main:
-    call cls                    ; 清除BIOS显示的信息
+    ;call cls                    ; 清除BIOS显示的信息
     mov ax,cs
 	mov es,ax					; ES = 0
 	mov ds,ax					; DS = CS
 	mov es,ax					; ES = CS
-	mov	ax,0B800h				; 文本窗口显存起始地址
-	mov	gs,ax					; GS = B800h
+;	mov	ax,0B800h				; 文本窗口显存起始地址
+;	mov	gs,ax					; GS = B800h
     mov byte[char],'A'
     init_x:
     mov ax, word[xmin]
@@ -74,19 +74,19 @@ main:
         OUTER:
             mov bx, delay
             INNER:
-                xor ax, ax
-                mov ah, 01h
-                int 16h
-                mov dl, al  ;dl<-按键ASCII码
-                jz test_input_over   ;无按键按下
-                mov ah, 00h ;清除键盘缓冲区
-                int 16h     ;清除键盘缓冲区
-                test_exit:
-                cmp dl, 27
-                jnz test_input_over
-                mov ah, 4ch
-                int 21h
-                test_input_over:
+;                xor ax, ax
+;                mov ah, 01h
+;                int 16h
+;                mov dl, al  ;dl<-按键ASCII码
+;                jz test_input_over   ;无按键按下
+;                mov ah, 00h ;清除键盘缓冲区
+;                int 16h     ;清除键盘缓冲区
+;                test_exit:
+;                cmp dl, 27
+;                jnz test_input_over
+;                mov ah, 4ch
+;                int 21h
+;                test_input_over:
                 dec bx
                 jg INNER
         loop OUTER
@@ -118,31 +118,31 @@ record_histroy:
     popa
     ret
 
-cls:
-    pusha           ;保存寄存器的值
-    mov ah,0x06     ;调用10号BIOS中断的6号功能
-    mov al,0        ;al=0代表清屏
-    mov bh,0x07     ;设置将屏幕置为黑底白字
-    mov ch,0        ;从(0,0)到(24,79)
-    mov cl,0   
-    mov dh,24  
-    mov dl,79  
-    int 0x10        ;调用中断
-    popa            ;恢复寄存器的值
-    ret             ;返回
+;cls:
+;    pusha           ;保存寄存器的值
+;    mov ah,0x06     ;调用10号BIOS中断的6号功能
+;    mov al,0        ;al=0代表清屏
+;    mov bh,0x07     ;设置将屏幕置为黑底白字
+;    mov ch,0        ;从(0,0)到(24,79)
+;    mov cl,0
+;    mov dh,24
+;    mov dl,79
+;    int 0x10        ;调用中断
+;    popa            ;恢复寄存器的值
+;    ret             ;返回
 
 
-print_id:
-    pusha
-    mov ax, myid 
-    mov bp, ax      ;es:bp: 字符串首地址
-    mov cx, 17      ;字符串长度
-    mov ax, 01300h  ;调用Write string功能
-    mov bx, 00F1h   ;白底蓝字，闪烁
-    mov dx, 00920h  ;显示在屏幕中央
-    int 10h
-    popa
-    ret
+;print_id:
+;    pusha
+;    mov ax, myid
+;    mov bp, ax      ;es:bp: 字符串首地址
+;    mov cx, 17      ;字符串长度
+;    mov ax, 01300h  ;调用Write string功能
+;    mov bx, 00F1h   ;白底蓝字，闪烁
+;    mov dx, 00920h  ;显示在屏幕中央
+;    int 10h
+;    popa
+;    ret
 
 move:
     pusha

@@ -19,6 +19,8 @@ extern "C"{
     void sys_proc_save();
     void sys_dbg_bochs_putc(char c);
 
+    void sys_execve_bin(uint32_t SEL_CODE, uint32_t SEL_DATA);
+
     /* vga */
     void sys_clear_screen();
     void sys_putchar(int c, int color, int x, int y);

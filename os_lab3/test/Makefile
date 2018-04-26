@@ -151,11 +151,7 @@ endef
 
 include usr/Makefrag
 
-#$(build_dir)/usr/user1.bin  \
-#$(build_dir)/usr/user2.bin  \
-#$(build_dir)/usr/user3.bin  \
-#$(build_dir)/usr/user4.bin  \
-#$(build_dir)/usr/user5.bin  \
+
 
 user_bin = $(build_dir)/usr/help.bin   \
            $(build_dir)/usr/record.bin \
@@ -165,8 +161,11 @@ user_bin = $(build_dir)/usr/help.bin   \
            $(build_dir)/usr/usr1.bin \
            $(build_dir)/usr/usr2.bin \
            $(build_dir)/usr/usr3.bin \
-           $(build_dir)/usr/usr4.bin
-
+           $(build_dir)/usr/usr4.bin \
+           $(build_dir)/usr/user1.bin  \
+           $(build_dir)/usr/user2.bin  \
+           $(build_dir)/usr/user3.bin  \
+           $(build_dir)/usr/user4.bin
 
 write_usr_progs: $(user_bin)
 	$(foreach user_prog, $(user_bin), $(call DO_write, $(user_prog)))

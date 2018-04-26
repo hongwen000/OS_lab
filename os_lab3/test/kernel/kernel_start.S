@@ -328,9 +328,7 @@ sys_proc_schd:
                 mov al,0x20
                 out 0x20,al
                 out 0xA0,al
-        pop ax
-        sti
-        iret
+                jmp .timer_int_regular
 
         .test_ready:
         cmp dword[fs:load_ready], 0
@@ -339,9 +337,7 @@ sys_proc_schd:
                 mov al,0x20
                 out 0x20,al
                 out 0xA0,al
-        pop ax
-        sti
-        iret
+                jmp .timer_int_regular
         .schd:
         push eax
         mov eax, [fs:pcb_que]
@@ -377,6 +373,8 @@ sys_proc_schd:
         mov ax, SEL_KERN_VIDEO
         mov gs, ax
         pop ax
+
+
         ;交换保存到的值的ds和fs
 ;        push eax
 ;        push ebx
@@ -391,11 +389,55 @@ sys_proc_schd:
     .skip_save:
     [extern sys_proc_set_running]
         call sys_proc_set_running
+
         mov al,0x20
         out 0x20,al
         out 0xA0,al
         jmp schd_schedule_asm
 
+    .timer_int_regular:
+        mov al, 1
+        xchg al, byte[sys_timer_irq_arrive]
+        mov ah, 0x9
+    %define INTEVAL 16
+
+        .test_up:
+        cmp word[int_08_what_to_play], INTEVAL
+        jge .test_left
+        mov al, '|'
+        inc word[int_08_what_to_play]
+        jmp .test_input_over
+
+        .test_left:
+        cmp word[int_08_what_to_play], INTEVAL * 2
+        jge .test_right
+        mov al, '/'
+        inc word[int_08_what_to_play]
+        jmp .test_input_over
+
+        .test_right:
+        cmp word[int_08_what_to_play], INTEVAL * 3
+        jge .test_down
+        mov al, '-'
+        inc word[int_08_what_to_play]
+        jmp .test_input_over
+
+        .test_down:
+        cmp word[int_08_what_to_play], INTEVAL * 4
+        jge .reset_char
+        mov al, '\'
+        inc word[int_08_what_to_play]
+        jmp .test_input_over
+
+        .reset_char:
+        mov word[int_08_what_to_play], 0
+
+        .test_input_over:
+
+        mov word [gs:82],ax
+        pop ax
+        sti
+        iret
 
 [global schedule_asm]
 [extern pcb0]
