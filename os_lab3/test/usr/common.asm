@@ -1,4 +1,5 @@
 ; 李新锐 2018-3
+[bits 32]
 
 %macro putchar 4
     pusha
@@ -22,37 +23,14 @@
 
 %macro program 4
 
-org 0A100h					;告知编译器代码将被加载到07c00h处
-
-jmp main
-
-;数据段
-data:
-    count   dw delay
-    dcount  dw ddelay
-    x       dw 7 + %1 + 1
-    y       dw 0 + %3 + 1
-    xmin    dw %1
-    xmax    dw %2
-    ymin    dw %3
-    ymax    dw %4
-    vx      dw 1
-    vy      dw 1
-    char    db 'A'
-    color   db 01h
-    myid    db 'Lixinrui 15323032'
-    old_x   times len   dw 0
-    old_y   times len   dw 0
-    cnt     dw 0
-    delay equ 600					
-    ddelay equ 100					
-
+SECTION .text align=4096
+[global main]
 main:
     ;call cls                    ; 清除BIOS显示的信息
-    mov ax,cs
-	mov es,ax					; ES = 0
-	mov ds,ax					; DS = CS
-	mov es,ax					; ES = CS
+    ;mov ax,cs
+	;mov es,ax					; ES = 0
+	;mov ds,ax					; DS = CS
+	;mov es,ax					; ES = CS
 ;	mov	ax,0B800h				; 文本窗口显存起始地址
 ;	mov	gs,ax					; GS = B800h
     mov byte[char],'A'
@@ -70,32 +48,19 @@ main:
     mov word[y], ax
 
     _loop:
-        mov cx, ddelay      
-        OUTER:
-            mov bx, delay
-            INNER:
-;                xor ax, ax
-;                mov ah, 01h
-;                int 16h
-;                mov dl, al  ;dl<-按键ASCII码
-;                jz test_input_over   ;无按键按下
-;                mov ah, 00h ;清除键盘缓冲区
-;                int 16h     ;清除键盘缓冲区
-;                test_exit:
-;                cmp dl, 27
-;                jnz test_input_over
-;                mov ah, 4ch
-;                int 21h
-;                test_input_over:
-                dec bx
-                jg INNER
-        loop OUTER
     call move
     call change_speed
-    putchar word[old_x], word[old_y], 0x0000, 0x20
+    ;putchar word[old_x], word[old_y], 0x0000, 0x20
     putchar word[x], word[y], byte[color], byte[char]
     inc word[cnt]
-    call record_histroy
+    ;call record_histroy
+    mov cx, 600
+    OUTER:
+    mov bx, 200
+    INNER:
+    dec bx
+    jg INNER
+    loop OUTER
     jmp _loop
 
 record_histroy:
@@ -154,6 +119,9 @@ move:
     ret
 
 change_color:
+    mov ax, %0
+    add ax, 1
+
     cmp byte[color],0Fh ;当前字符颜色是否为最后一种
     jnz no_rst          ;如果不是，选择下一种
     mov byte[color],0   ;如果是，重置
@@ -192,6 +160,29 @@ reverse_vy:
 end:
     jmp $                   ; 停止画框，无限循环 
 	
-times 1024 - ($ -$$)     db  0
+;数据段
+
+SECTION .data align=4096
+    count   dw delay
+    dcount  dw ddelay
+    x       dw 7 + %1 + 1
+    y       dw 0 + %3 + 1
+    xmin    dw %1
+    xmax    dw %2
+    ymin    dw %3
+    ymax    dw %4
+    vx      dw 1
+    vy      dw 1
+    char    db 'A'
+    color   db 01h
+    myid    db 'Lixinrui 15323032'
+    old_x   times len   dw 0
+    old_y   times len   dw 0
+    cnt     dw 0
+    delay equ 600
+    ddelay equ 100
+
+
+SECTION .bss align=4096
 
 %endmacro
