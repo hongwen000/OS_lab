@@ -56,11 +56,13 @@ main:
     ;call record_histroy
     mov cx, 600
     OUTER:
-    mov bx, 200
+    mov bx, 100
     INNER:
     dec bx
     jg INNER
+    and cx, 0xFFF
     loop OUTER
+
     jmp _loop
 
 record_histroy:
@@ -83,31 +85,6 @@ record_histroy:
     popa
     ret
 
-;cls:
-;    pusha           ;保存寄存器的值
-;    mov ah,0x06     ;调用10号BIOS中断的6号功能
-;    mov al,0        ;al=0代表清屏
-;    mov bh,0x07     ;设置将屏幕置为黑底白字
-;    mov ch,0        ;从(0,0)到(24,79)
-;    mov cl,0
-;    mov dh,24
-;    mov dl,79
-;    int 0x10        ;调用中断
-;    popa            ;恢复寄存器的值
-;    ret             ;返回
-
-
-;print_id:
-;    pusha
-;    mov ax, myid
-;    mov bp, ax      ;es:bp: 字符串首地址
-;    mov cx, 17      ;字符串长度
-;    mov ax, 01300h  ;调用Write string功能
-;    mov bx, 00F1h   ;白底蓝字，闪烁
-;    mov dx, 00920h  ;显示在屏幕中央
-;    int 10h
-;    popa
-;    ret
 
 move:
     pusha
@@ -119,8 +96,27 @@ move:
     ret
 
 change_color:
-    mov ax, %0
-    add ax, 1
+    mov dx, %1
+        .outerloop:
+            cmp dx, %2
+            add dx, 1
+            mov cx, %3
+            jge .ok
+            .innerloop:
+                cmp cx, %4
+                jge .outerloop
+                mov ax, dx
+                mov bx, 80
+                mul bx
+                add ax, cx
+                shl ax, 1
+                mov ah, 0x7
+                mov al, ' '
+                mov bp, ax
+                mov word[gs:bp], ax
+                add cx, 1
+                jmp .innerloop
+    .ok:
 
     cmp byte[color],0Fh ;当前字符颜色是否为最后一种
     jnz no_rst          ;如果不是，选择下一种
@@ -179,7 +175,7 @@ SECTION .data align=4096
     old_x   times len   dw 0
     old_y   times len   dw 0
     cnt     dw 0
-    delay equ 600
+    delay equ 60
     ddelay equ 100
 
 

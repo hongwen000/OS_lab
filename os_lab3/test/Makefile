@@ -17,7 +17,7 @@ ASELF = -f elf32
 AR = $(GCC_PREFIX)ar
 
 all:
-#	make clean
+	#make clean
 	#make bochs
 	make write_all_progs
 
