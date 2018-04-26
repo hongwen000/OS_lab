@@ -161,7 +161,11 @@ user_bin = $(build_dir)/usr/help.bin   \
            $(build_dir)/usr/record.bin \
            $(build_dir)/usr/bc.bin \
            $(build_dir)/usr/sleep.bin  \
-           $(build_dir)/usr/test.bin 
+           $(build_dir)/usr/test.bin \
+           $(build_dir)/usr/usr1.bin \
+           $(build_dir)/usr/usr2.bin \
+           $(build_dir)/usr/usr3.bin \
+           $(build_dir)/usr/usr4.bin
 
 
 write_usr_progs: $(user_bin)

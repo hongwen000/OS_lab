@@ -51,3 +51,8 @@ USER_BASE       EQU 0xc0000000
 	out 0x20,al
 	out 0xA0,al
 %endmacro
+
+%define PROC_STAT_NOT_READY 0
+%define PROC_STAT_READY 1
+%define PROC_STAT_RUNNING 2
+%define PROC_STAT_WAITING 3
