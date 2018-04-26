@@ -47,9 +47,9 @@ void gdt_init(){
     /* null descriptor */
     gdt_install(0, 0, 0, 0, 0);  
     /* kernel codenfo segment type: code addr: 0 limit: 4G gran: 4KB sz: 32bit */
-    gdt_install(SEL_KCODE, 0, 0xfffff, AC_RW|AC_EX|AC_DPL_KERN|AC_PR, GDT_GR|GDT_SZ);
+    gdt_install(SEL_KCODE, 0, 0x1ffff, AC_RW|AC_EX|AC_DPL_KERN|AC_PR, GDT_GR|GDT_SZ);
     /* kernel data segment type: data addr: 0 limit: 4G gran: 4KB sz: bit 32bit */
-    gdt_install(SEL_KDATA, 0, 0xfffff, AC_RW|AC_DPL_KERN|AC_PR, GDT_GR|GDT_SZ);
+    gdt_install(SEL_KDATA, 0, 0x1ffff, AC_RW|AC_DPL_KERN|AC_PR, GDT_GR|GDT_SZ);
     /* kernel video segment type: data addr: 0xB8000 limit: 1Mb gran: 1byte sz: 32bit */
     gdt_install(SEL_VIDEO, 0xB8000, 0xfffff, AC_RW|AC_DPL_KERN|AC_PR, GDT_SZ);
     /* kernel stack segment type: data addr: 0x6C00-0x7C00 direction: down limit: 4Kb gran: 4Kb sz: 32bit */

@@ -107,21 +107,20 @@ extern "C" void kernel_main()
         ++pADRS;
     }
 
-    sys_clear_screen();
     proc_init();
     print_ok("Process Management");
-    bin_loader::load_binary_from_disk(SEL_USER_DATA0, 384);
-    bin_loader::new_proc(SEL_USER_CODE0, SEL_USER_DATA0);
-    bin_loader::load_binary_from_disk(SEL_USER_DATA1, 448);
-    bin_loader::new_proc(SEL_USER_CODE1, SEL_USER_DATA1);
-//    bin_loader::load_binary_from_disk(SEL_USER_DATA2, 512);
+//    bin_loader::load_binary_from_disk(SEL_USER_DATA0, 384 + 256);
+//    bin_loader::new_proc(SEL_USER_CODE0, SEL_USER_DATA0);
+//    bin_loader::load_binary_from_disk(SEL_USER_DATA1, 448 + 256);
+//    bin_loader::new_proc(SEL_USER_CODE1, SEL_USER_DATA1);
+//    bin_loader::load_binary_from_disk(SEL_USER_DATA2, 512 + 256);
 //    bin_loader::new_proc(SEL_USER_CODE2, SEL_USER_DATA2);
-//    bin_loader::load_binary_from_disk(SEL_USER_DATA3, 576);
+//    bin_loader::load_binary_from_disk(SEL_USER_DATA3, 576 + 256);
 //    bin_loader::new_proc(SEL_USER_CODE3, SEL_USER_DATA3);
 //    schedule_asm();
-    set_load_stat(1);
+//    set_load_stat(1);
 
-    while (1);
+//    while (1);
     sh sh1;
     print_ok("Shell");
     printf("%s\n", str);

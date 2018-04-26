@@ -35,7 +35,7 @@ void proc_init()
     pcb2.next = nullptr;
     pcb3.next = nullptr;
 
-    pcb_que = &pcb0;
+    pcb_que = nullptr;
     used_pcb_num = 0;
     load_ready = 0;
 }
@@ -59,7 +59,7 @@ void save(CPU_INFO *cpu_info) {
     pcb_que->edi = cpu_info->edi;
     pcb_que->esi = cpu_info->esi;
     pcb_que->ebp = cpu_info->ebp;
-    pcb_que->esp = cpu_info->esp;
+    pcb_que->esp = cpu_info->esp + 0xc; //清int压的栈
     pcb_que->ebx = cpu_info->ebx;
     pcb_que->edx = cpu_info->edx;
     pcb_que->ecx = cpu_info->ecx;
@@ -73,32 +73,36 @@ void save(CPU_INFO *cpu_info) {
     pcb_que->es = pcb_que->es & 0xFFFF;
     pcb_que->ds = pcb_que->ds & 0xFFFF;
     pcb_que->cs = pcb_que->cs & 0xFFFF;
-    debug_printf("Addr of pcb: %x\n", (uint32_t) pcb_que);
-    debug_printf("gs: 0x%x\n",pcb_que->gs);    // 16 bits
-    debug_printf("fs: 0x%x\n",pcb_que->fs);    // 16 bits
-    debug_printf("es: 0x%x\n",pcb_que->es);    // 16 bits
-    debug_printf("ds: 0x%x\n",pcb_que->ds);          // 16 bits
-    debug_printf("edi: 0x%x\n",pcb_que->edi);
-    debug_printf("esi: 0x%x\n",pcb_que->esi);
-    debug_printf("ebp: 0x%x\n",pcb_que->ebp);
-    debug_printf("esp: 0x%x\n",pcb_que->esp);
-    debug_printf("ebx: 0x%x\n",pcb_que->ebx);
-    debug_printf("edx: 0x%x\n",pcb_que->edx);
-    debug_printf("ecx: 0x%x\n",pcb_que->ecx);
-    debug_printf("eax: 0x%x\n",pcb_que->eax);
-    debug_printf("eip: 0x%x\n",pcb_que->eip);
-    debug_printf("cs: 0x%x\n",pcb_que->cs);    // 16 bits
-    debug_printf("eflags: 0x%x\n",pcb_que->eflags);
+//    debug_printf("Addr of pcb: %x\n", (uint32_t) pcb_que);
+//    debug_printf("gs: 0x%x\n",pcb_que->gs);    // 16 bits
+//    debug_printf("fs: 0x%x\n",pcb_que->fs);    // 16 bits
+//    debug_printf("es: 0x%x\n",pcb_que->es);    // 16 bits
+//    debug_printf("ds: 0x%x\n",pcb_que->ds);          // 16 bits
+//    debug_printf("edi: 0x%x\n",pcb_que->edi);
+//    debug_printf("esi: 0x%x\n",pcb_que->esi);
+//    debug_printf("ebp: 0x%x\n",pcb_que->ebp);
+//    debug_printf("esp: 0x%x\n",pcb_que->esp);
+//    debug_printf("ebx: 0x%x\n",pcb_que->ebx);
+//    debug_printf("edx: 0x%x\n",pcb_que->edx);
+//    debug_printf("ecx: 0x%x\n",pcb_que->ecx);
+//    debug_printf("eax: 0x%x\n",pcb_que->eax);
+//    debug_printf("eip: 0x%x\n",pcb_que->eip);
+//    debug_printf("cs: 0x%x\n",pcb_que->cs);    // 16 bits
+//    debug_printf("eflags: 0x%x\n",pcb_que->eflags);
 }
 void round_robin()
 {
-    pcb_que->status = PROC_STAT_WAITING;
-    pcb_que=pcb_que->next;
-    pcb_que->status = PROC_STAT_RUNNING;
-    debug_printf("Change to Process %u\n", pcb_que->id);
+    if (pcb_que)
+    {
+        pcb_que->status = PROC_STAT_WAITING;
+        pcb_que=pcb_que->next;
+        pcb_que->status = PROC_STAT_RUNNING;
+        debug_printf("Change to Process %u\n", pcb_que->id);
+    }
 }
 
 extern "C" void sys_proc_set_running()
 {
-    pcb_que->status = PROC_STAT_RUNNING;
+    if (pcb_que)
+        pcb_que->status = PROC_STAT_RUNNING;
 }

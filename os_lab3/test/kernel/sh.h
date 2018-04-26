@@ -145,7 +145,7 @@ private:
                 {
                     found = true;
                     bin_loader::load_binary_from_disk(SEL_USER_DATA0, progs[i].lba);
-//                    bin_loader::exec(SEL_USER_CODE0, SEL_USER_DATA0);
+                    bin_loader::exec(SEL_USER_CODE0, SEL_USER_DATA0);
                     //if(!(strlen(progs[i].name) > 2 && progs[i].name[0] == 'c' && progs[i].name[1] == '_'))
                     if(false)
                     {

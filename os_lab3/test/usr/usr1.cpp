@@ -18,10 +18,15 @@ extern "C" void main()
 //    printf("I\n");
 //    putchar('I');
 //    printf("%s\n",asctime(gmtime(time(nullptr))));
-    puts("In User Process 1\n");
+
+    while (true)
+    {
+        puts("In User Process 0\n");
+    }
+//    while (true)
+//        puts("In User Process 0\n");
 //    asm volatile("int $0x93");
-    puts("User Process 1 Ends\n");
-    while (1);
+//    puts("User Process 0 Ends\n");
 //    while (true)
 //    {
 //        gets(infix);

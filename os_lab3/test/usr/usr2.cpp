@@ -17,9 +17,12 @@ extern "C" void main()
 //    printf("I\n");
 //    putchar('I');
 //    printf("%s\n",asctime(gmtime(time(nullptr))));
-    puts("In User Process 2\n");
+    while (true)
+    {
+        puts("In User Process 1\n");
+    }
 //    asm volatile("int $0x93");
-    puts("User Process 2 Ends\n");
+    puts("User Process 1 Ends\n");
     while (1);
 //    while (true)
 //    {

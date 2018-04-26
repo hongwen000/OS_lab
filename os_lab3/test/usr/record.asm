@@ -1,4 +1,4 @@
-db `7\n`
+db `11\n`
 db `bc\n`
 db `192\n`
 db `sleep\n`
@@ -13,4 +13,12 @@ db `usr3\n`
 db `512\n`
 db `usr4\n`
 db `576\n`
+db `asm1\n`
+db `640\n`
+db `asm2\n`
+db `704\n`
+db `asm3\n`
+db `768\n`
+db `asm4\n`
+db `832\n`
 times 1024 - ($ - $$) db 0
