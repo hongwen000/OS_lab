@@ -17,7 +17,6 @@ extern "C" void interrupt_91h();
 extern "C" void interrupt_97h();
 extern "C" void interrupt_99h();
 extern "C" void interrupt_system_call();
-extern "C" void schedule_asm();
 extern "C" void sys_proc_schd();
 
 extern "C" void set_pit_freq();
@@ -95,6 +94,7 @@ extern "C" void kernel_main()
     //int 0x93切换进程
     idt_install(0x93, (uint32_t)sys_proc_schd, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
 
+
     set_pit_freq();
     asm volatile("sti");
     asm volatile("int $0x97");
@@ -109,18 +109,6 @@ extern "C" void kernel_main()
 
     proc_init();
     print_ok("Process Management");
-//    bin_loader::load_binary_from_disk(SEL_USER_DATA0, 384 + 256);
-//    bin_loader::new_proc(SEL_USER_CODE0, SEL_USER_DATA0);
-//    bin_loader::load_binary_from_disk(SEL_USER_DATA1, 448 + 256);
-//    bin_loader::new_proc(SEL_USER_CODE1, SEL_USER_DATA1);
-//    bin_loader::load_binary_from_disk(SEL_USER_DATA2, 512 + 256);
-//    bin_loader::new_proc(SEL_USER_CODE2, SEL_USER_DATA2);
-//    bin_loader::load_binary_from_disk(SEL_USER_DATA3, 576 + 256);
-//    bin_loader::new_proc(SEL_USER_CODE3, SEL_USER_DATA3);
-//    schedule_asm();
-//    set_load_stat(1);
-
-//    while (1);
     sh sh1;
     print_ok("Shell");
     printf("%s\n", str);

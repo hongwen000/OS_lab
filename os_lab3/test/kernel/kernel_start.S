@@ -577,3 +577,13 @@ sys_sleep:
     popa
     pop bp
     ret
+
+[global sys_proc_exit]
+[extern sys_proc_exit_c]
+sys_proc_exit:
+        cli
+        __ISR_BEGIN_SAFE_ASM__
+        call sys_proc_exit_c
+        __ISR_LEAVE_SAFE_ASM__
+        sti
+        iret

@@ -1,7 +1,12 @@
-$(build_dir)/usr/%.bin: usr/%.asm
+$(build_dir)/usr/%.bin: usr/%.rec
 	mkdir -p $(@D) ;\
 	cd usr ;\
 	$(AS) $(ASBIN) ../$< -o ../$@
+
+$(build_dir)/usr/%.o: usr/%.asm
+	mkdir -p $(@D) ;\
+	cd usr ;\
+	$(AS) $(ASELF) ../$< -o ../$@
 
 $(build_dir)/usr/%.o: usr/%.cpp
 	mkdir -p $(@D) ;\

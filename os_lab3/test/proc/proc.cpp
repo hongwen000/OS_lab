@@ -106,3 +106,14 @@ extern "C" void sys_proc_set_running()
     if (pcb_que)
         pcb_que->status = PROC_STAT_RUNNING;
 }
+
+extern "C" void sys_proc_exit_c()
+{
+    for(int i = 0; pcb_que && i < MAX_PROC; ++i)
+    {
+        pcb_que->status = PROC_STAT_NOT_READY;
+        pcb_que=pcb_que->next;
+    }
+    set_load_stat(0);
+    asm volatile("int $0x90");
+}

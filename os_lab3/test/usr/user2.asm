@@ -1,2 +1,2 @@
 %include "common.asm"
-program -1, 12, 40, 80
+program 0, 12, 40, 80
