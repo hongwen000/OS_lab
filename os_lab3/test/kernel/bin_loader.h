@@ -26,6 +26,7 @@ public:
         printf("pid addr: %x\n", offset(PCB, esp));
         get_pcb();
         asm volatile("int $0x92");
+        pcb_que->status = PROC_STAT_READY;
     }
 
 private:

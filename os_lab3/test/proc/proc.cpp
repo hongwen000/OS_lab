@@ -3,8 +3,10 @@
 //
 #include "./proc.h"
 #include "../libc/stdio.h"
+#include "../kernel_lib/debug_printf.h"
 
 int used_pcb_num = 0;
+int load_ready = 0;
 PCB *pcb_que = nullptr;
 PCB pcb3;
 PCB pcb2;
@@ -17,6 +19,10 @@ PCB* pcb[MAX_PROC] {
         &pcb3
 };
 CPU_INFO info;
+void set_load_stat(int stat)
+{
+    load_ready = stat;
+}
 void proc_init()
 {
     pcb0.id = 0;
@@ -31,6 +37,7 @@ void proc_init()
 
     pcb_que = &pcb0;
     used_pcb_num = 0;
+    load_ready = 0;
 }
 void get_pcb()
 {
@@ -66,25 +73,32 @@ void save(CPU_INFO *cpu_info) {
     pcb_que->es = pcb_que->es & 0xFFFF;
     pcb_que->ds = pcb_que->ds & 0xFFFF;
     pcb_que->cs = pcb_que->cs & 0xFFFF;
-    printf("Addr of pcb: %x\n", (uint32_t) pcb_que);
-    printf("gs: 0x%x\n",pcb_que->gs);    // 16 bits
-    printf("fs: 0x%x\n",pcb_que->fs);    // 16 bits
-    printf("es: 0x%x\n",pcb_que->es);    // 16 bits
-    printf("ds: 0x%x\n",pcb_que->ds);          // 16 bits
-    printf("edi: 0x%x\n",pcb_que->edi);
-    printf("esi: 0x%x\n",pcb_que->esi);
-    printf("ebp: 0x%x\n",pcb_que->ebp);
-    printf("esp: 0x%x\n",pcb_que->esp);
-    printf("ebx: 0x%x\n",pcb_que->ebx);
-    printf("edx: 0x%x\n",pcb_que->edx);
-    printf("ecx: 0x%x\n",pcb_que->ecx);
-    printf("eax: 0x%x\n",pcb_que->eax);
-    printf("eip: 0x%x\n",pcb_que->eip);
-    printf("cs: 0x%x\n",pcb_que->cs);    // 16 bits
-    printf("eflags: 0x%x\n",pcb_que->eflags);
+    debug_printf("Addr of pcb: %x\n", (uint32_t) pcb_que);
+    debug_printf("gs: 0x%x\n",pcb_que->gs);    // 16 bits
+    debug_printf("fs: 0x%x\n",pcb_que->fs);    // 16 bits
+    debug_printf("es: 0x%x\n",pcb_que->es);    // 16 bits
+    debug_printf("ds: 0x%x\n",pcb_que->ds);          // 16 bits
+    debug_printf("edi: 0x%x\n",pcb_que->edi);
+    debug_printf("esi: 0x%x\n",pcb_que->esi);
+    debug_printf("ebp: 0x%x\n",pcb_que->ebp);
+    debug_printf("esp: 0x%x\n",pcb_que->esp);
+    debug_printf("ebx: 0x%x\n",pcb_que->ebx);
+    debug_printf("edx: 0x%x\n",pcb_que->edx);
+    debug_printf("ecx: 0x%x\n",pcb_que->ecx);
+    debug_printf("eax: 0x%x\n",pcb_que->eax);
+    debug_printf("eip: 0x%x\n",pcb_que->eip);
+    debug_printf("cs: 0x%x\n",pcb_que->cs);    // 16 bits
+    debug_printf("eflags: 0x%x\n",pcb_que->eflags);
 }
 void round_robin()
 {
+    pcb_que->status = PROC_STAT_WAITING;
     pcb_que=pcb_que->next;
+    pcb_que->status = PROC_STAT_RUNNING;
+    debug_printf("Change to Process %u\n", pcb_que->id);
 }
 
+extern "C" void sys_proc_set_running()
+{
+    pcb_que->status = PROC_STAT_RUNNING;
+}

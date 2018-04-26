@@ -79,7 +79,7 @@ extern "C" void kernel_main()
     tty1.set_x(6);
     current_tty = &tty1;
     print_ok("TTY");
-    idt_install(ISR_IRQ0 + IRQ_TIMER, (uint32_t)interrupt_timer, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
+    idt_install(ISR_IRQ0 + IRQ_TIMER, (uint32_t)sys_proc_schd, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
     print_ok("Clock");
     idt_install(ISR_IRQ0 + IRQ_KB, (uint32_t)interrupt_kb, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
     print_ok("Keyboard");
@@ -110,15 +110,16 @@ extern "C" void kernel_main()
     sys_clear_screen();
     proc_init();
     print_ok("Process Management");
-    bin_loader::load_binary_from_disk(SEL_USER_DATA0, 192);
+    bin_loader::load_binary_from_disk(SEL_USER_DATA0, 384);
     bin_loader::new_proc(SEL_USER_CODE0, SEL_USER_DATA0);
-    bin_loader::load_binary_from_disk(SEL_USER_DATA1, 192);
+    bin_loader::load_binary_from_disk(SEL_USER_DATA1, 448);
     bin_loader::new_proc(SEL_USER_CODE1, SEL_USER_DATA1);
-    bin_loader::load_binary_from_disk(SEL_USER_DATA2, 192);
-    bin_loader::new_proc(SEL_USER_CODE2, SEL_USER_DATA2);
-    bin_loader::load_binary_from_disk(SEL_USER_DATA3, 192);
-    bin_loader::new_proc(SEL_USER_CODE3, SEL_USER_DATA3);
-    schedule_asm();
+//    bin_loader::load_binary_from_disk(SEL_USER_DATA2, 512);
+//    bin_loader::new_proc(SEL_USER_CODE2, SEL_USER_DATA2);
+//    bin_loader::load_binary_from_disk(SEL_USER_DATA3, 576);
+//    bin_loader::new_proc(SEL_USER_CODE3, SEL_USER_DATA3);
+//    schedule_asm();
+    set_load_stat(1);
 
     while (1);
     sh sh1;

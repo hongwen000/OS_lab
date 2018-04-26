@@ -10,8 +10,10 @@
 #include "../kernel_lib/sys_utility.h"
 #define MAX_PROC 4
 
-#define PROC_RUNNING 1
-#define PROC_WAITING 0
+#define PROC_STAT_NOT_READY 0
+#define PROC_STAT_READY 1
+#define PROC_STAT_RUNNING 2
+#define PROC_STAT_WAITING 3
 
 struct CPU_INFO{
     /* segment registers */
@@ -41,7 +43,7 @@ struct PCB
 {
     uint32_t id;
     PCB* next;
-    uint32_t status = PROC_WAITING;
+    uint32_t status = PROC_STAT_NOT_READY;
     /* segment registers */
     uint32_t gs;    // 16 bits
     uint32_t fs;    // 16 bits
@@ -69,6 +71,7 @@ extern "C" void round_robin();
 extern "C" void save(CPU_INFO *cpu_info);
 void proc_init();
 void get_pcb();
+void set_load_stat(int stat);
 
 
 #endif //HHOS_PROC_H
