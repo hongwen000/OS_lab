@@ -23,13 +23,13 @@ static int weekday(int y, int m, int d){
     return (d += m < 3 ? y-- : y - 2, 23*m/9 + d + 4 + y/4- y/100 + y/400)%7;  
 };
 
+static int day_of_mon[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 struct tm* gmtime(const time_t tp)
 {
     tm* ret = & __LIBC__TM__;
     ret->tm_year = 1970;
     ret->tm_mon = 1;
     ret->tm_mday = 1;
-    int day_of_mon[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     int days = tp / 86400;
     while(days) 
     {
