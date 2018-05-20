@@ -28,7 +28,7 @@ CPUS := 1
 endif
 
 #qemu执行参数
-QEMUOPTS = -drive file=floppy.img,index=0,format=raw -smp $(CPUS) -m 4 $(QEMUEXTRA)
+QEMUOPTS = -drive file=kolibri.img,index=0,format=raw -smp $(CPUS) -m 256 $(QEMUEXTRA)
 
 #执行qemu虚拟机
 qemu: floppy

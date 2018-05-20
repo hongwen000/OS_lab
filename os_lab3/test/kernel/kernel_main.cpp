@@ -9,6 +9,10 @@
 #include "../kernel_lib/pm.h"
 #include "../kernel_lib/isr.h"
 #include "../proc/proc.h"
+#include "../kernel_lib/ram.h"
+#include "../kernel_lib/page.h"
+#include "../libc/assert.h"
+
 extern "C" void interrupt_timer();
 extern "C" void interrupt_kb();
 extern "C" void interrupt_ide();
@@ -18,8 +22,8 @@ extern "C" void interrupt_97h();
 extern "C" void interrupt_99h();
 extern "C" void interrupt_system_call();
 extern "C" void sys_proc_schd();
-
 extern "C" void set_pit_freq();
+extern "C" void gui_test();
 static tty* current_tty = nullptr;
 tty* sys_get_current_tty(){return current_tty;}
 
@@ -53,23 +57,6 @@ static inline void print_ok(char * mod) {
     current_tty->set_color(MAKE_COLOR(VGA_BLACK, VGA_WHITE));
     printf("]\n");
 }
-struct ADRS
-{
-    uint32_t BaseAddrLow;
-    uint32_t BaseAddrHigh;
-    uint32_t LengthLow;
-    uint32_t LengthHigh;
-    uint32_t Type;
-} __attribute__((packed));
-
-static char *memory_info[] =
-        {
-            "Usable RAM",
-            "Reserved",
-            "ACPI reclaimable",
-            "ACPI NVS",
-            "Area containing bad memory"
-        };
 
 extern "C" void kernel_main()
 {
@@ -96,22 +83,19 @@ extern "C" void kernel_main()
 
 
     set_pit_freq();
+
     asm volatile("sti");
     asm volatile("int $0x97");
-    int* pMCR_count = (int*)0x400;
-    ADRS* pADRS = (ADRS*)0x500;
-    for(int i = 0; i < *pMCR_count; ++i)
-    {
-        printf("Mem Region %u: Base: 0x%x%x, Len: 0x%x%x, Type: %s\n", i, pADRS->BaseAddrHigh, pADRS->BaseAddrLow,
-               pADRS->LengthHigh, pADRS->LengthLow, memory_info[pADRS->Type-1]);
-        ++pADRS;
-    }
-
+    ram_init();
+    print_ok("Detect physical memory");
+    vmm_init();
+    print_ok("Paging");
     proc_init();
     print_ok("Process Management");
-    sh sh1;
-    print_ok("Shell");
-    printf("%s\n", str);
-    sh1.run();
+
+//    sh sh1;
+//    print_ok("Shell");
+//    printf("%s\n", str);
+//    sh1.run();
     while(1);
 }

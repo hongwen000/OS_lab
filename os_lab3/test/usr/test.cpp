@@ -14,9 +14,9 @@ extern "C" void main()
     printf("Current unix timestamp is %u\n", time(nullptr));
     printf("Current datetime is %s\n", asctime(gmtime(time(nullptr))));
     printf("Testing sleep\n");
-    sleep(40);
-    printf("After 40 times of sleep\nNow it is %s\n",
-        asctime(gmtime(time(nullptr))));
+//    sleep(40);
+//    printf("After 40 times of sleep\nNow it is %s\n",
+//        asctime(gmtime(time(nullptr))));
     hhos_assert(strlen("123") == 2);
     srand(time(nullptr));
     printf("Generated random number %d\n", rand());

@@ -96,30 +96,35 @@ move:
     ret
 
 change_color:
-    mov dx, %1
-        .outerloop:
-            cmp dx, %2
-            add dx, 1
-            mov cx, %3
-            jge .ok
-            .innerloop:
-                cmp cx, %4
-                jge .outerloop
-                mov ax, dx
-                mov bx, 80
-                mul bx
-                add ax, cx
-                shl ax, 1
-                mov ah, 0x7
-                mov al, ' '
-                mov bp, ax
-                mov word[gs:bp], ax
-                add cx, 1
-                jmp .innerloop
-    .ok:
 
     cmp byte[color],0Fh ;当前字符颜色是否为最后一种
     jnz no_rst          ;如果不是，选择下一种
+
+    mov    esi,%1
+    jmp    .l1
+    .l4
+    mov    ecx,%3
+    jmp    .l2
+    .l3
+    inc    ecx
+    .l2
+
+        mov ax, si
+        mov bx, 80
+        mul bx
+        add ax, cx
+        shl ax, 1
+        mov bp, ax
+        mov ah, 0x7
+        mov al, ' '
+        mov word[gs:bp], ax
+
+    cmp    ecx,%4
+    jle    .l3
+    inc    esi
+    .l1:
+    cmp    esi,%2
+    jle    .l4
     mov byte[color],0   ;如果是，重置
 no_rst:
     inc byte[color]     ;选择下一种

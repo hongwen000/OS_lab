@@ -5,6 +5,8 @@
 #include "debug_printf.h"
 #include "../kernel/tty.h"
 
+HHOS_info_t HHOS_info;
+
 static char *fault_msg[] = {
         "Division By Zero",
         "Debug",
@@ -48,9 +50,12 @@ void blue_screen(int_frame *r)
 
     tty blue_tty(true);
     blue_tty.set_color(MAKE_COLOR(VGA_BLUE, VGA_WHITE));
-    for(int i = 0; i < 25; ++i)
-        for(int j = 0; j < 80; ++j)
-            tty_debug_printf(blue_tty ," ");
+    asm volatile("cli\n\t"
+                 "movw $0x18, %ax\n\t"
+                 "movw %ax, %gs"
+                 );
+    for(int i = 0; i < 1999; ++i)
+        tty_debug_printf(blue_tty ," ");
     blue_tty.set_x(0);
     blue_tty.set_y(0);
     tty_debug_printf(blue_tty,"  #          ##\n");
@@ -60,6 +65,10 @@ void blue_screen(int_frame *r)
     tty_debug_printf(blue_tty,"  #        #   \n");
     tty_debug_printf(blue_tty," ###        #  \n");
     tty_debug_printf(blue_tty,"  #          ##\n");
+    if(r == nullptr)
+    {
+        tty_debug_printf(blue_tty, "Function not implemented");
+    }
     if (r->int_no < ISR_IRQ0 && r->int_no >= 0)
     {
         tty_debug_printf(blue_tty, "Encountered x86 Exception %d : %s\n", r->int_no, fault_msg[r->int_no]);
