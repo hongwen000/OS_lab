@@ -3,7 +3,7 @@
 #include "../include/defines.h"
 #include "./pm.h"
 #include "./isr.h"
-#include "../proc/proc.h"
+//#include "../proc/proc.h"
 
 #define FLOPPY_SECTOR_PER_TRACK 18
 #define FLOPPY_TRACK_PER_HEAD 80

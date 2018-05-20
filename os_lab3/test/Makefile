@@ -59,6 +59,7 @@ include boot/Makefrag
 
 kernel_obj = $(build_dir)/kernel/kernel_start.o \
 			 $(build_dir)/kernel/kernel_main.o \
+                         $(build_dir)/kernel/sh.o \
 			 $(build_dir)/driver/vga.o \
 			 $(build_dir)/driver/kb.o \
 			 $(build_dir)/driver/ide.o \
@@ -88,8 +89,10 @@ kernel_lib_obj = $(build_dir)/kernel_lib/pm_utility.o \
 				 $(build_dir)/kernel_lib/isr.o \
 				 $(build_dir)/kernel_lib/irq.o \
 				 $(build_dir)/kernel_lib/fault.o \
+				 $(build_dir)/kernel_lib/ram.o \
+				 $(build_dir)/kernel_lib/page.o \
 				 $(build_dir)/kernel_lib/sys_utility.o \
-				 $(build_dir)/kernel_lib/sys_utility_asm.o
+				 $(build_dir)/kernel_lib/sys_utility_asm.o \
 
 
 

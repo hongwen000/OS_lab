@@ -8,22 +8,22 @@
 #include "../libc/stdlib.h"
 #include "../libc/ctype.h"
 
-static int putchar( int ch )
+static int debug_putchar( int ch )
 {
     sys_dbg_bochs_putc(ch);
     return ch;
 }
 
-static int puts(const char* string)
+int debug_puts(const char* string)
 {
     auto len = strlen(string);
     for(size_t i = 0; i < len; ++i)
     {
-        putchar(*(string + i));
+        debug_putchar(*(string + i));
     }
     return 0;
 }
-static int vsprintf( char* buffer, const char* format, va_list vlist )
+static int debug_vsprintf( char* buffer, const char* format, va_list vlist )
 {
     auto len_fmt = strlen(format);
     auto p_fmt = format;
@@ -108,25 +108,25 @@ static int vsprintf( char* buffer, const char* format, va_list vlist )
     return p_buf - buffer;
 }
 
-static int sprintf( char *buffer, const char *format, ... )
+static int debug_sprintf( char *buffer, const char *format, ... )
 {
     int ret;
     va_list va;
     va_start(va, format);
-    ret = vsprintf(buffer, format, va);
+    ret = debug_vsprintf(buffer, format, va);
     va_end(va);
     return ret;
 }
-static char printbuf[80*25];
+static char debug_printbuf[80*25];
 //TODO 关于这个返回值
 int debug_printf( const char* format, ... )
 {
     int ret;
     va_list va;
     va_start(va, format);
-    ret = vsprintf(printbuf, format, va);
+    ret = debug_vsprintf(debug_printbuf, format, va);
     va_end(va);
-    puts(printbuf);
+    debug_puts(debug_printbuf);
     return ret;
 }
 static int tty_putchar(tty& dbg_tty, int ch )
@@ -149,8 +149,8 @@ int tty_debug_printf(tty& dbg_tty, const char* format, ... )
     int ret;
     va_list va;
     va_start(va, format);
-    ret = vsprintf(printbuf, format, va);
+    ret = debug_vsprintf(debug_printbuf, format, va);
     va_end(va);
-    tty_puts(dbg_tty, printbuf);
+    tty_puts(dbg_tty, debug_printbuf);
     return ret;
 }

@@ -115,5 +115,4 @@ extern "C" void sys_proc_exit_c()
         pcb_que=pcb_que->next;
     }
     set_load_stat(0);
-    asm volatile("int $0x90");
 }

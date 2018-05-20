@@ -58,4 +58,8 @@ enum VGA_COLOR{
 
 #define __HHOS_libc
 
+struct HHOS_info_t {
+    uint32_t phy_mem = 0;
+};
+
 #endif
