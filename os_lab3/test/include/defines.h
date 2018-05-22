@@ -62,4 +62,8 @@ struct HHOS_info_t {
     uint32_t phy_mem = 0;
 };
 
+/* page global directory */
+using pde_t = uint32_t;
+/* page talbe entry */
+using pte_t = uint32_t;
 #endif

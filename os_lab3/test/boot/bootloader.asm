@@ -158,15 +158,15 @@ retry:
     jmp dword Selec_Code32_R0:KERNEL_ENTRY_ADDR
 
 msg_boot:
-    db "Bootsector loaded...",13,10,0
+    db "In bootloader",13,10,0
 msg_err:
     db "Loader load error.",13,10,0
 msg_succ:
-    db "Loader load success...",13,10,0
+    db "Loaded kernel into memory",13,10,0
 msg_gdt:
-    db "Temp GDT loaded...",13,10,0
+    db "Loaded temporal GDT",13,10,0
 msg_a20:
-    db "A20 line on...",13,10,0
+    db "A20 Line is on",13,10,0
 msg_temp:
     db 0,0,0
 msg_get_mem_map_err:

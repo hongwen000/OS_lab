@@ -20,8 +20,8 @@ extern "C" void interrupt_90h();
 extern "C" void interrupt_91h();
 extern "C" void interrupt_97h();
 extern "C" void interrupt_99h();
-extern "C" void interrupt_system_call();
-extern "C" void sys_proc_schd();
+extern "C" void system_call_asm();
+extern "C" void interrupt_timer();
 extern "C" void set_pit_freq();
 extern "C" void gui_test();
 static tty* current_tty = nullptr;
@@ -57,45 +57,47 @@ static inline void print_ok(char * mod) {
     current_tty->set_color(MAKE_COLOR(VGA_BLACK, VGA_WHITE));
     printf("]\n");
 }
-
+sh* p_sh = nullptr;
+extern "C" void run_sh()
+{
+    p_sh->run();
+}
 extern "C" void kernel_main()
 {
-    idt_install(ISR_SYSCALL, (uint32_t)interrupt_system_call, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
+    idt_install(ISR_SYSCALL, (uint32_t)system_call_asm, SEL_KCODE << 3, GATE_TRAP, IDT_PR | IDT_DPL_USER);
     tty tty1(false);
     tty1.set_x(6);
     current_tty = &tty1;
     print_ok("TTY");
-    idt_install(ISR_IRQ0 + IRQ_TIMER, (uint32_t)sys_proc_schd, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
+    idt_install(ISR_IRQ0 + IRQ_TIMER, (uint32_t)interrupt_timer, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
     print_ok("Clock");
     idt_install(ISR_IRQ0 + IRQ_KB, (uint32_t)interrupt_kb, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
     print_ok("Keyboard");
     idt_install(ISR_IRQ0 + IRQ_IDE, (uint32_t)interrupt_ide, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
     print_ok("IDE Disk");
     idt_install(0x99, (uint32_t)interrupt_99h, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
-    idt_install(0x97, (uint32_t)interrupt_97h, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
+    idt_install(0x97, (uint32_t)interrupt_97h, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_USER);
     //int 90/91是退出用户程序
     idt_install(0x90, (uint32_t)interrupt_90h, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
     idt_install(0x91, (uint32_t)interrupt_91h, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
-    //int 0x92是新建进程
-    idt_install(0x92, (uint32_t)sys_new_proc, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
-    //int 0x93切换进程
-    idt_install(0x93, (uint32_t)sys_proc_schd, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
 
 
     set_pit_freq();
 
     asm volatile("sti");
-    asm volatile("int $0x97");
+//    asm volatile("int $0x97");
     ram_init();
     print_ok("Detect physical memory");
     vmm_init();
     print_ok("Paging");
     proc_init();
-    print_ok("Process Management");
+    print_ok("Process");
+    scheduler();
 
-//    sh sh1;
-//    print_ok("Shell");
-//    printf("%s\n", str);
+    sh sh1;
+    print_ok("Shell");
+    printf("%s\n", str);
+    p_sh = &sh1;
 //    sh1.run();
     while(1);
 }

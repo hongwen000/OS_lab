@@ -8,6 +8,8 @@
 #include "../include/defines.h"
 #include "../kernel_lib/pm.h"
 #include "../kernel_lib/sys_utility.h"
+#include "../kernel_lib/isr.h"
+
 #define MAX_PROC 4
 
 #define PROC_STAT_NOT_READY 0
@@ -15,63 +17,68 @@
 #define PROC_STAT_RUNNING 2
 #define PROC_STAT_WAITING 3
 
-struct CPU_INFO{
-    /* segment registers */
-    uint32_t gs;    // 16 bits
-    uint32_t fs;    // 16 bits
-    uint32_t es;    // 16 bits
-    uint32_t ds;          // 16 bits
+//struct CPU_INFO_t{
+//    /* segment registers */
+//    uint32_t gs;    // 16 bits
+//    uint32_t fs;    // 16 bits
+//    uint32_t es;    // 16 bits
+//    uint32_t ds;          // 16 bits
+//
+//    /* registers save by pusha */
+//    uint32_t edi;
+//    uint32_t esi;
+//    uint32_t ebp;
+//    uint32_t esp;
+//    uint32_t ebx;
+//    uint32_t edx;
+//    uint32_t ecx;
+//    uint32_t eax;
+//
+//    uint32_t int_no;
+//
+//    /* save by `int` instruction */
+//    uint32_t err_code;
+//    uint32_t eip;
+//    uint32_t cs;    // 16 bits
+//    uint32_t eflags;
+//    uint32_t user_esp;
+//    uint32_t ss;    // 16 bits
+//}__attribute__((packed));
 
-    /* registers save by pusha */
+struct context_t {
     uint32_t edi;
     uint32_t esi;
-    uint32_t ebp;
-    uint32_t esp;
     uint32_t ebx;
-    uint32_t edx;
-    uint32_t ecx;
-    uint32_t eax;
-
-
-    /* save by `int` instruction */
-    uint32_t eip;
-    uint32_t cs;    // 16 bits
-    uint32_t eflags;
-}__attribute__((packed));
-
-struct PCB
-{
-    uint32_t id;
-    PCB* next;
-    uint32_t status = PROC_STAT_NOT_READY;
-    /* segment registers */
-    uint32_t gs;    // 16 bits
-    uint32_t fs;    // 16 bits
-    uint32_t es;    // 16 bits
-    uint32_t ds;          // 16 bits
-
-    /* registers save by pusha */
-    uint32_t edi;
-    uint32_t esi;
     uint32_t ebp;
-    uint32_t esp;
-    uint32_t ebx;
-    uint32_t edx;
-    uint32_t ecx;
-    uint32_t eax;
-
-
-    /* save by `int` instruction */
     uint32_t eip;
-    uint32_t cs;    // 16 bits
-    uint32_t eflags;
+};
+enum procstate { P_UNUSED, P_USED, P_SLEEPING, P_RUNNABLE, P_RUNNING, P_ZOMBIE };
+struct PCB {
+    uint32_t size;                     // Size of process memory (bytes)
+    pde_t* pgdir;                // Page table
+    char *kern_stack;                // Bottom of kernel stack for this process
+    enum procstate state;        // Process state
+    int pid;                     // Process ID
+    PCB *parent;         // Parent process
+    int_frame *tf;        // Trap frame for current syscall
+    context_t *context;     // swtch() here to run process
+    void *sleep_chain;                  // If non-zero, sleeping on sleep_chain
+    int killed;                  // If non-zero, have been killed
+//    struct file *ofile[NOFILE];  // Open files
+    struct inode *cwd;           // Current directory
+    char name[16];               // Process name (debugging)
 };
 
-extern "C" void round_robin();
-extern "C" void save(CPU_INFO *cpu_info);
+extern PCB *current_proc;
+extern context_t *cpu_context;
 void proc_init();
-void get_pcb();
-void set_load_stat(int stat);
-
+void scheduler();
+int fork();
+int fork_thread();
+void exit();
+int wait();
+void wakeup(void *sleep_chain);
+void sleep(void *sleep_chain);
+void sched();
 
 #endif //HHOS_PROC_H

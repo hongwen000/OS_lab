@@ -32,15 +32,14 @@ tty* sys_get_current_tty();
         "popa  \n\t"               \
         )
 
-static inline void system_call_sleep(unsigned int n)
+static inline void system_call_sleep()
 {
     asm volatile(
-    "movl %0, %%ecx\n\t"
     "movb $2, %%ah\n\t"
-            "int $0x98\n\t"
+    "int $0x98\n\t"
     :
-    :"r"(n)
-    :"%eax", "%ebx", "%ecx"
+    :
+    :"%eax", "%ebx"
     );
 
 }
@@ -89,3 +88,4 @@ static inline uint32_t system_call_get_timestamp()
     return ret;
 }
 #endif
+
