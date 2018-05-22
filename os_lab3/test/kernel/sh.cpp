@@ -45,41 +45,14 @@ int sh::exec(const sh::cmd &input_cmd)
     }
     else if (is_command(input_cmd, "run3"))
     {
-        bin_loader::load_binary_from_disk(SEL_USER_DATA0, 320);
-        bin_loader::new_proc(SEL_USER_CODE0, SEL_USER_DATA0);
-        bin_loader::load_binary_from_disk(SEL_USER_DATA1, 320);
-        bin_loader::new_proc(SEL_USER_CODE1, SEL_USER_DATA1);
-        bin_loader::load_binary_from_disk(SEL_USER_DATA2, 320);
-        bin_loader::new_proc(SEL_USER_CODE2, SEL_USER_DATA2);
-        bin_loader::load_binary_from_disk(SEL_USER_DATA3, 320);
-        bin_loader::new_proc(SEL_USER_CODE3, SEL_USER_DATA3);
-        set_load_stat(1);
 
     }
     else if (is_command(input_cmd, "run2"))
     {
-        bin_loader::load_binary_from_disk(SEL_USER_DATA0, 384);
-        bin_loader::new_proc(SEL_USER_CODE0, SEL_USER_DATA0);
-        bin_loader::load_binary_from_disk(SEL_USER_DATA1, 448);
-        bin_loader::new_proc(SEL_USER_CODE1, SEL_USER_DATA1);
-        bin_loader::load_binary_from_disk(SEL_USER_DATA2, 512);
-        bin_loader::new_proc(SEL_USER_CODE2, SEL_USER_DATA2);
-        bin_loader::load_binary_from_disk(SEL_USER_DATA3, 576);
-        bin_loader::new_proc(SEL_USER_CODE3, SEL_USER_DATA3);
-        set_load_stat(1);
 
     }
     else if (is_command(input_cmd, "run1"))
     {
-        bin_loader::load_binary_from_disk(SEL_USER_DATA0, 384 + 256);
-        bin_loader::new_proc(SEL_USER_CODE0, SEL_USER_DATA0);
-        bin_loader::load_binary_from_disk(SEL_USER_DATA1, 448 + 256);
-        bin_loader::new_proc(SEL_USER_CODE1, SEL_USER_DATA1);
-        bin_loader::load_binary_from_disk(SEL_USER_DATA2, 512 + 256);
-        bin_loader::new_proc(SEL_USER_CODE2, SEL_USER_DATA2);
-        bin_loader::load_binary_from_disk(SEL_USER_DATA3, 576 + 256);
-        bin_loader::new_proc(SEL_USER_CODE3, SEL_USER_DATA3);
-        set_load_stat(1);
     }
     else if (is_command(input_cmd, "crash"))
     {

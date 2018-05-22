@@ -11,7 +11,7 @@
 #define ISR_SYSCALL 0x98
 #define ISR_UNKNOWN 255
 
-struct int_frame{
+struct int_frame {
     /* segment registers */
     uint32_t gs;    // 16 bits
     uint32_t fs;    // 16 bits
@@ -37,7 +37,7 @@ struct int_frame{
     uint32_t eflags;
     uint32_t user_esp;
     uint32_t ss;    // 16 bits
-};    
+};
 
 /* isr.c */
 extern "C" void isr_init();

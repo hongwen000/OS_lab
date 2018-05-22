@@ -26,9 +26,9 @@ public:
     }
     static void new_proc(uint32_t SEL_CODE, uint32_t SEL_DATA)
     {
-        get_pcb();
+//        get_pcb();
         asm volatile("int $0x92");
-        pcb_que->status = PROC_STAT_READY;
+        pcb_que->state = P_RUNNABLE;
     }
 
 private:

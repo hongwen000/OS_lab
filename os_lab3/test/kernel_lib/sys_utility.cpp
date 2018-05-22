@@ -4,6 +4,7 @@
 #include "../driver/vga.h"
 #include "debug_printf.h"
 #include "../kernel/tty.h"
+#include "../proc/sys_proc.h"
 
 HHOS_info_t HHOS_info;
 
@@ -228,8 +229,10 @@ void sys_read_hard_disk(uint32_t segment, uint32_t address, uint16_t logical_sta
 //    sys_print_string(l16, 31, MAKE_COLOR(VGA_BLACK, VGA_CYAN), MAKE_POS(5, 0));
 //}
 
+extern PCB* current_proc;
 extern "C" void interrupt_97h_c() {
 
+    debug_printf(">>>>>>> syscall number: %d, form `%s`(PID: %d)\n", current_proc->tf->eax, current_proc->name, current_proc->pid);
     const char * l11 = " __    __  __    __   ______    ______  ";
     const char * l12 = "|  \\  |  \\|  \\  |  \\ /      \\  /      \\ ";
     const char * l13 = "| $$  | $$| $$  | $$|  $$$$$$\\|  $$$$$$\\";
@@ -249,4 +252,61 @@ extern "C" void interrupt_97h_c() {
     sys_print_string(l17, 40, MAKE_COLOR(VGA_BLACK, VGA_BRIGHT_CYAN), MAKE_POS(6, 40));
     sys_print_string(l18, 40, MAKE_COLOR(VGA_BLACK, VGA_BRIGHT_CYAN), MAKE_POS(7, 40));
     sys_print_string(l19, 40, MAKE_COLOR(VGA_BLACK, VGA_BRIGHT_CYAN), MAKE_POS(8, 40));
+}
+
+void system_call_c(int_frame* tf)
+{
+    uint32_t n = tf->eax;
+    uint8_t ah = (n >> 8) & 0xFF;
+    uint8_t al = n & 0xFF;
+    if (ah == 0)
+    {
+        tf->eax = sys_getchar();
+    }
+    else if (ah == 1)
+    {
+        sys_current_tty_putchar(al);
+    }
+    else if (ah == 2)
+    {
+        //Sleep
+    }
+    else if (ah == 3)
+    {
+        //Timestamp
+    }
+    else if (ah == 4)
+    {
+        //Fork
+        tf->eax = sys_fork();
+    }
+    else if (ah == 5)
+    {
+        tf->eax = sys_wait();
+    }
+    else if (ah == 6)
+    {
+        tf->eax = sys_exit();
+    }
+    else if (ah == 7)
+    {
+        tf->eax = sys_fork_thread();
+    }
+}
+
+void interrupt_timer_c()
+{
+    if (!current_proc) return;
+
+    if (current_proc->killed && (current_proc->tf->cs & CPL_USER) == CPL_USER){
+        exit();
+    }
+
+    wakeup(&HHOS_timer_ticks);
+
+    if (HHOS_timer_ticks % 1000 == 0){
+        debug_printf("timer_handler: timer alive, trick: %d\n", HHOS_timer_ticks);
+    }
+
+    sched();
 }

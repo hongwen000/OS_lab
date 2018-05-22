@@ -6,6 +6,6 @@ $(build_dir)/proc/%.o: proc/%.c
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -I basic_lib -I libc -c $< -o $@ -MMD -MF $(@:.o=.d)
 
-$(build_dir)/proc/%.o: proc/%.S
+$(build_dir)/proc/%.o: proc/%.asm
 	@mkdir -p $(@D)
 	$(AS) $(ASELF) $< -o $@

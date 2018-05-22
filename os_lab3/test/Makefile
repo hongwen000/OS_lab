@@ -65,6 +65,8 @@ kernel_obj = $(build_dir)/kernel/kernel_start.o \
 			 $(build_dir)/driver/ide.o \
 			 $(build_dir)/driver/cmos.o \
 			 $(build_dir)/proc/proc.o \
+             $(build_dir)/proc/sys_proc.o \
+             $(build_dir)/proc/init.o \
 
 
 include kernel/Makefrag
