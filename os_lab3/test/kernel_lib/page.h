@@ -32,6 +32,7 @@
 /* 4k per page */
 #define PAGE_SIZE 4096
 #define USER_STACK_SIZE PAGE_SIZE
+#define USER_TEXT_BASE (USER_BASE + USER_STACK_SIZE)
 
 /* 页掩码，取高20位 */
 #define PAGE_MASK 0xfffff000
@@ -46,9 +47,9 @@
 #define OFFSET_INDEX(x) ((x) & 0xfff)       // 获得页内偏移
 
 
-/* size of page global dirctory */
+/* text_size of page global dirctory */
 #define PDE_SIZE (PAGE_SIZE/sizeof(pte_t))
-/* size of page talbe entry */
+/* text_size of page talbe entry */
 #define PTE_SIZE (PAGE_SIZE/sizeof(uint32_t))
 
 /* 128个页表 每个PAGE_SIZE（4M）大小,
@@ -69,11 +70,11 @@ void vmm_test();
 void kvm_init(pde_t *pgdir);
 void uvm_init_fst(pde_t *pgdir, char *init, uint32_t size);
 int uvm_alloc(pte_t *pgdir, uint32_t old_sz, uint32_t new_sz);
-int uvm_load(pte_t *pgdir, uint32_t addr, struct inode *ip, uint32_t off, uint32_t size);
+int uvm_load(pte_t *pgdir, uint32_t addr, char *ip, uint32_t off, uint32_t size);
 void uvm_switch(PCB *pp);
 void uvm_free(pte_t *pgdir);
-pde_t *uvm_copy(pte_t *pgdir, uint32_t size);
-pde_t *uvm_copy_thread(pte_t *pgdir, uint32_t size);
+pde_t *uvm_copy(pte_t *pgdir, uint32_t text_size);
+pde_t *uvm_copy_thread(pte_t *pgdir, uint32_t text_size);
 
 /* isr 14 */
 void page_fault(struct int_frame *r);

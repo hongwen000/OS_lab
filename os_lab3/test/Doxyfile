@@ -410,15 +410,15 @@ INLINE_SIMPLE_STRUCTS  = NO
 
 TYPEDEF_HIDES_STRUCT   = NO
 
-# The size of the symbol lookup cache can be set using LOOKUP_CACHE_SIZE. This
+# The text_size of the symbol lookup cache can be set using LOOKUP_CACHE_SIZE. This
 # cache is used to resolve symbols given their name and scope. Since this can be
 # an expensive process and often the same symbol appears multiple times in the
 # code, doxygen keeps a cache of pre-resolved symbols. If the cache is too small
 # doxygen will become slower. If the cache is too large, memory is wasted. The
-# cache size is given by this formula: 2^(16+LOOKUP_CACHE_SIZE). The valid range
-# is 0..9, the default is 0, corresponding to a cache size of 2^16=65536
+# cache text_size is given by this formula: 2^(16+LOOKUP_CACHE_SIZE). The valid range
+# is 0..9, the default is 0, corresponding to a cache text_size of 2^16=65536
 # symbols. At the end of a run doxygen will report the cache usage and suggest
-# the optimal cache size from a speed point of view.
+# the optimal cache text_size from a speed point of view.
 # Minimum value: 0, maximum value: 9, default value: 0.
 
 LOOKUP_CACHE_SIZE      = 0
@@ -1485,8 +1485,8 @@ TREEVIEW_WIDTH         = 250
 
 EXT_LINKS_IN_WINDOW    = NO
 
-# Use this tag to change the font size of LaTeX formulas included as images in
-# the HTML documentation. When you change the font size after a successful
+# Use this tag to change the font text_size of LaTeX formulas included as images in
+# the HTML documentation. When you change the font text_size after a successful
 # doxygen run you need to manually remove any form_*.png images from the HTML
 # output directory to force them to be regenerated.
 # Minimum value: 8, maximum value: 50, default value: 10.
@@ -1939,7 +1939,7 @@ XML_OUTPUT             = xml
 
 # If the XML_PROGRAMLISTING tag is set to YES, doxygen will dump the program
 # listings (including syntax highlighting and cross-referencing information) to
-# the XML output. Note that enabling this will significantly increase the size
+# the XML output. Note that enabling this will significantly increase the text_size
 # of the XML output.
 # The default value is: YES.
 # This tag requires that the tag GENERATE_XML is set to YES.
@@ -1967,7 +1967,7 @@ DOCBOOK_OUTPUT         = docbook
 # If the DOCBOOK_PROGRAMLISTING tag is set to YES, doxygen will include the
 # program listings (including syntax highlighting and cross-referencing
 # information) to the DOCBOOK output. Note that enabling this will significantly
-# increase the size of the DOCBOOK output.
+# increase the text_size of the DOCBOOK output.
 # The default value is: NO.
 # This tag requires that the tag GENERATE_DOCBOOK is set to YES.
 
@@ -2008,7 +2008,7 @@ PERLMOD_LATEX          = NO
 # If the PERLMOD_PRETTY tag is set to YES, the Perl module output will be nicely
 # formatted so it can be parsed by a human reader. This is useful if you want to
 # understand what is going on. On the other hand, if this tag is set to NO, the
-# size of the Perl module output will be much smaller and Perl will parse it
+# text_size of the Perl module output will be much smaller and Perl will parse it
 # just the same.
 # The default value is: YES.
 # This tag requires that the tag GENERATE_PERLMOD is set to YES.
@@ -2217,7 +2217,7 @@ DOT_NUM_THREADS        = 0
 
 DOT_FONTNAME           = Helvetica
 
-# The DOT_FONTSIZE tag can be used to set the size (in points) of the font of
+# The DOT_FONTSIZE tag can be used to set the text_size (in points) of the font of
 # dot graphs.
 # Minimum value: 4, maximum value: 24, default value: 10.
 # This tag requires that the tag HAVE_DOT is set to YES.
@@ -2266,7 +2266,7 @@ UML_LOOK               = NO
 # If the UML_LOOK tag is enabled, the fields and methods are shown inside the
 # class node. If there are many fields or methods and many nodes the graph may
 # become too big to be useful. The UML_LIMIT_NUM_FIELDS threshold limits the
-# number of items for each type to make the size more manageable. Set this to 0
+# number of items for each type to make the text_size more manageable. Set this to 0
 # for no limit. Note that the threshold may be exceeded by 50% before the limit
 # is enforced. So when you set the threshold to 10, up to 15 fields may appear,
 # but if the number exceeds 15, the total amount of fields shown is limited to
@@ -2418,7 +2418,7 @@ PLANTUML_INCLUDE_PATH  =
 # by representing a node as a red box. Note that doxygen if the number of direct
 # children of the root node in a graph is already larger than
 # DOT_GRAPH_MAX_NODES then the graph will not be shown at all. Also note that
-# the size of a graph can be further restricted by MAX_DOT_GRAPH_DEPTH.
+# the text_size of a graph can be further restricted by MAX_DOT_GRAPH_DEPTH.
 # Minimum value: 0, maximum value: 10000, default value: 50.
 # This tag requires that the tag HAVE_DOT is set to YES.
 
@@ -2429,7 +2429,7 @@ DOT_GRAPH_MAX_NODES    = 50
 # root by following a path via at most 3 edges will be shown. Nodes that lay
 # further from the root node will be omitted. Note that setting this option to 1
 # or 2 may greatly reduce the computation time needed for large code bases. Also
-# note that the size of a graph can be further restricted by
+# note that the text_size of a graph can be further restricted by
 # DOT_GRAPH_MAX_NODES. Using a depth of 0 means no depth restriction.
 # Minimum value: 0, maximum value: 1000, default value: 0.
 # This tag requires that the tag HAVE_DOT is set to YES.

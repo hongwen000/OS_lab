@@ -12,6 +12,7 @@
 #include "../kernel_lib/ram.h"
 #include "../kernel_lib/page.h"
 #include "../libc/assert.h"
+#include "../kernel_lib/debug_printf.h"
 
 extern "C" void interrupt_timer();
 extern "C" void interrupt_kb();
@@ -47,7 +48,18 @@ void sys_current_tty_putchar(int ch)
 
     tty* _current_tty = sys_get_current_tty();
     if (_current_tty) _current_tty->putchar(ch);
+    sys_dbg_bochs_putc('\e');
+    sys_dbg_bochs_putc('[');
+    sys_dbg_bochs_putc('1');
+    sys_dbg_bochs_putc(';');
+    sys_dbg_bochs_putc('3');
+    sys_dbg_bochs_putc('4');
+    sys_dbg_bochs_putc('m');
     sys_dbg_bochs_putc(ch);
+    sys_dbg_bochs_putc('\e');
+    sys_dbg_bochs_putc('[');
+    sys_dbg_bochs_putc('0');
+    sys_dbg_bochs_putc('m');
 }
 const char* str = "Welcome to HHOS version 1.2.0\nYou can input help to see how to use it!";
 static inline void print_ok(char * mod) {
@@ -64,6 +76,7 @@ extern "C" void run_sh()
 }
 extern "C" void kernel_main()
 {
+    real_world_cls();
     idt_install(ISR_SYSCALL, (uint32_t)system_call_asm, SEL_KCODE << 3, GATE_TRAP, IDT_PR | IDT_DPL_USER);
     tty tty1(false);
     tty1.set_x(6);

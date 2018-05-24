@@ -50,16 +50,18 @@ void vmm_init(){
 //页表目录/虚拟地址/物理地址/flags
 void vmm_map(pde_t *pgdir, uint32_t va, uint32_t pa, uint32_t flags){
     if(va >= USER_BASE)
-        debug_printf("ram %x mapped to %x\n", pa, va);
+        debug_printf("vmm_map: 1. Try to map ram %x to %x\n", pa, va);
     uint32_t pde_idx = PDE_INDEX(va);
     uint32_t pte_idx = PTE_INDEX(va);
 
     pte_t *pte = (pte_t *)(pgdir[pde_idx] & PAGE_MASK);
+    if(va >= USER_BASE)
+        debug_printf("vmm_map: 2. pte of USER va 0x%x is at 0x%x\n", va, pte);
 
     if (!pte){
         if (va >= USER_BASE){
             pte = (pte_t *)ram_alloc();
-            debug_printf("it is used for storing page entry\n");
+            debug_printf("vmm_map: 2.5it is used for storing page entry\n");
             pgdir[pde_idx] = (uint32_t)pte | PTE_P | flags;
         } else {
             pte = (pte_t *)(pgd_kern[pde_idx] & PAGE_MASK);
@@ -69,12 +71,17 @@ void vmm_map(pde_t *pgdir, uint32_t va, uint32_t pa, uint32_t flags){
     }
 
     pte[pte_idx] = (pa & PAGE_MASK) | PTE_P | flags;
+    if(va >= USER_BASE)
+        debug_printf("vmm_map: 3.wrote page table: pte = 0x%x, pte_idx = %u, &pte[pte_idx] = 0x%x, pte[pte_idx] = 0x%x\n", pte, pte_idx, &(pte[pte_idx]), pte[pte_idx]);
+
 }
 int vmm_get_mapping(pde_t *pgdir, uint32_t va, uint32_t *pa){
     uint32_t pde_idx = PDE_INDEX(va);
     uint32_t pte_idx = PTE_INDEX(va);
+    debug_printf("pde_idx: %u, pte_idx: %u\n", pde_idx, pte_idx);
 
     pte_t *pte = (pte_t *)(pgdir[pde_idx] & PAGE_MASK);
+    debug_printf("pte* = 0x%x\n", pte);
     if (!pte){
         debug_printf("get_mapping: virtual address 0x%x is unmapped\n", va);
         return 0;
@@ -103,27 +110,33 @@ void kvm_init(pde_t *pgdir){
 }
 /* build a map of user space for a initproc's page table */
 void uvm_init_fst(pde_t *pgdir, char *init, uint32_t size){
+    char *user_tack;
+    debug_puts("uvm_init_fst: alloc memory for user stack of init\n");
+    user_tack = (char *)ram_alloc();
+    memset(user_tack, 0, PAGE_SIZE);
+    vmm_map(pgdir, USER_BASE, (uint32_t) user_tack, PTE_U | PTE_P | PTE_R);
+
     char *room;
 
     if(size < PAGE_SIZE)
-        debug_puts("uvm_init_fst: size\n");
+        debug_puts("uvm_init_fst: text_size < PAGE_SIZE\n");
 
     debug_puts("uvm_init_fst: alloc memory for init\n");
     room = (char *)ram_alloc();
 
     memset(room, 0, PAGE_SIZE);
-    debug_printf("init = 0x%x size = %d\n", init, size);
+    debug_printf("init = 0x%x text_size = %d\n", init, size);
     memcpy(room, init, size);
     debug_printf("uvm_init_fst: clear and copy\n");
 
-    vmm_map(pgdir, USER_BASE, (uint32_t)room, PTE_U | PTE_P | PTE_R);
+    vmm_map(pgdir, USER_TEXT_BASE, (uint32_t)room, PTE_U | PTE_P | PTE_R);
     debug_printf("uvm_init_fst: map\n");
 }
 void uvm_switch(PCB *pp){
     tss_set(SEL_KDATA << 3, (uint32_t)pp->kern_stack + PAGE_SIZE);
     vmm_switch_pgd((uint32_t)pp->pgdir);
 }
-pde_t *uvm_copy(pte_t *pgdir, uint32_t size){
+pde_t *uvm_copy(pte_t *pgdir, uint32_t text_size){
     pde_t *pgd;
     uint32_t i, pa, mem;
 
@@ -132,9 +145,9 @@ pde_t *uvm_copy(pte_t *pgdir, uint32_t size){
 
     kvm_init(pgd);
 
-    debug_printf("uvm_copy: copy pgdir 0x%x -> 0x%x, size: %d\n",pgdir, pgd, size);
+    debug_printf("uvm_copy: copy pgdir 0x%x -> 0x%x, text_size: %d\n",pgdir, pgd, text_size);
 
-    for (i = 0; i < size; i += PAGE_SIZE){
+    for (i = 0; i < USER_STACK_SIZE + text_size; i += PAGE_SIZE){
         if(!vmm_get_mapping(pgdir, USER_BASE + i, &pa))
             debug_puts("uvm_copy: pte not exixt or no present\n");
 
@@ -147,7 +160,7 @@ pde_t *uvm_copy(pte_t *pgdir, uint32_t size){
     }
     return pgd;
 }
-pde_t *uvm_copy_thread(pte_t *pgdir, uint32_t size){
+pde_t *uvm_copy_thread(pte_t *pgdir, uint32_t text_size){
     pde_t *pgd;
     uint32_t i, pa, mem;
 
@@ -156,7 +169,7 @@ pde_t *uvm_copy_thread(pte_t *pgdir, uint32_t size){
 
     kvm_init(pgd);
 
-    debug_printf("uvm_copy thread: copy pgdir 0x%x -> 0x%x, size: %d\n",pgdir, pgd, size);
+    debug_printf("uvm_copy thread: copy pgdir 0x%x -> 0x%x, text_size: %d\n",pgdir, pgd, text_size);
 
     for (i = 0; i < USER_STACK_SIZE; i += PAGE_SIZE){
         if(!vmm_get_mapping(pgdir, USER_BASE + i, &pa))
@@ -165,11 +178,11 @@ pde_t *uvm_copy_thread(pte_t *pgdir, uint32_t size){
         mem = ram_alloc();
         memcpy((void *)mem, (void *)pa, PAGE_SIZE);
 
-        debug_printf("uvm_copy_thread: phyaddr: 0x%x -> 0x%x\n", pa, mem);
+        debug_printf("uvm_copy_thread: Alloc new user stack, phyaddr: 0x%x -> 0x%x\n", pa, mem);
 
         vmm_map(pgd, USER_BASE + i, mem, PTE_R | PTE_U | PTE_P); // TODO (?)
     }
-    for (i = USER_STACK_SIZE; i < size; i += PAGE_SIZE)
+    for (i = USER_STACK_SIZE; i < USER_STACK_SIZE + text_size; i += PAGE_SIZE)
     {
         if(!vmm_get_mapping(pgdir, USER_BASE + i, &pa))
             debug_puts("uvm_copy_thread: pte not exixt or no present\n");
@@ -202,4 +215,46 @@ void vmm_test()
     const char* help = (const char*)0x400000;
     debug_puts(help);
 //    hhos_assert(vmm_get_mapping(pgd_kern, (uint32_t)help, nullptr));
+}
+int uvm_alloc(pte_t *pgdir, uint32_t old_sz, uint32_t new_sz){
+    uint32_t mem;
+    uint32_t start;
+
+    debug_printf("uvm_alloc: pgdir: 0x%x 0x%x -> 0x%x\n", pgdir, old_sz, new_sz);
+
+    if (new_sz < old_sz){
+        return old_sz;
+    }
+
+    for (start = PAGE_ALIGN_UP(old_sz); start < new_sz; start += PAGE_SIZE){
+        mem = ram_alloc();
+        debug_printf("uvm_alloc: that's for storing really elf image\n", pgdir, start, mem);
+        memset((void *)mem, 0, PAGE_SIZE);
+        debug_printf("uvm_alloc: call vmm_map(pgdir = 0x%x, start = 0x%x, mem = 0x%x)\n", pgdir, start, mem);
+        vmm_map(pgdir, start, mem, PTE_P | PTE_R | PTE_U);  // diff with PTE_U PTE_R ?
+    }
+
+    return new_sz;
+}
+int uvm_load(pte_t *pgdir, uint32_t addr, char* ip, uint32_t off, uint32_t size){
+    uint32_t i, n, pa;
+
+    debug_printf("uvm_load: pgdir: 0x%x addr: 0x%x ip:0x%x offset: 0x%x size: 0x%x\n", pgdir, addr, ip, off, size);
+
+    if((uint32_t)addr % PAGE_SIZE != 0)
+        debug_puts("uvm_load: addr must page aligned\n");
+
+    for (i = 0; i < size; i += PAGE_SIZE){
+        if(vmm_get_mapping(pgdir, addr + i, &pa) == 0)
+            debug_puts("uvm_load: address no mapped\n");
+        if (size - i < PAGE_SIZE){
+            n = size - i;
+        } else {
+            n = PAGE_SIZE;
+        }
+
+        // pa = va now
+        memcpy((char*)pa, ip + off + i, n);
+    }
+    return 0;
 }

@@ -6,16 +6,16 @@
 #include "../kernel_lib/debug_printf.h"
 
 int sys_fork(){
-    return fork();
+    return sys_do_fork();
 }
 
 int sys_wait(){
-    return wait();
+    return sys_do_wait();
 }
 
 int sys_exit(){
     debug_printf("sys_exit: proc `%s`(PID: %d) exit\n", current_proc->name, current_proc->pid);
-    exit();
+    sys_do_exit();
     return 0; // no reach
 }
 
@@ -82,15 +82,20 @@ int sys_sleep(int n){
         if (current_proc->killed){
             return -1;
         }
-        sleep(&HHOS_timer_ticks);
+        sys_do_sleep(&HHOS_timer_ticks);
     }
 
     debug_printf("sys_sleep: proc `%s`(PID: %d) weakup, acutal time: %d0ms\n", current_proc->name, current_proc->pid, HHOS_timer_ticks - trick0);
     return 0;
 }
 
-int sys_fork_thread() {
-    return fork_thread();
+int sys_clone() {
+    return sys_do_clone();
+}
+
+int sys_exec(uint32_t n)
+{
+    return sys_do_exec(n);
 }
 
 //int sys_uptime(){
