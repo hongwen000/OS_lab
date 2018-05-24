@@ -13,5 +13,6 @@ extern "C" {
 int debug_printf( const char* format, ... );
 int debug_puts(const char* string);
 int tty_debug_printf(tty& dbg_tty, const char* format, ... );
+void real_world_cls();
 };
 #endif //HHOS_DEBUG_PRINTF_H

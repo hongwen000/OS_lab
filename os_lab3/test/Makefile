@@ -1,3 +1,4 @@
+.PRECIOUS: %.c %.o
 include mkinc/gmsl
 
 .SUFFIXES:
@@ -16,9 +17,10 @@ ASELF = -f elf32
 
 AR = $(GCC_PREFIX)ar
 
+STRIP = $(GCC_PREFIX)strip
+
 all:
 	#make clean
-	#make bochs
 	make write_all_progs
 
 
@@ -66,6 +68,7 @@ kernel_obj = $(build_dir)/kernel/kernel_start.o \
 			 $(build_dir)/driver/cmos.o \
 			 $(build_dir)/proc/proc.o \
              $(build_dir)/proc/sys_proc.o \
+             $(build_dir)/proc/exec.o \
              $(build_dir)/proc/init.o \
 
 
@@ -160,17 +163,17 @@ include usr/Makefrag
 
 user_bin = $(build_dir)/usr/help.bin   \
            $(build_dir)/usr/record.bin \
-           $(build_dir)/usr/bc.bin \
-           $(build_dir)/usr/sleep.bin  \
-           $(build_dir)/usr/test.bin \
-           $(build_dir)/usr/usr1.bin \
-           $(build_dir)/usr/usr2.bin \
-           $(build_dir)/usr/usr3.bin \
-           $(build_dir)/usr/usr4.bin \
-           $(build_dir)/usr/user1.bin  \
-           $(build_dir)/usr/user2.bin  \
-           $(build_dir)/usr/user3.bin  \
-           $(build_dir)/usr/user4.bin
+           $(build_dir)/usr/bc.bin.elf \
+           $(build_dir)/usr/sleep.bin.elf  \
+           $(build_dir)/usr/test.bin.elf \
+           $(build_dir)/usr/usr1.bin.elf \
+           $(build_dir)/usr/usr2.bin.elf \
+           $(build_dir)/usr/usr3.bin.elf \
+           $(build_dir)/usr/usr4.bin.elf \
+           $(build_dir)/usr/user1.bin.elf  \
+           $(build_dir)/usr/user2.bin.elf  \
+           $(build_dir)/usr/user3.bin.elf  \
+           $(build_dir)/usr/user4.bin.elf
 
 write_usr_progs: $(user_bin)
 	$(foreach user_prog, $(user_bin), $(call DO_write, $(user_prog)))
@@ -238,7 +241,7 @@ gdb: .gdbinit
 
 #启动bochs虚拟机
 bochs: write_all_progs
-	export FLOPPYFILE=$(floppyfile) && bochs -qf bochsrc
+	export FLOPPYFILE=$(floppyfile) && bochs -qf bochsrc -rc bochsinit
 
 #清理
 clean:

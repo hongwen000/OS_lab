@@ -80,7 +80,7 @@ void proc_init(){
     debug_puts("proc_userinit: kernel space maped\n");
 
     uint32_t size = &__init_end - &__init_start;
-    pp->size = PAGE_SIZE;
+    pp->text_size = PAGE_SIZE;
 
     uvm_init_fst(pp->pgdir, &__init_start, size);
     debug_puts("proc_serinit: user space maped\n");
@@ -93,8 +93,8 @@ void proc_init(){
     pp->tf->gs = pp->tf->ds;
     pp->tf->ss = pp->tf->ds;
     pp->tf->eflags = FLAG_IF;
-    pp->tf->user_esp = USER_BASE + USER_STACK_SIZE;
-    pp->tf->eip = USER_BASE;
+    pp->tf->user_esp = USER_TEXT_BASE;
+    pp->tf->eip = USER_TEXT_BASE;
     debug_puts("proc_init: init stack build\n");
 
     strcpy(pp->name, "init");
@@ -120,15 +120,15 @@ void scheduler(){
                 continue;
             }
 
-            debug_printf("scheduler: proc `%s`(PID: %d) will run\n", pp->name, pp->pid);
+//            debug_printf("scheduler: proc `%s`(PID: %d) will run\n", pp->name, pp->pid);
 
             uvm_switch(pp);
             pp->state = P_RUNNING;
 
             current_proc = pp;
-            debug_puts(">>>> context switch\n");
+//            debug_puts(">>>> context switch\n");
             sys_context_switch(&cpu_context, pp->context);
-            debug_printf("<<<< return form proc `%s`(PID: %d)\n", pp->name, pp->pid);
+//            debug_printf("<<<< return form proc `%s`(PID: %d)\n", pp->name, pp->pid);
             asm volatile("sti");
         }
     }
@@ -145,7 +145,7 @@ void sched(){
     sys_context_switch(&current_proc->context, cpu_context);
 }
 
-void sleep(void *sleep_chain){
+void sys_do_sleep(void *sleep_chain){
     if(current_proc == nullptr)
         debug_puts("sleep: no proc\n");
 
@@ -181,7 +181,7 @@ void wakeup(void *sleep_chain){
         }
     }
 }
-int wait(){
+int sys_do_wait(){
     int havekids, pid;
     PCB* pp;
 
@@ -220,11 +220,11 @@ int wait(){
         }
 
         // wait for chidren to exit
-        sleep(current_proc);
+        sys_do_sleep(current_proc);
     }
 }
 
-void exit(){
+void sys_do_exit(){
     PCB *pp;
     int fd;
 
@@ -258,7 +258,7 @@ void exit(){
     debug_puts("exit: return form sched");
     bochs_break();
 }
-int fork(){
+int sys_do_fork(){
     int i;
     PCB *child;
 
@@ -270,11 +270,10 @@ int fork(){
 
     debug_puts("fork: copying memory...\n");
 
-    child->pgdir = uvm_copy(current_proc->pgdir, current_proc->size);
+    child->pgdir = uvm_copy(current_proc->pgdir, current_proc->text_size);
 
     if (child->pgdir == 0){
         debug_puts("fork:");
-        bochs_break();
         ram_free((uint32_t)child->kern_stack);
         child->kern_stack = 0;
         child->state = P_UNUSED;
@@ -282,7 +281,7 @@ int fork(){
     }
 
     debug_puts("fork: copying attrib...\n");
-    child->size = current_proc->size;
+    child->text_size = current_proc->text_size;
     child->parent = current_proc;
     *(child->tf) = *(current_proc->tf); // return form same address
 
@@ -295,7 +294,7 @@ int fork(){
     debug_puts("fork: done\n");
     return child->pid;
 }
-int fork_thread(){
+int sys_do_clone(){
     int i;
     PCB *child;
 
@@ -307,7 +306,7 @@ int fork_thread(){
 
     debug_puts("fork thread: allocating independent stack memory...\n");
 
-    child->pgdir = uvm_copy_thread(current_proc->pgdir, current_proc->size);
+    child->pgdir = uvm_copy_thread(current_proc->pgdir, current_proc->text_size);
 
     if (child->pgdir == 0){
         debug_puts("fork:");
@@ -319,7 +318,7 @@ int fork_thread(){
     }
 
     debug_puts("fork thread: copying attrib...\n");
-    child->size = current_proc->size;
+    child->text_size = current_proc->text_size;
     child->parent = current_proc;
     *(child->tf) = *(current_proc->tf); // return form same address
 

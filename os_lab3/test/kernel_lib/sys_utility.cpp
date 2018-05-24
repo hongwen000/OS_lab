@@ -290,7 +290,14 @@ void system_call_c(int_frame* tf)
     }
     else if (ah == 7)
     {
-        tf->eax = sys_fork_thread();
+        tf->eax = sys_clone();
+    }
+    else if (ah == 8)
+    {
+        uint32_t blk = *(uint32_t*)(current_proc->tf->user_esp+4);
+        debug_printf("0x%x\n", (current_proc->tf->user_esp+4));
+        debug_printf("sys_exec: Exec program in block %d\n", blk);
+        tf->eax = sys_exec(blk);
     }
 }
 
@@ -299,7 +306,7 @@ void interrupt_timer_c()
     if (!current_proc) return;
 
     if (current_proc->killed && (current_proc->tf->cs & CPL_USER) == CPL_USER){
-        exit();
+        sys_do_exit();
     }
 
     wakeup(&HHOS_timer_ticks);

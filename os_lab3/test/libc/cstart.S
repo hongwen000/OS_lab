@@ -4,6 +4,6 @@
 [extern main]
 _start:
     call main
-	mov ah, 4ch
-	int 91h
+	mov ah, 6
+	int 0x98
 

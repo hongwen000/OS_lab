@@ -54,7 +54,7 @@ struct context_t {
 };
 enum procstate { P_UNUSED, P_USED, P_SLEEPING, P_RUNNABLE, P_RUNNING, P_ZOMBIE };
 struct PCB {
-    uint32_t size;                     // Size of process memory (bytes)
+    uint32_t text_size;                     // Size of process memory (bytes)
     pde_t* pgdir;                // Page table
     char *kern_stack;                // Bottom of kernel stack for this process
     enum procstate state;        // Process state
@@ -73,12 +73,12 @@ extern PCB *current_proc;
 extern context_t *cpu_context;
 void proc_init();
 void scheduler();
-int fork();
-int fork_thread();
-void exit();
-int wait();
+int sys_do_fork();
+int sys_do_clone();
+void sys_do_exit();
+int sys_do_wait();
 void wakeup(void *sleep_chain);
-void sleep(void *sleep_chain);
+void sys_do_sleep(void *sleep_chain);
 void sched();
 
 #endif //HHOS_PROC_H

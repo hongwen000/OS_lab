@@ -100,7 +100,7 @@ retry:
 
 ; next: 
     mov ax, es
-    add ax, 0x20    ; 0x200 size of a sector
+    add ax, 0x20    ; 0x200 text_size of a sector
     mov es, ax  ; write address += 0x200
 
     add cl, 1   ; sector + 1

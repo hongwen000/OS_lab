@@ -7,12 +7,33 @@
 #include "../libc/string.h"
 #include "../libc/stdlib.h"
 #include "../libc/ctype.h"
-
+void real_world_cls()
+{
+    sys_dbg_bochs_putc('\033');
+    sys_dbg_bochs_putc('c');
+}
 static int debug_putchar( int ch )
 {
+    //echo -e "\e[1;31m This is red text! \e[0m"
+    sys_dbg_bochs_putc('\e');
+    sys_dbg_bochs_putc('[');
+    sys_dbg_bochs_putc('1');
+    sys_dbg_bochs_putc(';');
+    sys_dbg_bochs_putc('3');
+    sys_dbg_bochs_putc('1');
+    sys_dbg_bochs_putc('m');
     sys_dbg_bochs_putc(ch);
+    sys_dbg_bochs_putc('\e');
+    sys_dbg_bochs_putc('[');
+    sys_dbg_bochs_putc('0');
+    sys_dbg_bochs_putc('m');
     return ch;
 }
+//static int debug_putchar( int ch )
+//{
+//    sys_dbg_bochs_putc(ch);
+//    return ch;
+//}
 
 int debug_puts(const char* string)
 {

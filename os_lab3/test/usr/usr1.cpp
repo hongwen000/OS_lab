@@ -3,45 +3,72 @@
 //
 
 #include "../include/defines.h"
+#include "../libc/sys/hhos.h"
 #include "../libc/stdio.h"
 #include "../libc/ctype.h"
-#include "../libc/time.h"
-#include "../libc/unistd.h"
 
-
-
-extern "C" void main()
+char str[80] = "129djwqhdsajd128dw9i39ie93i8494urjoiew98kdkd";
+int LetterNr = 0;
+void CountLetter()
 {
-//    char infix[SIZE];
-//    printf("Basic calculate 1.1\n");
-//    printf("Input q to exit\n");
-//    printf("I\n");
-//    putchar('I');
-//    printf("%s\n",asctime(gmtime(time(nullptr))));
-
-    while (true)
+    for(int i = 0; i < 80; ++i)
     {
-        puts("In User Process 0\n");
+        if(isalpha(str[i]))
+            ++LetterNr;
     }
-//    while (true)
-//        puts("In User Process 0\n");
-//    asm volatile("int $0x93");
-//    puts("User Process 0 Ends\n");
-//    while (true)
-//    {
-//        gets(infix);
-//        if (strcmp(infix, "q") == 0)
-//            break;
-//        calc c(infix);
-//        int errorn = c.get_err();
-//        if(errorn != 0)
-//        {
-//            printf("Wrong input at column %d\n", errorn);
-//        }
-//        else
-//        {
-//            printf("%d\n", c.get_result());
-//        }
-//    }
 }
+
+extern "C" void main() {
+    int pid;
+    bochs_break();
+    pid = clone();
+    if (pid == -1)
+        printf("error in fork !");
+    if (pid) {
+        wait();
+        printf("LetterNr = %d\n", LetterNr);
+    }
+    else {
+        bochs_break();
+        CountLetter();
+        exit();
+    }
+}
+
+void sys_outw(uint16_t port, uint16_t data)
+{
+    asm volatile ("outw %0, %1"
+    :
+    :"a"(data), "Nd"(port));
+}
+//extern "C" void main()
+//{
+////    char infix[SIZE];
+////    printf("Basic calculate 1.1\n");
+////    printf("Input q to exit\n");
+////    printf("I\n");
+////    putchar('I');
+////    printf("%s\n",asctime(gmtime(time(nullptr))));
+//
+////    while (true)
+//        puts("In User Process 0\n");
+////    asm volatile("int $0x93");
+////    puts("User Process 0 Ends\n");
+////    while (true)
+////    {
+////        gets(infix);
+////        if (strcmp(infix, "q") == 0)
+////            break;
+////        calc c(infix);
+////        int errorn = c.get_err();
+////        if(errorn != 0)
+////        {
+////            printf("Wrong input at column %d\n", errorn);
+////        }
+////        else
+////        {
+////            printf("%d\n", c.get_result());
+////        }
+////    }
+//}
 

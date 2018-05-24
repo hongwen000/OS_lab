@@ -4,6 +4,7 @@
 #include "ram.h"
 #include "../libc/stdio.h"
 #include "debug_printf.h"
+#include "page.h"
 
 extern HHOS_info_t HHOS_info;
 extern uint8_t kernstart;
@@ -38,7 +39,7 @@ void ram_init()
         ++pADRS;
     }
     printf("0x%x bytes memory Installed\n", HHOS_info.phy_mem);
-    printf("Kernel start at: 0x%x, end at0x%x, size %ukb\n", &kernstart, &kernend, (&kernend - &kernstart) / 1024);
+    printf("Kernel start at: 0x%x, end at0x%x, text_size %ukb\n", &kernstart, &kernend, (&kernend - &kernstart) / 1024);
     printf("%d pages available for allocation (%d kb)\n", pm_node_cnt, pm_node_cnt * 4);
 }
 
@@ -50,7 +51,8 @@ uint32_t ram_alloc()
         bochs_break();
         return 0;
     }
-    debug_printf("Give you memory %x\n", pm_node[pm_node_size - 1]);
+    debug_printf("Give you physical memory %x\n", pm_node[pm_node_size - 1]);
+    memset((char*)pm_node[pm_node_size - 1], 0, PAGE_SIZE);
     return pm_node[--pm_node_size];
 }
 

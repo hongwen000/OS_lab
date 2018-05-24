@@ -68,13 +68,13 @@ main:
 record_histroy:
     pusha
     cld
-    mov si, old_x + 1 * sizeof_word
-    mov di, old_x
+    mov esi, old_x + 1 * sizeof_word
+    mov edi, old_x
     %rep    len - 1
             movsw
     %endrep
-    mov si, old_y + 1 * sizeof_word
-    mov di, old_y
+    mov esi, old_y + 1 * sizeof_word
+    mov edi, old_y
     %rep    len - 1
             movsw
     %endrep

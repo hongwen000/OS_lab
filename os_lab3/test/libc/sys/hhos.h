@@ -87,5 +87,72 @@ static inline uint32_t system_call_get_timestamp()
             );
     return ret;
 }
+
+static inline int fork()
+{
+    uint32_t ret;
+    asm volatile(
+    "movb $4, %%ah\n\t"
+    "int $0x98\n\t"
+    "movl %%eax, %0\n\t"
+    :"=r"(ret)
+    :
+    :"%eax", "%ebx", "%ecx"
+    );
+    return ret;
+}
+static inline int wait()
+{
+    uint32_t ret;
+    asm volatile(
+    "movb $5, %%ah\n\t"
+    "int $0x98\n\t"
+    "movl %%eax, %0\n\t"
+    :"=r"(ret)
+    :
+    :"%eax", "%ebx", "%ecx"
+    );
+    return ret;
+}
+static inline void exit()
+{
+    uint32_t ret;
+    asm volatile(
+    "movb $6, %%ah\n\t"
+    "int $0x98\n\t"
+    "movl %%eax, %0\n\t"
+    :"=r"(ret)
+    :
+    :"%eax", "%ebx", "%ecx"
+    );
+}
+static inline int clone()
+{
+    uint32_t ret;
+    asm volatile(
+    "movb $7, %%ah\n\t"
+    "int $0x98\n\t"
+    "movl %%eax, %0\n\t"
+    :"=r"(ret)
+    :
+    :"%eax", "%ebx", "%ecx"
+    );
+    return ret;
+}
+static inline uint32_t system_call_exec(uint32_t n)
+{
+    uint32_t ret;
+    asm volatile(
+    "movb $8, %%ah\n\t"
+    "push %1\n\t"
+    "int $0x98\n\t"
+    "movl %%eax, %0\n\t"
+    "add %%esp, 4"
+    :"=r"(ret)
+    :"r"(n)
+    :"%eax", "%ebx", "%ecx"
+    );
+    return ret;
+}
 #endif
 
