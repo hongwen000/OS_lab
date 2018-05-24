@@ -9,16 +9,11 @@
 #include "../libc/stdio.h"
 #include "../libc/string.h"
 #include "../libc/stdlib.h"
-#include "../kernel_lib/sys_utility.h"
-#include "bin_loader.h"
 #include "../libc/sys/hhos.h"
 #include "../libc/ctype.h"
-#include "../driver/ide.h"
 #include "../driver/kb.h"
 #define HELP_FILE_SECTOR 64
 #define REC_FILE_SECTOR 128
-extern "C" void sys_proc_exit();
-extern "C" void interrupt_kb();
 
 class sh{
 private:
@@ -46,8 +41,44 @@ private:
     cmd cmds[buf_size / 4];
     char buf[buf_size];
     char histroy[history_term][buf_size];
-    char record_buf[512];
-    char help[512];
+    char record_buf[512] =
+            "11\n"
+            "bc\n"
+            "192\n"
+            "sleep\n"
+            "256\n"
+            "test\n"
+            "320\n"
+            "usr1\n"
+            "384\n"
+            "usr2\n"
+            "448\n"
+            "usr3\n"
+            "512\n"
+            "usr4\n"
+            "576\n"
+            "asm1\n"
+            "640\n"
+            "asm2\n"
+            "704\n"
+            "asm3\n"
+            "768\n"
+            "asm4\n"
+            "832\n";
+    char help[512] =
+            "HHOS shell 1.1.0 help\n"
+            "Command    Usage\n"
+            "ls         list all user programs\n"
+            "dir        same to ls\n"
+            "cls        clear screen\n"
+            "clear      same to cls\n"
+            "echo       echo your input\n"
+            "help       show help\n"
+            "\n"
+            "Enter the name of a user program to execuate it\n"
+            "You can run multiply commands by spliting them \n"
+            "using  ;  (must have spaces in both sides)";
+
     size_t prog_cnt = 0;
     size_t pos = 0;
 
@@ -62,7 +93,7 @@ private:
 
     void history_push(const char* buf);
 
-    int exec(const cmd & input_cmd);
+    int sh_exec(const cmd & input_cmd);
     void read_prog_record();
     void read_help_file();
     int split_input(char* buf);

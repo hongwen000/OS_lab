@@ -61,7 +61,6 @@ include boot/Makefrag
 
 kernel_obj = $(build_dir)/kernel/kernel_start.o \
 			 $(build_dir)/kernel/kernel_main.o \
-                         $(build_dir)/kernel/sh.o \
 			 $(build_dir)/driver/vga.o \
 			 $(build_dir)/driver/kb.o \
 			 $(build_dir)/driver/ide.o \
@@ -163,7 +162,7 @@ include usr/Makefrag
 
 user_bin = $(build_dir)/usr/help.bin   \
            $(build_dir)/usr/record.bin \
-           $(build_dir)/usr/bc.bin.elf \
+           $(build_dir)/usr/sh.bin.elf \
            $(build_dir)/usr/sleep.bin.elf  \
            $(build_dir)/usr/test.bin.elf \
            $(build_dir)/usr/usr1.bin.elf \

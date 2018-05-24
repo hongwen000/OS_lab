@@ -5,6 +5,7 @@
 #include "../include/defines.h"
 #include "../libc/stdio.h"
 #include "../libc/ctype.h"
+#include "../libc/string.h"
 
 #define SIZE 50
 template <typename T>

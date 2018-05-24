@@ -4,6 +4,8 @@
 #include "../libc/unistd.h"
 #include "../libc/assert.h"
 #include "../libc/stdlib.h"
+#include "../libc/string.h"
+
 extern "C" void main()
 {
         //    asm volatile(

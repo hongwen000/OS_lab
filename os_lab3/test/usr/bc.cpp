@@ -7,6 +7,7 @@
 #include "../libc/ctype.h"
 #include "../libc/time.h"
 #include "../libc/unistd.h"
+#include "../libc/string.h"
 
 #define SIZE 50
 template <typename T>

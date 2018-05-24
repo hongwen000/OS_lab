@@ -1,9 +1,6 @@
 #ifndef _HHOS_H_
 #define _HHOS_H_
-#include "../../kernel/tty.h"
 #include "../../kernel_lib/pm.h"
-#include "../../kernel_lib/sys_utility.h"
-tty* sys_get_current_tty();
 
 #define __ISR_BEGIN_SAFE_C__        \
         asm volatile(               \
@@ -139,12 +136,13 @@ static inline int clone()
     );
     return ret;
 }
-static inline uint32_t system_call_exec(uint32_t n)
+static inline uint32_t exec(uint32_t n)
 {
     uint32_t ret;
     asm volatile(
     "movb $8, %%ah\n\t"
     "push %1\n\t"
+    "push $0\n\t"
     "int $0x98\n\t"
     "movl %%eax, %0\n\t"
     "add %%esp, 4"

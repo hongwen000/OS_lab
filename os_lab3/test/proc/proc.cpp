@@ -103,7 +103,8 @@ void proc_init(){
 
     initproc = pp;
 
-    debug_puts("proc_init: done, perpare for running\n");
+//    debug_puts("proc_init: done, perpare for running\n");
+    printf("Init progress loaded, ready for scheduling\n");
 }
 
 //the entity of `context` is on stack
@@ -120,15 +121,15 @@ void scheduler(){
                 continue;
             }
 
-//            debug_printf("scheduler: proc `%s`(PID: %d) will run\n", pp->name, pp->pid);
+            debug_printf("scheduler: proc `%s`(PID: %d) will run\n", pp->name, pp->pid);
 
             uvm_switch(pp);
             pp->state = P_RUNNING;
 
             current_proc = pp;
-//            debug_puts(">>>> context switch\n");
+            debug_puts(">>>> context switch\n");
             sys_context_switch(&cpu_context, pp->context);
-//            debug_printf("<<<< return form proc `%s`(PID: %d)\n", pp->name, pp->pid);
+            debug_printf("<<<< return form proc `%s`(PID: %d)\n", pp->name, pp->pid);
             asm volatile("sti");
         }
     }

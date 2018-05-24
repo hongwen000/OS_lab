@@ -10,7 +10,7 @@
 #include "../kernel_lib/sys_utility.h"
 #include "../kernel_lib/isr.h"
 
-#define MAX_PROC 4
+#define MAX_PROC 128
 
 #define PROC_STAT_NOT_READY 0
 #define PROC_STAT_READY 1

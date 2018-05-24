@@ -9,7 +9,7 @@ void sh::history_push(const char *buf)
     strcpy(histroy[0], buf);
 }
 
-int sh::exec(const sh::cmd &input_cmd)
+int sh::sh_exec(const sh::cmd &input_cmd)
 {
     if (is_command(input_cmd, "ls") || is_command(input_cmd, "dir")) {
         printf("You have %d user programs intalled\n", prog_cnt);
@@ -20,8 +20,8 @@ int sh::exec(const sh::cmd &input_cmd)
     }
     else if (is_command(input_cmd, "cls") || is_command(input_cmd, "clear"))
     {
-        sys_clear_screen();
-        sys_get_current_tty()->tty_init();
+        asm volatile("mov $28, %ah\n\tint $0x98");
+        asm volatile("mov $29, %ah\n\tint $0x98");
     }
     else if (is_command(input_cmd, "help"))
     {
@@ -71,11 +71,11 @@ int sh::exec(const sh::cmd &input_cmd)
         }
 
     }
-    else if (is_command(input_cmd, "date"))
-    {
-        read_rtc();
-        printf("%s\n", sys_internal_time_str);
-    }
+//    else if (is_command(input_cmd, "date"))
+//    {
+//        read_rtc();
+//        printf("%s\n", sys_internal_time_str);
+//    }
 #ifdef IDE_TEST
     else if (is_command(input_cmd, "ide"))
     {
@@ -89,13 +89,19 @@ int sh::exec(const sh::cmd &input_cmd)
             if (is_command(input_cmd, progs[i].name))
             {
                 found = true;
-                bin_loader::load_binary_from_disk(SEL_USER_DATA0, progs[i].lba);
-                bin_loader::exec(SEL_USER_CODE0, SEL_USER_DATA0);
-                //if(!(strlen(progs[i].name) > 2 && progs[i].name[0] == 'c' && progs[i].name[1] == '_'))
-                if(false)
+                int n = fork();
+                if (n == 0)
                 {
-                    sys_clear_screen();
-                    sys_get_current_tty()->tty_init();
+                    exec((uint32_t)progs[i].lba);
+                }
+                else {
+                    printf("---------------------------------------\n");
+                    printf("Shell forked for user program, pid = %d\n", n);
+                    printf("---------------------------------------\n");
+                    wait();
+                    printf("---------------------------------------\n");
+                    printf("user program exited\n");
+                    printf("---------------------------------------\n");
                 }
                 break;
             }
@@ -108,7 +114,6 @@ int sh::exec(const sh::cmd &input_cmd)
 
 void sh::read_prog_record()
 {
-    sys_read_hard_disk(SEL_KERN_DATA, (uint32_t)record_buf, REC_FILE_SECTOR, 1);
     char buf1[32];
     char buf2[32];
     char buf3[32];
@@ -127,7 +132,6 @@ void sh::read_prog_record()
 
 void sh::read_help_file()
 {
-    sys_read_hard_disk(SEL_KERN_DATA, (uint32_t)help, HELP_FILE_SECTOR, 1);
 }
 
 int sh::split_input(char *buf)
@@ -230,6 +234,7 @@ void sh::run() {
     printf("%s", prompt);
     while(true)
     {
+        printf("");
         unsigned char in = getchar();
         if (in == KEY_UP)
         {
@@ -273,7 +278,7 @@ void sh::run() {
             int cmd_cnt = split_batch(inputs, input_cnt);
             for(int cmd_num = 0; cmd_num < cmd_cnt; ++ cmd_num)
             {
-                exec(cmds[cmd_num]);
+                sh_exec(cmds[cmd_num]);
             }
             memset(buf, 0, buf_size);
             pos = 0;
@@ -313,4 +318,13 @@ void sh::run() {
             buf[pos++] = in;
         }
     }
+}
+
+extern "C" void main()
+{
+    printf("--------------------------------------\n");
+    printf("Shell loaded, system ready for use\n");
+    printf("--------------------------------------\n");
+    sh sh1;
+    sh1.run();
 }
