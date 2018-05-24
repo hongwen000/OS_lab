@@ -1,6 +1,8 @@
 #include "./time.h"
 #include "./stdio.h"
 #include "./sys/hhos.h"
+#include "./string.h"
+
 #ifdef _HHOS_LIBC_TEST
 namespace hhlibc {
 

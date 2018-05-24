@@ -87,6 +87,7 @@ void blue_screen(int_frame *r)
 extern "C" int sys_getchar()
 {
     unsigned char ch = kb_buf_out();
+    debug_printf("DEBUG: sys_getchar got %c (%d)\n", ch, (int) ch);
     return ch;
 }
 
@@ -265,7 +266,7 @@ void system_call_c(int_frame* tf)
     }
     else if (ah == 1)
     {
-        sys_current_tty_putchar(al);
+         sys_current_tty_putchar(al);
     }
     else if (ah == 2)
     {
@@ -295,9 +296,19 @@ void system_call_c(int_frame* tf)
     else if (ah == 8)
     {
         uint32_t blk = *(uint32_t*)(current_proc->tf->user_esp+4);
-        debug_printf("0x%x\n", (current_proc->tf->user_esp+4));
+        debug_printf("sys_exec: +4 : 0x%x = %d\n", (current_proc->tf->user_esp+4), *(int*)(current_proc->tf->user_esp+4));
+        debug_printf("sys_exec: +8 : 0x%x = %d\n", (current_proc->tf->user_esp+8), *(int*)(current_proc->tf->user_esp+8));
         debug_printf("sys_exec: Exec program in block %d\n", blk);
         tf->eax = sys_exec(blk);
+    }
+    else if (ah == 28)
+    {
+        sys_clear_screen();
+    }
+    else if (ah == 29)
+    {
+        extern tty* sys_get_current_tty();
+        sys_get_current_tty()->tty_init();
     }
 }
 

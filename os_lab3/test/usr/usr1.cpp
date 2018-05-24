@@ -6,6 +6,7 @@
 #include "../libc/sys/hhos.h"
 #include "../libc/stdio.h"
 #include "../libc/ctype.h"
+#include "../kernel_lib/sys_utility.h"
 
 char str[80] = "129djwqhdsajd128dw9i39ie93i8494urjoiew98kdkd";
 int LetterNr = 0;
@@ -20,7 +21,6 @@ void CountLetter()
 
 extern "C" void main() {
     int pid;
-    bochs_break();
     pid = clone();
     if (pid == -1)
         printf("error in fork !");
@@ -29,7 +29,6 @@ extern "C" void main() {
         printf("LetterNr = %d\n", LetterNr);
     }
     else {
-        bochs_break();
         CountLetter();
         exit();
     }

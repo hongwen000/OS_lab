@@ -17,7 +17,7 @@ __init_start:
     jmp $
 
 child:
-    push 384
+    push 192
     push 0
     mov ah, 8
     int 0x98
