@@ -41,7 +41,7 @@ void gdt_install(uint8_t num, uint32_t base, uint32_t limit, uint8_t access, uin
 
 void gdt_init(){
     /* Setup the GDT pointer and limit */
-    gp.limit = (sizeof(struct gdt_entry) * NGDT) - 1; //gdtr limit <- text_size of gdt table - 1
+    gp.limit = (sizeof(struct gdt_entry) * NGDT) - 1; //gdtr limit <- size of gdt table - 1
     gp.base = (uint32_t)&gdt;
 
     /* null descriptor */

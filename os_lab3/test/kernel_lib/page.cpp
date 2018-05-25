@@ -119,13 +119,13 @@ void uvm_init_fst(pde_t *pgdir, char *init, uint32_t size){
     char *room;
 
     if(size < PAGE_SIZE)
-        debug_puts("uvm_init_fst: text_size < PAGE_SIZE\n");
+        debug_puts("uvm_init_fst: size < PAGE_SIZE\n");
 
     debug_puts("uvm_init_fst: alloc memory for init\n");
     room = (char *)ram_alloc();
 
     memset(room, 0, PAGE_SIZE);
-    debug_printf("init = 0x%x text_size = %d\n", init, size);
+    debug_printf("init = 0x%x size = %d\n", init, size);
     memcpy(room, init, size);
     debug_printf("uvm_init_fst: clear and copy\n");
 
@@ -145,7 +145,7 @@ pde_t *uvm_copy(pte_t *pgdir, uint32_t text_size){
 
     kvm_init(pgd);
 
-    debug_printf("uvm_copy: copy pgdir 0x%x -> 0x%x, text_size: %d\n",pgdir, pgd, text_size);
+    debug_printf("uvm_copy: copy pgdir 0x%x -> 0x%x, size: %d\n",pgdir, pgd, text_size);
 
     for (i = 0; i < USER_STACK_SIZE + text_size; i += PAGE_SIZE){
         if(!vmm_get_mapping(pgdir, USER_BASE + i, &pa))
@@ -169,7 +169,7 @@ pde_t *uvm_copy_thread(pte_t *pgdir, uint32_t text_size){
 
     kvm_init(pgd);
 
-    debug_printf("uvm_copy thread: copy pgdir 0x%x -> 0x%x, text_size: %d\n",pgdir, pgd, text_size);
+    debug_printf("uvm_copy thread: copy pgdir 0x%x -> 0x%x, size: %d\n",pgdir, pgd, text_size);
 
     for (i = 0; i < USER_STACK_SIZE; i += PAGE_SIZE){
         if(!vmm_get_mapping(pgdir, USER_BASE + i, &pa))
