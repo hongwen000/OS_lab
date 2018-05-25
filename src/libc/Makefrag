@@ -1,0 +1,6 @@
+$(build_dir)/libc/%.o: libc/%.cpp
+	@mkdir -p $(@D)
+	$(CXX) $(CXXFLAGS) -I libc/sys -I libc -I kernel -c $< -o $@
+$(build_dir)/libc/%.o: libc/%.S
+	@mkdir -p $(@D)
+	$(AS) $(ASELF) $< -o $@

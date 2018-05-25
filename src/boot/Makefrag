@@ -1,0 +1,3 @@
+$(build_dir)/boot/%.bin: boot/%.asm
+	@mkdir -p $(@D)
+	$(AS) $(ASBIN) $< -o $@
