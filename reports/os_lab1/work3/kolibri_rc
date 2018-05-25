@@ -1,0 +1,27 @@
+###############################################################
+# Configuration file for Bochs
+###############################################################
+
+# how much memory the emulated machine will have
+megs: 128
+
+# filename of ROM images
+romimage: file=/usr/local/Cellar/bochs/2.6.9_1/share/bochs/BIOS-bochs-latest
+vgaromimage: file=/usr/local/Cellar/bochs/2.6.9_1/share/bochs/VGABIOS-lgpl-latest
+vga: extension=vbe, update_freq=25, realtime=1
+
+# what disk images will be used
+floppya: 1_44=kolibri.img, status=inserted
+
+# choose the boot disk.
+boot: floppy
+
+# where do we send log messages?
+# log: bochsout.txt
+
+# disable the mouse
+mouse: enabled=1
+
+cpuid: level=6
+# enable key mapping, using US layout as default.
+keyboard: keymap=/usr/local/Cellar/bochs/2.6.9_1/share/bochs/keymaps/sdl2-pc-us.map
