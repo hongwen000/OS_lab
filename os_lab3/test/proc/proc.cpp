@@ -187,16 +187,20 @@ int sys_do_wait(){
     PCB* pp;
 
     debug_puts("wait: waiting...\n");
-    for (;;){
+    for (;;)
+    {
         havekids = 0;
-        for (pp = ptable; pp <= &ptable[MAX_PROC]; pp++){
-            if (pp->parent != current_proc){
+        for (pp = ptable; pp <= &ptable[MAX_PROC]; pp++)
+        {
+            if (pp->parent != current_proc)
+            {
                 continue;
             }
 
             havekids = 1;
 
-            if (pp->state == P_ZOMBIE){
+            if (pp->state == P_ZOMBIE)
+            {
                 debug_printf("wait: recycle proc `%s`(PID: %d)\n", pp->name, pp->pid);
                 // can be clear
                 pid = pp->pid;
@@ -216,7 +220,8 @@ int sys_do_wait(){
             }
         }
 
-        if (!havekids || current_proc->killed){
+        if (!havekids || current_proc->killed)
+        {
             return -1;
         }
 
