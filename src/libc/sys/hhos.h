@@ -145,7 +145,67 @@ static inline uint32_t exec(uint32_t n)
     "push $0\n\t"
     "int $0x98\n\t"
     "movl %%eax, %0\n\t"
-    "add %%esp, 4"
+    "add $8, %%esp"
+    :"=r"(ret)
+    :"r"(n)
+    :"%eax", "%ebx", "%ecx"
+    );
+    return ret;
+}
+static inline int p(int n)
+{
+    int ret;
+    asm volatile(
+    "movb $9, %%ah\n\t"
+    "push %1\n\t"
+    "int $0x98\n\t"
+    "movl %%eax, %0\n\t"
+    "add $4, %%esp"
+    :"=r"(ret)
+    :"r"(n)
+    :"%eax", "%ebx", "%ecx"
+    );
+    return ret;
+}
+static inline int v(int n)
+{
+    int ret;
+    asm volatile(
+    "movb $10, %%ah\n\t"
+    "push %1\n\t"
+    "int $0x98\n\t"
+    "movl %%eax, %0\n\t"
+    "add $4, %%esp"
+    :"=r"(ret)
+    :"r"(n)
+    :"%eax", "%ebx", "%ecx"
+    );
+    return ret;
+}
+static inline int getsem(int n)
+{
+    int ret;
+    asm volatile(
+    "movb $11, %%ah\n\t"
+    "push %1\n\t"
+    "int $0x98\n\t"
+    "movl %%eax, %0\n\t"
+    "add $4, %%esp"
+    :"=r"(ret)
+    :"r"(n)
+    :"%eax", "%ebx", "%ecx"
+    );
+    return ret;
+}
+static inline int freesem(int n)
+{
+    int ret;
+    asm volatile(
+    "movb $12, %%ah\n\t"
+    "push %1\n\t"
+    "int $0x98\n\t"
+    "movl %%eax, %0\n\t"
+    "add $4, %%esp"
     :"=r"(ret)
     :"r"(n)
     :"%eax", "%ebx", "%ecx"

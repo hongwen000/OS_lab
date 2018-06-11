@@ -98,6 +98,22 @@ int sys_exec(uint32_t n)
     return sys_do_exec(n);
 }
 
+int sys_p(int sem_id) {
+    return sys_do_p(sem_id);
+}
+
+int sys_v(int sem_id) {
+    return sys_do_v(sem_id);
+}
+
+int sys_getsem(int v) {
+    return sys_do_getsem(v);
+}
+
+int sys_freesem(int sem_id) {
+    return sys_do_freesem(sem_id);
+}
+
 //int sys_uptime(){
 //    return timer_ticks;
 //}
