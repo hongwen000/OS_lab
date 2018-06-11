@@ -177,7 +177,7 @@ void sys_outw(uint16_t port, uint16_t data)
 }
 
 void sys_dbg_bochs_putc(char c){
-    sys_outb(0xe9, (uint8_t)c);
+//    sys_outb(0xe9, (uint8_t)c);
 }
 
 

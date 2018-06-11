@@ -38,6 +38,7 @@ static PCB *proc_alloc(){
 
             /* alloc kernstack */
             pp->kern_stack = (char *)ram_alloc();
+            debug_puts("proc_alloc: that is used as kernel stack\n");
             sp = pp->kern_stack + PAGE_SIZE;
 
             sp -= sizeof(*pp->tf);
@@ -146,26 +147,20 @@ void sched(){
     sys_context_switch(&current_proc->context, cpu_context);
 }
 
-void sys_do_sleep(void *sleep_chain){
+void sys_do_sleep(void *sleep_event){
     if(current_proc == nullptr)
         debug_puts("sleep: no proc\n");
 
     debug_printf("sleep: proc `%s`(PID: %d) is going to sleep...\n", current_proc->name, current_proc->pid);
-    /* go to sleep
-     * NB: This operation MUST be atomic
-     * 这是一处确定有死锁风险的代码，当 sleep_chain 赋值后，如果父进程的 wait 马上执行，
-     * 那么 wait 将因为找不到任何需要唤醒的进程而退出，此后本进程才进入 P_SLEEPING 状态。
-     * 只是这时已经没有进程能够唤醒它了。
-     */
     asm volatile("cli");
-    current_proc->sleep_chain = sleep_chain;
+    current_proc->sleep_event = sleep_event;
     current_proc->state = P_SLEEPING;
     asm volatile("sti");
 
     sched();
 
     // wake up
-    current_proc->sleep_chain = nullptr;
+    current_proc->sleep_event = nullptr;
 
     debug_printf("sleep: proc `%s`(PID: %d)  wakeup...\n", current_proc->name, current_proc->pid);
 
@@ -173,12 +168,33 @@ void sys_do_sleep(void *sleep_chain){
     pic_init();
 }
 
-void wakeup(void *sleep_chain){
+void wakeup(void *sleep_event){
     PCB *pp;
 
     for (pp = ptable; pp < &ptable[MAX_PROC]; pp++){
-        if (pp->state == P_SLEEPING && pp->sleep_chain == sleep_chain){
+        if (pp->state == P_SLEEPING && pp->sleep_event == sleep_event){
             pp->state = P_RUNNABLE;
+        }
+    }
+}
+void wakeup_one(void *sleep_event, PCB* begin){
+    PCB *pp = begin;
+
+    auto n = MAX_PROC;
+    while(n--)
+    {
+        if(pp->state == P_SLEEPING && pp->sleep_event == sleep_event)
+        {
+            pp->state = P_RUNNABLE;
+            break;
+        }
+        if(pp - ptable == MAX_PROC)
+        {
+            pp = ptable;
+        }
+        else
+        {
+            pp++;
         }
     }
 }

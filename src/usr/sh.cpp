@@ -234,7 +234,7 @@ void sh::run() {
     printf("%s", prompt);
     while(true)
     {
-        printf("");
+//        printf("");
         unsigned char in = getchar();
         if (in == KEY_UP)
         {
