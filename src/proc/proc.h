@@ -62,7 +62,7 @@ struct PCB {
     PCB *parent;         // Parent process
     int_frame *tf;        // Trap frame for current syscall
     context_t *context;     // swtch() here to run process
-    void *sleep_chain;                  // If non-zero, sleeping on sleep_chain
+    void *sleep_event;                  // If non-zero, sleeping on sleep_event
     int killed;                  // If non-zero, have been killed
 //    struct file *ofile[NOFILE];  // Open files
     struct inode *cwd;           // Current directory
@@ -77,8 +77,8 @@ int sys_do_fork();
 int sys_do_clone();
 void sys_do_exit();
 int sys_do_wait();
-void wakeup(void *sleep_chain);
-void sys_do_sleep(void *sleep_chain);
+void wakeup(void *sleep_event);
+void sys_do_sleep(void *sleep_event);
 void sched();
 
 #endif //HHOS_PROC_H

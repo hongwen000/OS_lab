@@ -52,8 +52,6 @@
 /* size of page talbe entry */
 #define PTE_SIZE (PAGE_SIZE/sizeof(uint32_t))
 
-/* 128个页表 每个PAGE_SIZE（4M）大小,
- * 4M * 128 = 512M */
 #define PTE_COUNT 1024
 
 /* export page dirctroy */

@@ -33,7 +33,7 @@ static inline void sys_outw(uint16_t port, uint16_t data)
         sys_outw(0x8A00,0x8A00);    \
         sys_outw(0x8A00,0x08AE0);
 static inline void sys_dbg_bochs_putc(char c){
-    sys_outb(0xe9, (uint8_t)c);
+//    sys_outb(0xe9, (uint8_t)c);
 }
 static inline int debug_putchar( int ch )
 {
@@ -222,16 +222,16 @@ static inline int debug_sprintf( char *buffer, const char *format, ... )
 }
 static char debug_printbuf[80*25];
 //TODO 关于这个返回值
-static inline int debug_printf( const char* format, ... )
-{
-    int ret;
-    va_list va;
-    va_start(va, format);
-    ret = debug_vsprintf(debug_printbuf, format, va);
-    va_end(va);
-    debug_puts(debug_printbuf);
-    return ret;
-}
+//static inline int debug_printf( const char* format, ... )
+//{
+//    int ret;
+//    va_list va;
+//    va_start(va, format);
+//    ret = debug_vsprintf(debug_printbuf, format, va);
+//    va_end(va);
+//    debug_puts(debug_printbuf);
+//    return ret;
+//}
 #endif
 
 unsigned char kb_buf[KB_BUF_LEN];
@@ -377,40 +377,40 @@ void kb_handler() {
   if((st & 0x01) == 0)
     return;
   data = sys_inb(0x60);
-  debug_printf("kb_handler: scancode %u\n", data);
+//  debug_printf("kb_handler: scancode %u\n", data);
   if(data == 0xE0){
     //如果是第一次发送过来的扩展键标志，记录并返回
     ctrl_shift_status |= E0ESC;
-      debug_printf("kb_handler: .1 ctrl_shift_status %u\n", ctrl_shift_status);
+//      debug_printf("kb_handler: .1 ctrl_shift_status %u\n", ctrl_shift_status);
     return;
   }
   else if(data & 0x80){
     //可能是组合键的断码，需要特别考虑并清除该组合键状态
     data = (ctrl_shift_status & E0ESC ? data : data & 0x7F);
     ctrl_shift_status &= ~(combine_key[data] | E0ESC);
-      debug_printf("kb_handler: .2 ctrl_shift_status %u\n", ctrl_shift_status);
+//      debug_printf("kb_handler: .2 ctrl_shift_status %u\n", ctrl_shift_status);
     return;
   }
   else if(ctrl_shift_status & E0ESC){
     //进入这里说明上次按键是扩展键标志
     data |= 0x80;
     ctrl_shift_status &= ~E0ESC;//扩展键低位读取到结束，清除扩展位标志
-      debug_printf("kb_handler: .3 ctrl_shift_status %u\n", ctrl_shift_status);
+//      debug_printf("kb_handler: .3 ctrl_shift_status %u\n", ctrl_shift_status);
   }
   //添加组合键状态
   ctrl_shift_status |= combine_key[data];
-    debug_printf("kb_handler: .4 ctrl_shift_status %u\n", ctrl_shift_status);
+//    debug_printf("kb_handler: .4 ctrl_shift_status %u\n", ctrl_shift_status);
   //决定状态键状态(使用异或来回切换)
   ctrl_shift_status ^= togglecode[data];
-    debug_printf("kb_handler: .5 ctrl_shift_status %u\n", ctrl_shift_status);
+//    debug_printf("kb_handler: .5 ctrl_shift_status %u\n", ctrl_shift_status);
   c = charcode[ctrl_shift_status & (CTRL | SHIFT)][data];
-  debug_printf("kb_handler: charcode[%u] is at 0x%x\n", ctrl_shift_status & (CTRL | SHIFT),&charcode[ctrl_shift_status & (CTRL | SHIFT)]);
+//  debug_printf("kb_handler: charcode[%u] is at 0x%x\n", ctrl_shift_status & (CTRL | SHIFT),&charcode[ctrl_shift_status & (CTRL | SHIFT)]);
   if(ctrl_shift_status & CAPSLOCK){
     if('a' <= c && c <= 'z')
       c += 'A' - 'a';
     else if('A' <= c && c <= 'Z')
       c += 'a' - 'A';
   }
-  debug_printf("kb_handler: got char %c (%d)", c, (int)c);
+//  debug_printf("kb_handler: got char %c (%d)", c, (int)c);
   kb_buf_in(c);
 }

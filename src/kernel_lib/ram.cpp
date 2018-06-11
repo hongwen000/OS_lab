@@ -51,7 +51,7 @@ uint32_t ram_alloc()
         bochs_break();
         return 0;
     }
-    debug_printf("Give you physical memory %x\n", pm_node[pm_node_size - 1]);
+    debug_printf("ram_alloc: give you physical memory %x\n", pm_node[pm_node_size - 1]);
     memset((char*)pm_node[pm_node_size - 1], 0, PAGE_SIZE);
     return pm_node[--pm_node_size];
 }
