@@ -24,3 +24,4 @@ $(build_dir)/usr/%.bin.elf: $(build_dir)/usr/%.o $(build_dir)/libc/cstart.o
 	$(LD) $(LDFLAGS) -Tusr/linker.ld $(build_dir)/libc/cstart.o $< -lc -o $@
 	$(OBJDUMP) -S $@ > $@.dump
 	$(STRIP) $@
+

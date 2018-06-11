@@ -87,7 +87,7 @@ void blue_screen(int_frame *r)
 extern "C" int sys_getchar()
 {
     unsigned char ch = kb_buf_out();
-    debug_printf("DEBUG: sys_getchar got %c (%d)\n", ch, (int) ch);
+//    debug_printf("DEBUG: sys_getchar got %c (%d)\n", ch, (int) ch);
     return ch;
 }
 
@@ -177,7 +177,7 @@ void sys_outw(uint16_t port, uint16_t data)
 }
 
 void sys_dbg_bochs_putc(char c){
-//    sys_outb(0xe9, (uint8_t)c);
+    sys_outb(0xe9, (uint8_t)c);
 }
 
 
@@ -301,6 +301,26 @@ void system_call_c(int_frame* tf)
         debug_printf("sys_exec: Exec program in block %d\n", blk);
         tf->eax = sys_exec(blk);
     }
+    else if (ah == 9)
+    {
+        int arg = *(uint32_t*)(current_proc->tf->user_esp+4);
+        tf->eax = sys_p(arg);
+    }
+    else if (ah == 10)
+    {
+        int arg = *(uint32_t*)(current_proc->tf->user_esp+4);
+        tf->eax = sys_v(arg);
+    }
+    else if (ah == 11)
+    {
+        int arg = *(uint32_t*)(current_proc->tf->user_esp+4);
+        tf->eax = sys_getsem(arg);
+    }
+    else if (ah == 12)
+    {
+        int arg = *(uint32_t*)(current_proc->tf->user_esp+4);
+        tf->eax = sys_freesem(arg);
+    }
     else if (ah == 28)
     {
         sys_clear_screen();
@@ -326,5 +346,6 @@ void interrupt_timer_c()
         debug_printf("timer_handler: timer alive, trick: %d\n", HHOS_timer_ticks);
     }
 
-    sched();
+    if(HHOS_timer_ticks % 50 == 0)
+        sched();
 }

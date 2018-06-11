@@ -177,29 +177,24 @@ private:
 
 extern "C" void main()
 {
-//    char infix[SIZE];
-//    printf("Basic calculate 1.1\n");
-//    printf("Input q to exit\n");
-//    printf("I\n");
-//    putchar('I');
-//    printf("%s\n",asctime(gmtime(time(nullptr))));
-    puts("In User Prog\n");
-    while (1);
-//    while (true)
-//    {
-//        gets(infix);
-//        if (strcmp(infix, "q") == 0)
-//            break;
-//        calc c(infix);
-//        int errorn = c.get_err();
-//        if(errorn != 0)
-//        {
-//            printf("Wrong input at column %d\n", errorn);
-//        }
-//        else
-//        {
-//            printf("%d\n", c.get_result());
-//        }
-//    }
+    char infix[SIZE];
+    printf("Basic calculate 1.1\n");
+    printf("Input q to exit\n");
+    while (true)
+    {
+        gets(infix);
+        if (strcmp(infix, "q") == 0)
+            break;
+        calc c(infix);
+        int errorn = c.get_err();
+        if(errorn != 0)
+        {
+            printf("Wrong input at column %d\n", errorn);
+        }
+        else
+        {
+            printf("%d\n", c.get_result());
+        }
+    }
 }
 

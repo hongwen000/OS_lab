@@ -177,27 +177,14 @@ void wakeup(void *sleep_event){
         }
     }
 }
-void wakeup_one(void *sleep_event, PCB* begin){
-    PCB *pp = begin;
 
-    auto n = MAX_PROC;
-    while(n--)
+void wakeup_one(void *sleep_event, PCB* pp){
+    if(pp->state == P_SLEEPING && pp->sleep_event == sleep_event)
     {
-        if(pp->state == P_SLEEPING && pp->sleep_event == sleep_event)
-        {
-            pp->state = P_RUNNABLE;
-            break;
-        }
-        if(pp - ptable == MAX_PROC)
-        {
-            pp = ptable;
-        }
-        else
-        {
-            pp++;
-        }
+        pp->state = P_RUNNABLE;
     }
 }
+
 int sys_do_wait(){
     int havekids, pid;
     PCB* pp;

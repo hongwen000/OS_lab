@@ -43,9 +43,9 @@ private:
     char histroy[history_term][buf_size];
     char record_buf[512] =
             "11\n"
-            "bc\n"
+            "sh\n"
             "192\n"
-            "sleep\n"
+            "bc\n"
             "256\n"
             "test\n"
             "320\n"

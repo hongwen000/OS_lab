@@ -68,6 +68,7 @@ kernel_obj = $(build_dir)/kernel/kernel_start.o \
 			 $(build_dir)/proc/proc.o \
              $(build_dir)/proc/sys_proc.o \
              $(build_dir)/proc/exec.o \
+             $(build_dir)/proc/sem.o \
              $(build_dir)/proc/init.o \
 
 
@@ -163,7 +164,7 @@ include usr/Makefrag
 user_bin = $(build_dir)/usr/help.bin   \
            $(build_dir)/usr/record.bin \
            $(build_dir)/usr/sh.bin.elf \
-           $(build_dir)/usr/sleep.bin.elf  \
+           $(build_dir)/usr/bc.bin.elf  \
            $(build_dir)/usr/test.bin.elf \
            $(build_dir)/usr/usr1.bin.elf \
            $(build_dir)/usr/usr2.bin.elf \

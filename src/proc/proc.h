@@ -67,6 +67,7 @@ struct PCB {
 //    struct file *ofile[NOFILE];  // Open files
     struct inode *cwd;           // Current directory
     char name[16];               // Process name (debugging)
+    PCB* next;
 };
 
 extern PCB *current_proc;
@@ -78,6 +79,7 @@ int sys_do_clone();
 void sys_do_exit();
 int sys_do_wait();
 void wakeup(void *sleep_event);
+void wakeup_one(void *sleep_event, PCB* pp);
 void sys_do_sleep(void *sleep_event);
 void sched();
 
