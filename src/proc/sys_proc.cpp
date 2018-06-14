@@ -4,6 +4,8 @@
 
 #include "sys_proc.h"
 #include "../kernel_lib/debug_printf.h"
+#include "../kernel_lib/page.h"
+#include "../kernel_lib/ram.h"
 
 int sys_fork(){
     return sys_do_fork();
@@ -99,6 +101,7 @@ int sys_exec(uint32_t n)
 }
 
 int sys_p(int sem_id) {
+//    debug_printf("sys_p: sem_id = %d\n", sem_id);
     return sys_do_p(sem_id);
 }
 
@@ -112,6 +115,26 @@ int sys_getsem(int v) {
 
 int sys_freesem(int sem_id) {
     return sys_do_freesem(sem_id);
+}
+
+void *sys_sbrk(int len) {
+    auto old_size = USER_TEXT_BASE + current_proc->text_size;
+    auto new_size = USER_TEXT_BASE + PAGE_ALIGN_UP(current_proc->text_size + len);
+    debug_printf("sys_sbrk: extending memory from 0x%x to 0x%x\n", old_size, new_size);
+    uvm_alloc(current_proc->pgdir, old_size, new_size);
+    current_proc->text_size = PAGE_ALIGN_UP(current_proc->text_size + len);
+    return (void*)old_size;
+}
+
+int sys_munmap(void *addr, size_t length) {
+    for(uint32_t p = PAGE_ALIGN_DOWN((uint32_t)addr); p < PAGE_ALIGN_UP((uint32_t)addr+ length); p += PAGE_SIZE)
+    {
+        uint32_t pa;
+        vmm_get_mapping(current_proc->pgdir, (uint32_t)addr, &pa);
+        debug_printf("sys_munmap: free pa 0x%x va 0x%x\n", p, pa);
+        ram_free(pa);
+    }
+    return 0;
 }
 
 //int sys_uptime(){

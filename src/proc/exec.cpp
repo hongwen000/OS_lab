@@ -135,6 +135,7 @@ int sys_do_exec(uint32_t n){
     current_proc->pgdir = pgdir;
     debug_printf("exec: top is at 0x%x\n", top);
     current_proc->text_size = top - USER_TEXT_BASE;
+    current_proc->brk = (void*)top;
     current_proc->tf->eip = eh.entry;
     current_proc->tf->user_esp = sp;
     uvm_switch(current_proc);

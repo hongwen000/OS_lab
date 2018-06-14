@@ -116,7 +116,13 @@ libc_obj = $(build_dir)/libc/string.o \
 		   $(build_dir)/libc/ctype.o \
 		   $(build_dir)/libc/stdlib.o \
 		   $(build_dir)/libc/stdio.o \
-		   $(build_dir)/libc/time.o
+		   $(build_dir)/libc/time.o \
+		   $(build_dir)/libc/sys/hhos.o \
+		   $(build_dir)/libc/mutex.o \
+		   $(build_dir)/libc/alloc.o \
+		   $(build_dir)/libc/new.o \
+		   $(build_dir)/libc/list.o \
+
 
 
 libc = $(build_dir)/libc/libc.a

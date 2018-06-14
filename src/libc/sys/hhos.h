@@ -212,5 +212,42 @@ static inline int freesem(int n)
     );
     return ret;
 }
+
+static inline
+void * sbrk(int incr)
+{
+    void* ret;
+    asm volatile(
+    "movb $13, %%ah\n\t"
+    "push %1\n\t"
+    "int $0x98\n\t"
+    "movl %%eax, %0\n\t"
+    "add $4, %%esp"
+    :"=r"(ret)
+    :"r"(incr)
+    :"%eax", "%ebx", "%ecx"
+    );
+    return ret;
+}
+
+
+static inline
+int munmap(void *addr, size_t length)
+{
+    int ret;
+    asm volatile(
+    "movb $14, %%ah\n\t"
+    "push %2\n\t"
+    "push %1\n\t"
+    "int $0x98\n\t"
+    "movl %%eax, %0\n\t"
+    "add $8, %%esp"
+    :"=r"(ret)
+    :"r"(addr), "r"(length)
+    :"%eax", "%ebx", "%ecx"
+    );
+    return ret;
+}
+
 #endif
 

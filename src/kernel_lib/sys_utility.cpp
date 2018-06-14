@@ -303,23 +303,36 @@ void system_call_c(int_frame* tf)
     }
     else if (ah == 9)
     {
-        int arg = *(uint32_t*)(current_proc->tf->user_esp+4);
+        int arg = *(uint32_t*)(current_proc->tf->user_esp+0);
         tf->eax = sys_p(arg);
     }
     else if (ah == 10)
     {
-        int arg = *(uint32_t*)(current_proc->tf->user_esp+4);
+        int arg = *(uint32_t*)(current_proc->tf->user_esp+0);
         tf->eax = sys_v(arg);
     }
     else if (ah == 11)
     {
-        int arg = *(uint32_t*)(current_proc->tf->user_esp+4);
+        int arg = *(uint32_t*)(current_proc->tf->user_esp+0);
         tf->eax = sys_getsem(arg);
     }
     else if (ah == 12)
     {
-        int arg = *(uint32_t*)(current_proc->tf->user_esp+4);
+        int arg = *(uint32_t*)(current_proc->tf->user_esp+0);
         tf->eax = sys_freesem(arg);
+    }
+    else if (ah == 13)
+    {
+        size_t arg = *(size_t *)(current_proc->tf->user_esp+0);
+        tf->eax = (uint32_t)sys_sbrk(arg);
+    }
+    else if (ah == 14)
+    {
+        void* addr = *(void **)(current_proc->tf->user_esp+0);
+        size_t length = *(size_t *)(current_proc->tf->user_esp+4);
+        debug_printf("sys_munmap: +0 : 0x%x = 0x%x\n", (current_proc->tf->user_esp+0), *(uint32_t *)(current_proc->tf->user_esp+0));
+        debug_printf("sys_munmap: +4 : 0x%x = 0x%x\n", (current_proc->tf->user_esp+4), *(uint32_t *)(current_proc->tf->user_esp+4));
+        tf->eax = sys_munmap(addr, length);
     }
     else if (ah == 28)
     {
