@@ -78,12 +78,12 @@ void vmm_map(pde_t *pgdir, uint32_t va, uint32_t pa, uint32_t flags){
 int vmm_get_mapping(pde_t *pgdir, uint32_t va, uint32_t *pa){
     uint32_t pde_idx = PDE_INDEX(va);
     uint32_t pte_idx = PTE_INDEX(va);
-    debug_printf("pde_idx: %u, pte_idx: %u\n", pde_idx, pte_idx);
+    debug_printf("vmm_get_mapping: va 0x%x, pde_idx: %u, pte_idx: %u\n", va, pde_idx, pte_idx);
 
     pte_t *pte = (pte_t *)(pgdir[pde_idx] & PAGE_MASK);
-    debug_printf("pte* = 0x%x\n", pte);
+    debug_printf("vmm_get_mapping: pte* = 0x%x\n", pte);
     if (!pte){
-        debug_printf("get_mapping: virtual address 0x%x is unmapped\n", va);
+        debug_printf("vmm_get_mapping: virtual address 0x%x is unmapped\n", va);
         return 0;
     }
     if (pte[pte_idx] != 0 && (pte[pte_idx] & PTE_P)){
@@ -220,7 +220,7 @@ int uvm_alloc(pte_t *pgdir, uint32_t old_sz, uint32_t new_sz){
     uint32_t mem;
     uint32_t start;
 
-    debug_printf("uvm_alloc: pgdir: 0x%x 0x%x -> 0x%x\n", pgdir, old_sz, new_sz);
+    debug_printf("uvm_alloc: pgdir: 0x%x, old_size 0x%x -> new_size 0x%x\n", pgdir, old_sz, new_sz);
 
     if (new_sz < old_sz){
         return old_sz;

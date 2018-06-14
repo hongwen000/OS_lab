@@ -27,6 +27,8 @@ using size_t = unsigned long;
 using uint8_t = unsigned char;
 using uint16_t = unsigned short;
 using uint32_t = unsigned int;
+using uintptr_t = unsigned int;
+using intptr_t = int;
 
 
 enum VGA_COLOR{

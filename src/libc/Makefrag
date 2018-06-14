@@ -4,3 +4,4 @@ $(build_dir)/libc/%.o: libc/%.cpp
 $(build_dir)/libc/%.o: libc/%.S
 	@mkdir -p $(@D)
 	$(AS) $(ASELF) $< -o $@
+

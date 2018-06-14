@@ -3,6 +3,7 @@
 //
 #include "../include/defines.h"
 #include "proc.h"
+#include "../kernel_lib/debug_printf.h"
 
 #define NSEM 100
 struct Sem {
@@ -13,7 +14,9 @@ struct Sem {
 Sem sem[NSEM];
 
 int sys_do_p(int sem_id) {
-    --sem[sem_id].v;
+    __sync_fetch_and_sub(&sem[sem_id].v, 1);
+//    --sem[sem_id].v;
+    debug_printf("sys_do_p: sem[%d] = %d\n", sem_id, sem[sem_id].v);
     if(sem[sem_id].v < 0)
     {
         current_proc->next = sem[sem_id].head;
@@ -24,7 +27,9 @@ int sys_do_p(int sem_id) {
 }
 
 int sys_do_v(int sem_id) {
-    ++sem[sem_id].v;
+    __sync_fetch_and_add(&sem[sem_id].v, 1);
+//    ++sem[sem_id].v;
+    debug_printf("sys_do_v: sem[%d] = %d\n", sem_id, sem[sem_id].v);
     if(sem[sem_id].v <= 0)
     {
         wakeup_one(&sem[sem_id], sem[sem_id].head);
@@ -42,6 +47,7 @@ int sys_do_getsem(int v) {
         {
             sem[i].v = v;
             sem[i].used = true;
+            debug_printf("sys_do_getsem: give you sem[%d]\n", i);
             return i;
         }
     }

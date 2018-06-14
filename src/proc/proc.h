@@ -68,6 +68,7 @@ struct PCB {
     struct inode *cwd;           // Current directory
     char name[16];               // Process name (debugging)
     PCB* next;
+    void* brk;
 };
 
 extern PCB *current_proc;

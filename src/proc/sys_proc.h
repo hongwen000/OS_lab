@@ -20,6 +20,7 @@ int sys_p(int sem_id);
 int sys_v(int sem_id);
 int sys_getsem(int v);
 int sys_freesem(int sem_id);
-
+void* sys_sbrk(int len);
+int sys_munmap(void* addr, size_t length);
 
 #endif //TEST_SYS_PROC_H
