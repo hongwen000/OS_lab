@@ -116,3 +116,16 @@ void list::print(void) const {
 int list::size() const {
     return _size;
 }
+
+void list::clear(void) {
+    if (this->head != nullptr) {
+      node* p = this->head;
+      while (p != nullptr) {
+        node* temp = p;
+        p = p->next;
+        delete temp;
+      }
+      this->head = nullptr;
+    }
+    this->_size = 0;
+}

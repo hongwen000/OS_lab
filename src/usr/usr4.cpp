@@ -2,16 +2,14 @@
 #include "../libc/list.h"
 #include "../libc/stdio.h"
 
-int pos[] = {1,2,0,1,2,3,4,5,6,7};
-int data[] = {1,1,1,2,3,4,5,6,7,8};
 int del[] = {5,8,3,2,1};
 extern "C" void main() {
     list li;
 
-    int n = 10;
+    int n = 8;
 
     for (int i = 0; i < n; i++) {
-        li.insert(pos[i], data[i]);
+        li.insert(0, n - i);
     }
 
     li.print();
@@ -22,12 +20,14 @@ extern "C" void main() {
 
     li = li3 = li2 = li;
 
+    li2.insert(0, -2);
+    li3.insert(0, -3);
     li.print();
-    printf("size: %d\n", li.size());
+    printf(" size: %d\n", li.size());
     li2.print();
-    printf("size: %d\n", li2.size());
+    printf(" size: %d\n", li2.size());
     li3.print();
-    printf("size: %d\n", li3.size());
+    printf(" size: %d\n", li3.size());
 
     int m = 5;
 
