@@ -7,39 +7,103 @@
 #include "../libc/stdio.h"
 #include "../libc/ctype.h"
 #include "../kernel_lib/sys_utility.h"
+#include "../libc/string.h"
 
-char str[80] = "129djwqhdsajd128dw9i39ie93i8494urjoiew98kdkd";
-int LetterNr = 0;
-void CountLetter()
+int reader_count = 0;
+int reader_sem;
+int writer_sem;
+char buf[21];
+int ptr = 0;
+void reader(int id)
 {
-    for(int i = 0; i < 80; ++i)
+    bool stop = false;
+    while (!stop)
     {
-        if(isalpha(str[i]))
-            ++LetterNr;
+        p(reader_sem);
+        reader_count++;
+        printf("Reader %d entered, %d readers in total\n", id, reader_count);
+        if(reader_count == 1)
+            p(writer_sem);
+        v(reader_sem);
+        printf("Reader %d start reading: %s\n", id, buf);
+        if(strlen(buf) >= 10)
+            stop = true;
+        p(reader_sem);
+        reader_count--;
+        printf("Reader %d left, %d readers stays\n", id, reader_count);
+        if(reader_count == 0)
+            v(writer_sem);
+        v(reader_sem);
     }
 }
-
-extern "C" void main() {
-    int pid;
-    pid = clone();
-    if (pid == -1)
-        printf("error in fork !");
-    if (pid) {
-        wait();
-        printf("LetterNr = %d\n", LetterNr);
-    }
-    else {
-        CountLetter();
-        exit();
-    }
-}
-
-void sys_outw(uint16_t port, uint16_t data)
+extern "C" void main()
 {
-    asm volatile ("outw %0, %1"
-    :
-    :"a"(data), "Nd"(port));
+    reader_sem = getsem(1);
+    writer_sem = getsem(1);
+
+    if(clone())
+    {
+        reader(1);
+        wait();
+    }
+    else if(clone())
+    {
+        reader(2);
+        wait();
+    }
+    else if(clone())
+    {
+        reader(3);
+        wait();
+    }
+    else
+    {
+        while (ptr < 10)
+        {
+            p(writer_sem);
+            buf[ptr] = 'A';
+            int n = 100000;
+            while (n--);
+            printf("Writer: wrote 'A' to buffer\n");
+            ++ptr;
+            v(writer_sem);
+        }
+        printf("Writer finished his work\n");
+        wait();
+    }
 }
+//char str[80] = "129djwqhdsajd128dw9i39ie93i8494urjoiew98kdkd";
+//int LetterNr = 0;
+//void CountLetter()
+//{
+//    for(int i = 0; i < 80; ++i)
+//    {
+//        if(isalpha(str[i]))
+//            ++LetterNr;
+//    }
+//}
+//
+//extern "C" void main() {
+//    int pid;
+//    pid = clone();
+//    if (pid == -1)
+//        printf("error in fork !");
+//    if (pid) {
+//        wait();
+//        printf("LetterNr = %d\n", LetterNr);
+//    }
+//    else {
+//        CountLetter();
+//        exit();
+//    }
+//}
+//
+//void sys_outw(uint16_t port, uint16_t data)
+//{
+//    asm volatile ("outw %0, %1"
+//    :
+//    :"a"(data), "Nd"(port));
+//}
 //extern "C" void main()
 //{
 ////    char infix[SIZE];

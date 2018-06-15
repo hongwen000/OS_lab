@@ -7,6 +7,8 @@
 #include "../libc/string.h"
 #include "../libc/stdlib.h"
 #include "../libc/ctype.h"
+
+#define DEBUG_PRINTF
 void real_world_cls()
 {
     sys_dbg_bochs_putc('\033');
@@ -35,6 +37,7 @@ static int debug_putchar( int ch )
 //    return ch;
 //}
 
+#ifdef DEBUG_PRINTF
 int debug_puts(const char* string)
 {
     auto len = strlen(string);
@@ -44,6 +47,13 @@ int debug_puts(const char* string)
     }
     return 0;
 }
+#else
+int debug_puts(const char* string)
+{
+    return 0;
+}
+#endif
+
 static int debug_vsprintf( char* buffer, const char* format, va_list vlist )
 {
     auto len_fmt = strlen(format);
@@ -140,6 +150,7 @@ static int debug_sprintf( char *buffer, const char *format, ... )
 }
 static char debug_printbuf[80*25];
 //TODO 关于这个返回值
+#ifdef DEBUG_PRINTF
 int debug_printf( const char* format, ... )
 {
     int ret;
@@ -150,6 +161,15 @@ int debug_printf( const char* format, ... )
     debug_puts(debug_printbuf);
     return ret;
 }
+#else
+int debug_printf( const char* format, ... )
+{
+    return 0;
+}
+#endif
+
+
+
 static int tty_putchar(tty& dbg_tty, int ch )
 {
     sys_dbg_bochs_putc(ch);
