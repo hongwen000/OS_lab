@@ -14,6 +14,7 @@ void real_world_cls()
     sys_dbg_bochs_putc('\033');
     sys_dbg_bochs_putc('c');
 }
+#ifdef COLORIZE_DEBUG_PRINTF
 static int debug_putchar( int ch )
 {
     //echo -e "\e[1;31m This is red text! \e[0m"
@@ -31,6 +32,16 @@ static int debug_putchar( int ch )
     sys_dbg_bochs_putc('m');
     return ch;
 }
+#else
+
+static int debug_putchar( int ch )
+{
+    //echo -e "\e[1;31m This is red text! \e[0m"
+    sys_dbg_bochs_putc(ch);
+    return ch;
+}
+
+#endif
 //static int debug_putchar( int ch )
 //{
 //    sys_dbg_bochs_putc(ch);
