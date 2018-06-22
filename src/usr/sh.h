@@ -19,8 +19,9 @@ class sh{
 private:
     static constexpr int buf_size = 128;
     static constexpr int history_term = 10;
-    static constexpr char * prompt = "HHOS> ";
+    static constexpr char * prompt = "HHOS ";
     static constexpr int SUCCESS = 0;
+    static constexpr int FAIL = -1;
     static constexpr char * cmd_list[] = {
             "ls",
             "dir",
@@ -66,7 +67,7 @@ private:
             "asm4\n"
             "832\n";
     char help[512] =
-            "HHOS shell 1.1.0 help\n"
+            "HHOS shell 1.9.0 help\n"
             "Command    Usage\n"
             "ls         list all user programs\n"
             "dir        same to ls\n"
@@ -98,8 +99,8 @@ private:
     void read_help_file();
     int split_input(char* buf);
     int split_batch(char** inputs, int input_cnt);
-
     int bf(const char* Pattern, const char * Text);
+    char pwd[32] = "/";
 
 
 public:

@@ -38,9 +38,11 @@ void ram_init()
         }
         ++pADRS;
     }
+    printf("-----------------------------MEM INFO------------------------------\n");
     printf("0x%x bytes memory Installed\n", HHOS_info.phy_mem);
     printf("Kernel start at: 0x%x, end at0x%x, text_size %ukb\n", &kernstart, &kernend, (&kernend - &kernstart) / 1024);
     printf("%d pages available for allocation (%d kb)\n", pm_node_cnt, pm_node_cnt * 4);
+    printf("-----------------------------MEM INFO END--------------------------\n");
 }
 
 uint32_t ram_alloc()

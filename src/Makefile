@@ -65,6 +65,8 @@ kernel_obj = $(build_dir)/kernel/kernel_start.o \
 			 $(build_dir)/driver/kb.o \
 			 $(build_dir)/driver/ide.o \
 			 $(build_dir)/driver/cmos.o \
+			 $(build_dir)/fs/fat32.o \
+			 $(build_dir)/fs/sys_uio.o \
 			 $(build_dir)/proc/proc.o \
              $(build_dir)/proc/sys_proc.o \
              $(build_dir)/proc/exec.o \
@@ -75,6 +77,7 @@ kernel_obj = $(build_dir)/kernel/kernel_start.o \
 include kernel/Makefrag
 include driver/Makefrag
 include proc/Makefrag
+include fs/Makefrag
 
 -include $(wildcard $(build_dir)/kernel/*.d)
 
@@ -169,20 +172,27 @@ include usr/Makefrag
 
 user_bin = $(build_dir)/usr/help.bin   \
            $(build_dir)/usr/record.bin \
-           $(build_dir)/usr/sh.bin.elf \
-           $(build_dir)/usr/bc.bin.elf  \
-           $(build_dir)/usr/test.bin.elf \
-           $(build_dir)/usr/usr1.bin.elf \
-           $(build_dir)/usr/usr2.bin.elf \
-           $(build_dir)/usr/usr3.bin.elf \
-           $(build_dir)/usr/usr4.bin.elf \
-           $(build_dir)/usr/user1.bin.elf  \
-           $(build_dir)/usr/user2.bin.elf  \
-           $(build_dir)/usr/user3.bin.elf  \
-           $(build_dir)/usr/user4.bin.elf
+           $(build_dir)/usr/sh.elf \
+           $(build_dir)/usr/bc.elf  \
+           $(build_dir)/usr/test.elf \
+           $(build_dir)/usr/usr1.elf \
+           $(build_dir)/usr/usr2.elf \
+           $(build_dir)/usr/usr3.elf \
+           $(build_dir)/usr/usr4.elf \
+           $(build_dir)/usr/test.txt \
+#           $(build_dir)/usr/user1.elf  \
+#           $(build_dir)/usr/user2.elf  \
+#           $(build_dir)/usr/user3.elf  \
+#           $(build_dir)/usr/user4.elf
+
+#write_usr_progs: $(user_bin)
+#	$(foreach user_prog, $(user_bin), $(call DO_write, $(user_prog)))
+#	cp hard_disk.img $(hard_disk_file)
 
 write_usr_progs: $(user_bin)
-	$(foreach user_prog, $(user_bin), $(call DO_write, $(user_prog)))
+	hdiutil attach $(hard_disk_file)
+	cp $(build_dir)/usr/*.elf $(build_dir)/usr/*.txt /Volumes/NEW
+	hdiutil detach /dev/disk2
 
 floppyfile = $(build_dir)/disk.img
 hard_disk_file = $(build_dir)/hard_disk.img
@@ -191,7 +201,10 @@ clean_disk:
 	@mkdir -p build
 	dd if=/dev/zero of=$(floppyfile) bs=512 count=2880
 	rm -f $(hard_disk_file)
-	bximage $(hard_disk_file) -hd=10M -imgmode=flat -mode=create -q
+	bximage $(hard_disk_file) -hd=40M -imgmode=flat -mode=create -q
+	hdiutil attach -imagekey diskimage-class=CRawDiskImage -nomount $(hard_disk_file)
+	newfs_msdos -F32 -v NEW disk2
+	hdiutil detach /dev/disk2
 
 write_kernel: clean_disk kernel_img $(bootloader_bin)
 	dd if=$(bootloader_bin) of=$(floppyfile) conv=notrunc

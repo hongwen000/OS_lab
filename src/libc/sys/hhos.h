@@ -1,6 +1,7 @@
 #ifndef _HHOS_H_
 #define _HHOS_H_
 #include "../../kernel_lib/pm.h"
+#include "stat.h"
 
 #define __ISR_BEGIN_SAFE_C__        \
         asm volatile(               \
@@ -152,6 +153,22 @@ static inline uint32_t exec(uint32_t n)
     );
     return ret;
 }
+static inline uint32_t exec(const char* path)
+{
+    uint32_t ret;
+    asm volatile(
+    "movb $8, %%ah\n\t"
+    "push %1\n\t"
+    "push $0\n\t"
+    "int $0x98\n\t"
+    "movl %%eax, %0\n\t"
+    "add $8, %%esp"
+    :"=r"(ret)
+    :"r"(path)
+    :"%eax", "%ebx", "%ecx"
+    );
+    return ret;
+}
 static inline int p(int n)
 {
     int ret;
@@ -249,5 +266,110 @@ int munmap(void *addr, size_t length)
     return ret;
 }
 
+static inline
+int open(const char *path, uint32_t mode)
+{
+    int ret;
+    asm volatile(
+    "movb $15, %%ah\n\t"
+    "push %2\n\t"
+    "push %1\n\t"
+    "int $0x98\n\t"
+    "movl %%eax, %0\n\t"
+    "add $8, %%esp"
+    :"=r"(ret)
+    :"r"(path), "r"(mode)
+    :"%eax", "%ebx", "%ecx"
+    );
+    return ret;
+}
+static inline
+int read(int fildes, void *buf, size_t nbyte)
+{
+    int ret;
+    asm volatile(
+    "movb $16, %%ah\n\t"
+    "push %3\n\t"
+    "push %2\n\t"
+    "push %1\n\t"
+    "int $0x98\n\t"
+    "movl %%eax, %0\n\t"
+    "add $12, %%esp"
+    :"=r"(ret)
+    :"r"(fildes), "r"(buf), "r"(nbyte)
+    :"%eax", "%ebx", "%ecx"
+    );
+    return ret;
+}
+
+static inline
+int write(int fildes, void *buf, size_t nbyte)
+{
+    int ret;
+    asm volatile(
+    "movb $17, %%ah\n\t"
+    "push %3\n\t"
+    "push %2\n\t"
+    "push %1\n\t"
+    "int $0x98\n\t"
+    "movl %%eax, %0\n\t"
+    "add $12, %%esp"
+    :"=r"(ret)
+    :"r"(fildes), "r"(buf), "r"(nbyte)
+    :"%eax", "%ebx", "%ecx"
+    );
+    return ret;
+}
+
+static inline int close(int n)
+{
+    int ret;
+    asm volatile(
+    "movb $18, %%ah\n\t"
+    "push %1\n\t"
+    "int $0x98\n\t"
+    "movl %%eax, %0\n\t"
+    "add $4, %%esp"
+    :"=r"(ret)
+    :"r"(n)
+    :"%eax", "%ebx", "%ecx"
+    );
+    return ret;
+}
+static inline
+int lseek(int fildes, int offset, int whence)
+{
+    int ret;
+    asm volatile(
+    "movb $20, %%ah\n\t"
+    "push %3\n\t"
+    "push %2\n\t"
+    "push %1\n\t"
+    "int $0x98\n\t"
+    "movl %%eax, %0\n\t"
+    "add $12, %%esp"
+    :"=r"(ret)
+    :"r"(fildes), "r"(offset), "r"(whence)
+    :"%eax", "%ebx", "%ecx"
+    );
+    return ret;
+}
+static inline
+int fstat(int fildes, stat *buf)
+{
+    int ret;
+    asm volatile(
+    "movb $19, %%ah\n\t"
+    "push %2\n\t"
+    "push %1\n\t"
+    "int $0x98\n\t"
+    "movl %%eax, %0\n\t"
+    "add $8, %%esp"
+    :"=r"(ret)
+    :"r"(fildes), "r"(buf)
+    :"%eax", "%ebx", "%ecx"
+    );
+    return ret;
+}
 #endif
 

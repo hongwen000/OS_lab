@@ -39,6 +39,7 @@ extern "C"{
     void sys_print_int(int num, int x, int y);
     void sys_read_disk(uint32_t segment, uint32_t address, uint16_t logical_start_sector, uint8_t secotr_cnt);
     void sys_read_hard_disk(uint32_t segment, uint32_t address, uint16_t logical_start_sector, uint8_t secotr_cnt);
+    void sys_write_hard_disk(uint32_t segment, uint32_t address, uint16_t logical_start_sector, uint8_t secotr_cnt);
     void read_rtc();
     extern char sys_internal_time_str[20];
     extern "C" void interrupt_timer_c();

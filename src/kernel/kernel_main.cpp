@@ -11,6 +11,8 @@
 #include "../kernel_lib/page.h"
 #include "../libc/assert.h"
 #include "../kernel_lib/debug_printf.h"
+#include "../fs/fat32.h"
+#include "../fs/sys_uio.h"
 
 extern "C" void interrupt_timer();
 extern "C" void interrupt_kb();
@@ -73,7 +75,7 @@ void sys_current_tty_putchar(int ch)
 
 #endif
 
-const char* str = "Welcome to HHOS version 1.2.0\nYou can input help to see how to use it!";
+const char* str = "Welcome to HHOS version 1.9.0\nYou can input help to see how to use it!";
 static inline void print_ok(char * mod) {
     printf("%s init [", mod);
     current_tty->set_color(MAKE_COLOR(VGA_BLACK, VGA_GREEN));
@@ -82,6 +84,9 @@ static inline void print_ok(char * mod) {
     printf("]\n");
 }
 extern "C" void kb_init();
+uint8_t fs_buf[512];
+char write_buf[512] = "This is a big big big world\n";
+SectorBuffer_t sectorBuffer;
 extern "C" void kernel_main()
 {
     real_world_cls();
@@ -107,7 +112,15 @@ extern "C" void kernel_main()
     set_pit_freq();
 
     asm volatile("sti");
+//    sys_write_hard_disk(SEL_KERN_DATA, (uint32_t)&write_buf[0], 0, 1);
 //    asm volatile("int $0x97");
+//    auto fs_info = FS_read_info(fs_buf);
+//    Show_FS_Info(fs_info);
+//    FileInfo_t fp;
+//    Read_Print_File("/SH.ELF", &fp, fs_info, &sectorBuffer);
+//    bochs_break();
+    fs_init();
+    print_ok("File System");
     ram_init();
     print_ok("Memory");
     vmm_init();

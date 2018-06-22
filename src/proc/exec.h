@@ -10,4 +10,5 @@
 #define MAX_ARGC 20
 
 int sys_do_exec(uint32_t n);
+int sys_do_exec(const char* path);
 #endif //TEST_EXEC_H

@@ -56,7 +56,7 @@ static inline size_t strlen(const char* _str)
 {
     const char* str = _str;
     size_t len = 0;
-    while(*(_str++))
+    while(_str && *(_str++))
     {
         len++;
     }

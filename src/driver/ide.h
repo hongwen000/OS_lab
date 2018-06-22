@@ -54,6 +54,7 @@ struct ide_request
     ide_request(uint32_t _lba) :
             cmd(B_BUSY), dev(0), lba(_lba), next_req(nullptr){}
     void reset(uint32_t _lba) {cmd = B_BUSY; dev = 0; lba = _lba; next_req = nullptr;}
+    void prepare_write(uint32_t _lba){cmd = B_BUSY|B_DIRTY; dev = 0; lba = _lba; next_req = nullptr;}
     char cmd;
     char dev = 0;
     uint32_t lba;

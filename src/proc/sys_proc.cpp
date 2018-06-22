@@ -100,6 +100,11 @@ int sys_exec(uint32_t n)
     return sys_do_exec(n);
 }
 
+int sys_exec(const char* path)
+{
+    return sys_do_exec(path);
+}
+
 int sys_p(int sem_id) {
 //    debug_printf("sys_p: sem_id = %d\n", sem_id);
     return sys_do_p(sem_id);

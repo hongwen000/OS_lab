@@ -66,7 +66,7 @@ size_t strlen(const char* _str)
 {
     auto str = _str;
     size_t len = 0;
-    while(*(_str++))
+    while(_str && *(_str++))
     {
         len++;
     }
@@ -78,6 +78,44 @@ char *strcpy(char* _dst, const char* _src)
     memcpy(reinterpret_cast<void*>(_dst), reinterpret_cast<const void *>(_src), len);
     _dst[len] = '\0';
     return _dst;
+}
+char *strncpy(char* _dst, const char* _src, size_t count)
+{
+    auto len = strlen(_src);
+    if(count < len)
+    {
+        len = count;
+    }
+    memcpy(reinterpret_cast<void*>(_dst), reinterpret_cast<const void *>(_src), len);
+    for(size_t i = len; i < count; ++i)
+        _dst[i] = 0;
+    return _dst;
+}
+int strncmp(const char* _s1, const char* _s2, size_t count)
+{
+    auto len1 = strlen(_s1);
+    auto len2 = strlen(_s2);
+    auto len = len1 < len2 ? len1 : len2;
+    if(count < len) len = count;
+    auto ret = memcmp(reinterpret_cast<const void*>(_s1), reinterpret_cast<const void *>(_s2), len);
+    if(len < len1 && len < len2)
+        return ret;
+    if(ret == 0)
+    {
+        if(len1 == len2)
+        {
+            return 0;
+        }
+        else if (len == len1)
+        {
+            return -1;
+        }
+        else
+        {
+            return 1;
+        }
+    }
+    return ret;
 }
 int strcmp(const char* _s1, const char* _s2)
 {
@@ -115,6 +153,19 @@ void reverse(char* buffer)
     }
 }
 
+char * strrchr( const char * s, int c )
+{
+    size_t i = 0;
+    while ( s && s[i++] );
+    do
+    {
+        if ( s && s[--i] == (char) c )
+        {
+            return (char *) s + i;
+        }
+    } while ( i );
+    return nullptr;
+}
 //void utoa(char* buffer, unsigned int num, int base)
 //{
 //    char *p = buffer;
