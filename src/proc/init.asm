@@ -17,7 +17,7 @@ __init_start:
     jmp $
 
 child:
-    push (shell - $$) + 0xc0001000   ; path
+    push (shell - $$) + 0xc0002000   ; path
     ;push 192
     push 0
     mov ah, 8
