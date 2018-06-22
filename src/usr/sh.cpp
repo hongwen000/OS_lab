@@ -11,6 +11,7 @@ void sh::history_push(const char *buf)
     strcpy(histroy[0], buf);
 }
 static char formated_file_name[16];
+static uint8_t cp_buf[512];
 static char *FS_format_file_name(DirectoryEntry_t *entry) {
     int i, j;
     uint8_t *entryname = entry->Filename;
@@ -81,8 +82,6 @@ static FileInfo_t FS_read_one_file_info(DirectoryEntry_t *dir_entry)
 
 static char dir_buf[0x20];
 static char LongFileNameBuffer[LONG_FILENAME_MAX_LEN];
-static uint32_t sz;
-static char fmt[] = "%u\n";
 int sh::sh_exec(const sh::cmd &input_cmd)
 {
     if (is_command(input_cmd, "ls") || is_command(input_cmd, "dir")) {
@@ -119,10 +118,8 @@ int sh::sh_exec(const sh::cmd &input_cmd)
                     {
                         putchar(file_info.filename[i]);
                     }
-//                    putchar('\n');
-                    sz =file_info.FileSize;
 //                    bochs_break();
-                    printf(fmt, sz);
+                    printf(" %u bytes\n", file_info.FileSize);
 //                    printf("Here 5\n");
 //                    printf("");
                 }
@@ -167,8 +164,8 @@ int sh::sh_exec(const sh::cmd &input_cmd)
                         uint8_t ch;
                         for(size_t i = 0; i < 8; ++i)
                         {
-                            auto fn = inputs[input_cmd.start+1];
-                            if(i < strlen(fn))
+                            auto fn = inputs[input_cmd.start+2];
+                            if(i < strlen(fn) && fn[i] != '.')
                             {
                                 ch = fn[i];
                             }
@@ -179,7 +176,7 @@ int sh::sh_exec(const sh::cmd &input_cmd)
                             write(fd, &ch, 1);
                         }
                         close(fd);
-                        printf("rm: succeeded\n");
+                        printf("mv: succeeded\n");
                         break;
                     }
                 }
@@ -248,13 +245,13 @@ int sh::sh_exec(const sh::cmd &input_cmd)
         int fd_s = open(src, 0);
         if(fd_s == -1)
         {
-            printf("cp: Can not open source file\n");
+            printf("cp: Can not open source file %s\n", src);
             return FAIL;
         }
-        int fd_d = open(src, 1);
+        int fd_d = open(dst, 1);
         if(fd_d == -1)
         {
-            printf("cp: Can not open dest file\n");
+            printf("cp: Can not open dest file %s\n", dst);
             return FAIL;
         }
         stat st;
@@ -262,13 +259,79 @@ int sh::sh_exec(const sh::cmd &input_cmd)
         auto sz = st.size;
         printf("cp: Ready to copy %u bytes\n", sz);
         uint8_t ch;
-        for(size_t i = 0; i < sz; ++i)
-        {
-            read(fd_s, &ch, 1);
-            write(fd_d, &ch, 1);
-        }
+
+//        for(size_t i = 0; i <= sz / 512; ++i)
+//        {
+            read(fd_s, cp_buf, sz);
+            write(fd_d, cp_buf, sz);
+//        }
+        putchar('\n');
         close(fd_s);
         close(fd_d);
+        const char *name;
+        const char *ext;
+        name = strrchr(dst, '/');
+        if(name == nullptr)
+        {
+            return -1;
+        }
+        name = name + 1;
+        ext = strrchr(dst, '.');
+        size_t ext_len;
+        size_t name_len;
+        if(ext == nullptr)
+        {
+            ext_len = 0;
+            name_len = strlen(name);
+        }
+        else
+        {
+            ext = ext + 1;
+            ext_len = strlen(ext);
+            name_len = strlen(name) - ext_len - 1;
+        }
+        char parent[strlen(dst)];
+        strcpy(parent, dst);
+        parent[name-dst] = 0;
+        int fd;
+        fd = open(parent, 0);
+        if(fd == -1)
+            return FAIL;
+        LongFileNameBuffer[0] = 0;
+        do
+        {
+            read(fd, dir_buf, 0x20);
+            DirectoryEntry_t *CurrentOneFileInfo = (DirectoryEntry_t *)&dir_buf;
+            auto file_info=FS_read_one_file_info(CurrentOneFileInfo);
+            if ((file_info.attributes & 0x0f) == 0x0f)
+            {
+                strcpy(LongFileNameBuffer + strlen(LongFileNameBuffer), file_info.LongFilename);
+            }
+            else
+            {
+                strcpy(file_info.LongFilename,LongFileNameBuffer);
+                //Got one file
+                LongFileNameBuffer[0] = 0;
+                if(file_info.filename[0] == '\000' || file_info.filename[0] == 0x7f || file_info.filename[0] == 0xe5)
+                {
+                    continue;
+                }
+                else
+                {
+                    if(strcmp(file_info.filename, name) == 0)
+                    {
+                        lseek(fd, -4, SEEK_CUR);
+                        write(fd, &sz, 4);
+                        close(fd);
+                        printf("cp: succeeded\n");
+                        break;
+                    }
+                    else
+                    {
+                    }
+                }
+            }
+        }while(dir_buf[0] != '\x00');
     }
     else if (is_command(input_cmd, "cls") || is_command(input_cmd, "clear"))
     {

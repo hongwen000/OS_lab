@@ -172,8 +172,8 @@ struct FileInfo_t {
     uint32_t CurrentClusterOffset;
     uint32_t CurrentCluster;
     short CurrentSector;
-    short CurrentByte;
-    uint32_t pos;
+    short CurrentByte = 0;
+    uint32_t pos = 0;
     uint8_t flags;
     uint8_t attributes;
     uint8_t mode;

@@ -127,7 +127,9 @@ char *FS_format_file_name(DirectoryEntry_t *entry) {
                 formated_file_name[j++] = entryname[i];
             }
         }
-        formated_file_name[j++] = '.';
+        if(entryname[8] != ' ')
+            formated_file_name[j++] = '.';
+//        formated_file_name[j++] = '.';
         for (i = 8; i<11; i++) {
             if (entryname[i] != ' ') {
                 formated_file_name[j++] = entryname[i];
@@ -184,8 +186,11 @@ FileInfo_t FS_read_one_file_info(DirectoryEntry_t *dir_entry, uint32_t cluster, 
     return ret;
 }
 //Search a file under a directory
-FileInfo_t * FS_find_file(uint32_t cluster, const char *filename, FileInfo_t * fp, FS_Info_t fs_info, SectorBuffer_t* buffer)
+FileInfo_t *FS_find_file(uint32_t cluster, const char *filename, FileInfo_t *fp, FS_Info_t fs_info, SectorBuffer_t *buffer,
+                         int recursive)
 {
+    if(recursive<=0)
+        return nullptr;
     uint32_t FAT_content = FS_get_FAT_entry(cluster, fs_info, buffer);
 //    if(FAT_content != FAT_MASK_EOC)
 //    {
@@ -224,16 +229,21 @@ FileInfo_t * FS_find_file(uint32_t cluster, const char *filename, FileInfo_t * f
                     *fp = file_info;
                     return fp;
                 }
+                else
+                {
+                    debug_printf("FS_find_file: %s is not %s\n", filename, file_info.filename);
+                }
             }
         }
     }
-    if(FAT_content == FAT_MASK_EOC)
+//    if(FAT_content == FAT_MASK_EOC)
         return nullptr;
-    else
-        return FS_find_file(FAT_content, filename, fp, fs_info, buffer);
+//    else
+//        return FS_find_file(FAT_content, filename, fp, fs_info, buffer, recursive-1);
 }
 FileInfo_t * FS_fopen(const char *filename, const char *mode, FileInfo_t* fp, FS_Info_t fs_info, SectorBuffer_t* buffer)
 {
+    debug_printf("FS_fopen: %s\n", filename);
     if(fp == nullptr)
         return nullptr;
     uint32_t cluster = 0;
@@ -263,9 +273,9 @@ FileInfo_t * FS_fopen(const char *filename, const char *mode, FileInfo_t* fp, FS
                 size_t len = i - j - 1;
                 strncpy(part_name, filename + j + 1, len);
                 part_name[len] = 0;
-                fp = FS_find_file(cluster, part_name, fp, fs_info, buffer);
+                fp = FS_find_file(cluster, part_name, fp, fs_info, buffer, 10);
                 if(fp == nullptr)
-                    continue;
+                    break;
                 cluster = fp->StartCluster;
             }
             j = i;
@@ -509,17 +519,57 @@ int FS_fwrite(uint8_t *src, uint32_t size, uint32_t count, FileInfo_t *fp, FS_In
     }
     return size - i;
 }
-int FS_ffsync(FileInfo_t *fp, SectorBuffer_t* buffer)
+int FS_ffsync(FileInfo_t *fp, SectorBuffer_t *buffer)
 {
-    if (buffer->SectorFlags & ENRTRY_FLAG_DIRTY)
+    if (buffer->SectorFlags & CURRENT_FLAG_DIRTY)
         FS_fsync(buffer);
+//    if ((fp->flags & ENRTRY_FLAG_SIZECHANGED) && !(fp->attributes & 0x10))
+//    {
+//        debug_printf("FS_ffsync: file %s SIZECHANGED\n", fp->filename);
+//        FS_read_sector(buffer->data, (uint32_t)((fs_global_info.DataStartSector+ fp->ParentStartCluster - 2)));
+//        buffer->SectorNumber = fp->ParentStartCluster;
+//        size_t offset = 0;
+//        for (; offset < fs_global_info.SectorsPerCluster*SECTOR_SIZE; offset += 0x20)
+//        {
+//            DirectoryEntry_t *CurrentOneFileInfo = (DirectoryEntry_t *)&buffer->data[offset];
+//            auto file_info=FS_read_one_file_info(CurrentOneFileInfo, fp->ParentStartCluster, fs_global_info);
+//            if ((file_info.attributes & 0x0f) == 0x0f)
+//            {
+//                continue;
+//            }
+//            else
+//            {
+//                if(file_info.filename[0] == '\000' || file_info.filename[0] == 0x7f)
+//                {
+//                    continue;
+//                }
+//                else
+//                {
+//                    if(strncmp(fp->filename, file_info.filename, strlen(fp->filename)) == 0
+//                       || strncmp(fp->filename, file_info.LongFilename, strlen(fp->filename)) == 0)
+//                    {
+//                        debug_printf("FS_ffsync: %s: new file size %u\n", fp->FileSize);
+//                        CurrentOneFileInfo->FileSize = fp->FileSize;
+//                        buffer->SectorFlags |= CURRENT_FLAG_DIRTY;
+//                        FS_fsync(buffer);
+//                        buffer->SectorFlags &= ~CURRENT_FLAG_DIRTY;
+//                    }
+//                    else
+//                    {
+//                        debug_printf("FS_ffsync: %s is not %s\n", fp->filename, file_info.filename);
+//                    }
+//                }
+//            }
+//        }
+//    }
     fp->flags &= ~ENRTRY_FLAG_DIRTY;
+    fp->flags &= ~ENRTRY_FLAG_SIZECHANGED;
     return 0;
 }
 
-int FS_fclose(FileInfo_t *fp, SectorBuffer_t* buffer)
+int FS_fclose(FileInfo_t *fp, SectorBuffer_t *buffer)
 {
-    FS_ffsync(fp, buffer);
+    FS_ffsync(fp,buffer);
     return 0;
 }
 int FS_touch(const char *filename, FS_Info_t fs_info, SectorBuffer_t* buffer) {
@@ -527,10 +577,26 @@ int FS_touch(const char *filename, FS_Info_t fs_info, SectorBuffer_t* buffer) {
     uint32_t cluster;
     const char *name;
     const char *ext;
-    name = strrchr(filename, '/')+1;
-    ext = strrchr(filename, '.')+1;
-    auto ext_len = strlen(ext);
-    auto name_len = strlen(name) - ext_len - 1;
+    name = strrchr(filename, '/');
+    if(name == nullptr)
+    {
+        return -1;
+    }
+    name = name + 1;
+    ext = strrchr(filename, '.');
+    size_t ext_len;
+    size_t name_len;
+    if(ext == nullptr)
+    {
+        ext_len = 0;
+        name_len = strlen(name);
+    }
+    else
+    {
+        ext = ext + 1;
+        ext_len = strlen(ext);
+        name_len = strlen(name) - ext_len - 1;
+    }
     char parent[strlen(filename)];
     strcpy(parent, filename);
     parent[name-filename] = 0;
@@ -562,7 +628,8 @@ int FS_touch(const char *filename, FS_Info_t fs_info, SectorBuffer_t* buffer) {
     entry.FirstCluster = cluster & 0xffff;
     entry.FileSize = 0;
     strncpy((char*)entry.Filename, name, name_len < 8 ? name_len : 8);
-    strncpy((char*)entry.Extension, ext, 3);
+    strncpy((char*)entry.Extension, ext ? ext : "   ", 3);
+//    strncpy((char*)entry.Extension, ext, 3);
     for(int i = 0; i < 8; ++i)
     {
         if(entry.Filename[i] == 0)

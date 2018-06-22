@@ -29,6 +29,7 @@ int sys_open(const char *path, uint32_t mode)
         if(!fd[i].used)
         {
             auto ret = FS_fopen(path, "rw", &fd[i], fs_global_info, &fs_global_buf);
+            //Open fail but to create
             if(ret == nullptr)
             {
                 if(mode & O_CREAT)
@@ -38,8 +39,18 @@ int sys_open(const char *path, uint32_t mode)
                     if(ret == nullptr)
                         return -1;
                     printf("File %s created\n", path);
+                    printf("Parent Directory at Cluster: %u\n", ret->ParentStartCluster);
+                    printf("File Start at Cluster: %u\n", ret->StartCluster);
+                    printf("File size (byte): %u\n", ret->FileSize);
+                    return i;
+                }
+                //Create fail
+                else
+                {
+                    return -1;
                 }
             }
+            //Open success
             else
             {
                 if(ret->FileSize == 4294967295)
@@ -66,7 +77,7 @@ int sys_read(int fildes, void *buf, size_t nbyte)
 }
 int sys_write(int fildes, void *buf, size_t nbyte)
 {
-    return FS_fwrite((uint8_t*)buf, 1, nbyte, &fd[fildes], fs_global_info, &fs_global_buf);
+    return FS_fwrite((uint8_t*)buf, nbyte, 1, &fd[fildes], fs_global_info, &fs_global_buf);
 }
 int sys_close(int fildes)
 {

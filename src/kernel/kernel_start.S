@@ -94,46 +94,46 @@ HHOS_timer_ticks dd 0
 interrupt_timer:
     cli
     __ISR_BEGIN_SAFE_ASM__
-        inc dword[HHOS_timer_ticks]
-	    .timer_int_regular:
-            mov al, 1
-            mov ah, 0x9
-        %define INTEVAL 16
+;        inc dword[HHOS_timer_ticks]
+;	    .timer_int_regular:
+;            mov al, 1
+;            mov ah, 0x9
+;        %define INTEVAL 16
+;
+;            .test_up:
+;            cmp word[int_08_what_to_play], INTEVAL
+;            jge .test_left
+;            mov al, '|'
+;            inc word[int_08_what_to_play]
+;            jmp .test_input_over
+;
+;            .test_left:
+;            cmp word[int_08_what_to_play], INTEVAL * 2
+;            jge .test_right
+;            mov al, '/'
+;            inc word[int_08_what_to_play]
+;            jmp .test_input_over
+;
+;            .test_right:
+;            cmp word[int_08_what_to_play], INTEVAL * 3
+;            jge .test_down
+;            mov al, '-'
+;            inc word[int_08_what_to_play]
+;            jmp .test_input_over
+;
+;            .test_down:
+;            cmp word[int_08_what_to_play], INTEVAL * 4
+;            jge .reset_char
+;            mov al, '\'
+;            inc word[int_08_what_to_play]
+;            jmp .test_input_over
 
-            .test_up:
-            cmp word[int_08_what_to_play], INTEVAL
-            jge .test_left
-            mov al, '|'
-            inc word[int_08_what_to_play]
-            jmp .test_input_over
+;            .reset_char:
+;            mov word[int_08_what_to_play], 0
+;
+;            .test_input_over:
 
-            .test_left:
-            cmp word[int_08_what_to_play], INTEVAL * 2
-            jge .test_right
-            mov al, '/'
-            inc word[int_08_what_to_play]
-            jmp .test_input_over
-
-            .test_right:
-            cmp word[int_08_what_to_play], INTEVAL * 3
-            jge .test_down
-            mov al, '-'
-            inc word[int_08_what_to_play]
-            jmp .test_input_over
-
-            .test_down:
-            cmp word[int_08_what_to_play], INTEVAL * 4
-            jge .reset_char
-            mov al, '\'
-            inc word[int_08_what_to_play]
-            jmp .test_input_over
-
-            .reset_char:
-            mov word[int_08_what_to_play], 0
-
-            .test_input_over:
-
-            mov word [gs:82],ax
+;            mov word [gs:82],ax
             [extern interrupt_timer_c]
             call interrupt_timer_c
             mov al,0x20

@@ -6,6 +6,7 @@
 #include "../kernel/tty.h"
 #include "../proc/sys_proc.h"
 #include "../fs/sys_uio.h"
+#include "../libc/stdio.h"
 
 HHOS_info_t HHOS_info;
 
@@ -50,7 +51,7 @@ static char *fault_msg[] = {
 void blue_screen(int_frame *r)
 {
 
-    tty blue_tty(true);
+//    tty blue_tty(true);
 //    blue_tty.set_color(MAKE_COLOR(VGA_BLUE, VGA_WHITE));
 //    asm volatile("cli\n\t"
 //                 "movw $0x18, %ax\n\t"
@@ -67,21 +68,25 @@ void blue_screen(int_frame *r)
 //    tty_debug_printf(blue_tty,"  #        #   \n");
 //    tty_debug_printf(blue_tty," ###        #  \n");
 //    tty_debug_printf(blue_tty,"  #          ##\n");
-    if(r == nullptr)
-    {
-        tty_debug_printf(blue_tty, "Function not implemented");
-    }
-    if (r->int_no < ISR_IRQ0 && r->int_no >= 0)
-    {
-        tty_debug_printf(blue_tty, "Encountered x86 Exception %d : %s\n", r->int_no, fault_msg[r->int_no]);
-    }
-    else
-    {
-        tty_debug_printf(blue_tty, "Encountered untreated interrupt %d\n", r->int_no);
-    }
-    tty_debug_printf(blue_tty,"Error code: %d\n", r->err_code);
-    tty_debug_printf(blue_tty,"CS:EIP: %d:0x%x\n", r->cs, r->eip);
-    tty_debug_printf(blue_tty,"System will halt");
+//    if(r == nullptr)
+//    {
+//        tty_debug_printf(blue_tty, "Function not implemented");
+//    }
+//    if (r->int_no < ISR_IRQ0 && r->int_no >= 0)
+//    {
+//        tty_debug_printf(blue_tty, "Encountered x86 Exception %d : %s\n", r->int_no, fault_msg[r->int_no]);
+//    }
+//    else
+//    {
+//        tty_debug_printf(blue_tty, "Encountered untreated interrupt %d\n", r->int_no);
+//    }
+//    tty_debug_printf(blue_tty,"Error code: %d\n", r->err_code);
+//    tty_debug_printf(blue_tty,"CS:EIP: %d:0x%x\n", r->cs, r->eip);
+//    tty_debug_printf(blue_tty,"System will halt");
+
+//    printf("Error code: %d\n", r->err_code);
+//    printf("CS:EIP: %d:0x%x\n", r->cs, r->eip);
+//    printf("System will halt");
 
 }
 

@@ -31,7 +31,7 @@
 
 /* 4k per page */
 #define PAGE_SIZE 4096
-#define USER_STACK_SIZE PAGE_SIZE
+#define USER_STACK_SIZE 2 * PAGE_SIZE //0x2000
 #define USER_TEXT_BASE (USER_BASE + USER_STACK_SIZE)
 
 /* 页掩码，取高20位 */
