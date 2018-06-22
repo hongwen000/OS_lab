@@ -17,11 +17,14 @@ __init_start:
     jmp $
 
 child:
-    push 192
+    push (shell - $$) + 0xc0001000   ; path
+    ;push 192
     push 0
     mov ah, 8
     int 0x98
     add esp, 8
     jmp $
 
+shell:
+    db "/SH.ELF", 0
 __init_end:

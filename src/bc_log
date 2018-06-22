@@ -1,0 +1,58 @@
+========================================================================
+                       Bochs x86 Emulator 2.6.9
+               Built from SVN snapshot on April 9, 2017
+                  Compiled on May  2 2018 at 13:26:35
+========================================================================
+Next at t=0
+(0) [0x0000fffffff0] f000:fff0 (no symbol): jmpf 0xf000:e05b          ; ea5be000f0
+cTTY init [OK]
+Clock init [OK]
+Keyboard init [OK]
+IDE Disk init [OK]
+-----------------------------FS INFO-------------------------------
+This Volume Total have 81648 Sectors:
+Cluster Size:512
+NEW        
+Reserved Sectors: 32
+Fat zone Total have 628 Sectors
+:Data zone Start from Cluster: 1288
+Data zone Total have 80360 Sectors:
+Data zone Total have 80360 Clusters:
+-----------------------------FS INFO END---------------------------
+File System init [OK]
+-----------------------------MEM INFO------------------------------
+0x1ef0000 bytes memory Installed
+Kernel start at: 0x100000, end at0x5aa020, text_size 4776kb
+6724 pages available for allocation (26896 kb)
+-----------------------------MEM INFO END--------------------------
+Memory init [OK]
+Paging init [OK]
+Init progress loaded, ready for scheduling
+Process init [OK]
+Now scheduler launches
+Next at t=53259745
+(0) [0x0000001063fe] 0008:00000000001063fe (sys_outw+1c): nop                       ; 90
+file /SH.ELF opened
+Parent Directory at Cluster: 2
+File Start at Cluster: 32
+File size (byte): 17108
+--------------------------------------
+Shell loaded, system ready for use
+--------------------------------------
+HHOS> ls
+Next at t=213078023
+(0) [0x0000001063fe] 0008:00000000001063fe (sys_outw+1c): nop                       ; 90
+Directory / opened
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 #          ##
+ ###        #  
+  #        #   
+     ##### #   
+  #        #   
+ ###        #  
+  #          ##
+Encountered x86 Exception 14 : Page Fault
+Error code: 4
+CS:EIP: 43:0xbdc001ae
+System will haltNext at t=1524292008
+(0) [0x000000106ece] 0008:0000000000106ece (_Z6memcmpPKvS0_m+0): push ebp                  ; 55
+(0).[1524292008] [0x000000106ece] 0008:0000000000106ece (_Z6memcmpPKvS0_m+0): push ebp                  ; 55

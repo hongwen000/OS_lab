@@ -29,6 +29,7 @@ using uint16_t = unsigned short;
 using uint32_t = unsigned int;
 using uintptr_t = unsigned int;
 using intptr_t = int;
+using int32_t = int;
 
 
 enum VGA_COLOR{
@@ -68,4 +69,7 @@ struct HHOS_info_t {
 using pde_t = uint32_t;
 /* page talbe entry */
 using pte_t = uint32_t;
+#define offsetof(TYPE, MEMBER) __builtin_offsetof (TYPE, MEMBER)
+#define DEBUG_PRINTF
+#define COLORIZE_DEBUG_PRINTF
 #endif

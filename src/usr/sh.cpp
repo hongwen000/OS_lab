@@ -2,21 +2,273 @@
 // Created by 李新锐 on 20/05/2018.
 //
 #include "sh.h"
+#include "../fs/fat32.h"
+#include "../fs/sys_uio.h"
 
 void sh::history_push(const char *buf)
 {
     memmove(histroy[1], histroy[0], buf_size * history_term * sizeof(char));
     strcpy(histroy[0], buf);
 }
+static char formated_file_name[16];
+static char *FS_format_file_name(DirectoryEntry_t *entry) {
+    int i, j;
+    uint8_t *entryname = entry->Filename;
+//    uint8_t *formated_file_name=new uint8_t [16];
+    if (entry->Attributes != 0x0f) {
+        j = 0;
+        for (i = 0; i<8; i++) {
+            if (entryname[i] != ' ') {
+                formated_file_name[j++] = entryname[i];
+            }
+        }
+        if(entryname[8] != ' ')
+            formated_file_name[j++] = '.';
+        for (i = 8; i<11; i++) {
+            if (entryname[i] != ' ') {
+                formated_file_name[j++] = entryname[i];
+            }
+        }
+        formated_file_name[j++] = '\x00';
+    }
+    else {
+        LongFileName_t *LongEntry = (LongFileName_t*)entry;
+        j = 0;
+        for (i = 0; i<5; i++) {
+            formated_file_name[j++] = (uint8_t)LongEntry->name_1[i];
+        }
+        for (i = 0; i<6; i++) {
+            formated_file_name[j++] = (uint8_t)LongEntry->name_2[i];
+        }
+        for (i = 0; i<2; i++) {
+            formated_file_name[j++] = (uint8_t)LongEntry->name_3[i];
+        }
+        formated_file_name[j++] = '\x00';
+    }
 
+    return (char *)formated_file_name;
+}
+static FileInfo_t FS_read_one_file_info(DirectoryEntry_t *dir_entry)
+{
+    constexpr int TO_DO_SECTOR_PER_CLUSTER = 1;
+    FileInfo_t ret;
+    if ((dir_entry->Attributes &ATTR_LONG_NAME_MASK) == ATTR_LONG_NAME)
+    {
+        LongFileName_t *LongFileName = (LongFileName_t*)dir_entry;
+        strcpy(ret.LongFilename, FS_format_file_name(dir_entry));
+        ret.attributes = ATTR_LONG_NAME;
+        ret.checksum = LongFileName->checksum;
+    }
+    else
+    {
+        strcpy(ret.filename, "");
+        strcpy(ret.filename, FS_format_file_name(dir_entry));
+        ret.attributes = dir_entry->Attributes;
+        ret.CurrentByte = 0;
+        ret.StartCluster = ret.CurrentCluster = (((uint32_t)dir_entry->ClusterLow) << 16) | dir_entry->FirstCluster;
+        ret.flags = 0;
+        ret.mode = ENRTRY_MODE_WRITE;
+        ret.pos = 0;
+        ret.FileSize = dir_entry->FileSize;
+        if ((ret.attributes & ATTR_DIRECTORY) == 1)
+        {
+            ret.FileSize = SECTOR_SIZE * TO_DO_SECTOR_PER_CLUSTER;
+        }
+        ret.CurrentClusterOffset = 0;
+    }
+    return ret;
+}
+
+static char dir_buf[0x20];
+static char LongFileNameBuffer[LONG_FILENAME_MAX_LEN];
+static uint32_t sz;
+static char fmt[] = "%u\n";
 int sh::sh_exec(const sh::cmd &input_cmd)
 {
     if (is_command(input_cmd, "ls") || is_command(input_cmd, "dir")) {
-        printf("You have %d user programs intalled\n", prog_cnt);
-        printf("Program Name\t\t\tSector Number\n");
-        for (size_t i = 0; i < prog_cnt; ++i) {
-            printf("%s\t\t\t\t\t%d\n", progs[i].name, progs[i].lba);
+        int fd;
+        if(input_cmd.cnt == 1)
+            fd = open(pwd, 0);
+        else
+            fd = open(inputs[input_cmd.start + 1], 0);
+        if(fd == -1)
+            return FAIL;
+        LongFileNameBuffer[0] = 0;
+        int n = 0;
+        do
+        {
+            read(fd, dir_buf, 0x20);
+            DirectoryEntry_t *CurrentOneFileInfo = (DirectoryEntry_t *)&dir_buf;
+            auto file_info=FS_read_one_file_info(CurrentOneFileInfo);
+            if ((file_info.attributes & 0x0f) == 0x0f)
+            {
+                strcpy(LongFileNameBuffer + strlen(LongFileNameBuffer), file_info.LongFilename);
+            }
+            else
+            {
+                strcpy(file_info.LongFilename,LongFileNameBuffer);
+                //Got one file
+                LongFileNameBuffer[0] = 0;
+                if(file_info.filename[0] == '\000' || file_info.filename[0] == 0x7f || file_info.filename[0] == 0xe5)
+                {
+                    continue;
+                }
+                else
+                {
+                    for(int i = 0; i < 8; ++i)
+                    {
+                        putchar(file_info.filename[i]);
+                    }
+//                    putchar('\n');
+                    sz =file_info.FileSize;
+//                    bochs_break();
+                    printf(fmt, sz);
+//                    printf("Here 5\n");
+//                    printf("");
+                }
+            }
+        }while(dir_buf[0] != '\x00');
+    }
+    else if (is_command(input_cmd, "mv") || is_command(input_cmd, "move"))
+    {
+        if(input_cmd.cnt != 3)
+        {
+            printf("mv [SOURCE FILE] [DESTINATION FILE]\n");
+            return FAIL;
         }
+        int fd;
+        fd = open(pwd, 0);
+        if(fd == -1)
+            return FAIL;
+        LongFileNameBuffer[0] = 0;
+        do
+        {
+            read(fd, dir_buf, 0x20);
+            DirectoryEntry_t *CurrentOneFileInfo = (DirectoryEntry_t *)&dir_buf;
+            auto file_info=FS_read_one_file_info(CurrentOneFileInfo);
+            if ((file_info.attributes & 0x0f) == 0x0f)
+            {
+                strcpy(LongFileNameBuffer + strlen(LongFileNameBuffer), file_info.LongFilename);
+            }
+            else
+            {
+                strcpy(file_info.LongFilename,LongFileNameBuffer);
+                //Got one file
+                LongFileNameBuffer[0] = 0;
+                if(file_info.filename[0] == '\000' || file_info.filename[0] == 0x7f || file_info.filename[0] == 0xe5)
+                {
+                    continue;
+                }
+                else
+                {
+                    if(strcmp(file_info.filename, inputs[input_cmd.start + 1]) == 0)
+                    {
+                        lseek(fd, -0x20, SEEK_CUR);
+                        uint8_t ch;
+                        for(size_t i = 0; i < 8; ++i)
+                        {
+                            auto fn = inputs[input_cmd.start+1];
+                            if(i < strlen(fn))
+                            {
+                                ch = fn[i];
+                            }
+                            else
+                            {
+                                ch = ' ';
+                            }
+                            write(fd, &ch, 1);
+                        }
+                        close(fd);
+                        printf("rm: succeeded\n");
+                        break;
+                    }
+                }
+            }
+        }while(dir_buf[0] != '\x00');
+    }
+    else if (is_command(input_cmd, "rm") || is_command(input_cmd, "del"))
+    {
+        if(input_cmd.cnt != 2)
+        {
+            printf("del [FILE]\n");
+            return FAIL;
+        }
+        int fd;
+        fd = open(pwd, 0);
+        if(fd == -1)
+            return FAIL;
+        LongFileNameBuffer[0] = 0;
+        do
+        {
+            read(fd, dir_buf, 0x20);
+            DirectoryEntry_t *CurrentOneFileInfo = (DirectoryEntry_t *)&dir_buf;
+            auto file_info=FS_read_one_file_info(CurrentOneFileInfo);
+            if ((file_info.attributes & 0x0f) == 0x0f)
+            {
+                strcpy(LongFileNameBuffer + strlen(LongFileNameBuffer), file_info.LongFilename);
+            }
+            else
+            {
+                strcpy(file_info.LongFilename,LongFileNameBuffer);
+                //Got one file
+                LongFileNameBuffer[0] = 0;
+                if(file_info.filename[0] == '\000' || file_info.filename[0] == 0x7f || file_info.filename[0] == 0xe5)
+                {
+                    continue;
+                }
+                else
+                {
+                    if(strcmp(file_info.filename, inputs[input_cmd.start + 1]) == 0)
+                    {
+                        lseek(fd, -0x20, SEEK_CUR);
+                        uint8_t ch = 0xe5;
+                        write(fd, &ch, 1);
+                        close(fd);
+                        printf("rm: succeeded\n");
+                        break;
+                    }
+                }
+            }
+        }while(dir_buf[0] != '\x00');
+    }
+    else if (is_command(input_cmd, "cp") || is_command(input_cmd, "copy"))
+    {
+        if(input_cmd.cnt != 3)
+        {
+            printf("cp [SOURCE FILE] [DESTINATION FILE]\n");
+            return FAIL;
+        }
+        auto src = inputs[input_cmd.start + 1];
+        auto dst = inputs[input_cmd.start + 2];
+        if(strcmp(src, dst) == 0)
+        {
+            printf("cp: Source file name can not be same to dest file name\n");
+            return FAIL;
+        }
+        int fd_s = open(src, 0);
+        if(fd_s == -1)
+        {
+            printf("cp: Can not open source file\n");
+            return FAIL;
+        }
+        int fd_d = open(src, 1);
+        if(fd_d == -1)
+        {
+            printf("cp: Can not open dest file\n");
+            return FAIL;
+        }
+        stat st;
+        fstat(fd_s, &st);
+        auto sz = st.size;
+        printf("cp: Ready to copy %u bytes\n", sz);
+        uint8_t ch;
+        for(size_t i = 0; i < sz; ++i)
+        {
+            read(fd_s, &ch, 1);
+            write(fd_d, &ch, 1);
+        }
+        close(fd_s);
+        close(fd_d);
     }
     else if (is_command(input_cmd, "cls") || is_command(input_cmd, "clear"))
     {
@@ -84,15 +336,16 @@ int sh::sh_exec(const sh::cmd &input_cmd)
 #endif
     else {
         bool found = false;
-        for(size_t i = 0; i < prog_cnt; ++i)
-        {
-            if (is_command(input_cmd, progs[i].name))
-            {
+//        for(size_t i = 0; i < prog_cnt; ++i)
+//        {
+//            if (is_command(input_cmd, progs[i].name))
+//            {
                 found = true;
                 int n = fork();
                 if (n == 0)
                 {
-                    exec((uint32_t)progs[i].lba);
+                     exec(inputs[input_cmd.start]);
+//                    exec((uint32_t)progs[i].lba);
                 }
                 else {
                     printf("---------------------------------------\n");
@@ -103,9 +356,9 @@ int sh::sh_exec(const sh::cmd &input_cmd)
                     printf("user program exited\n");
                     printf("---------------------------------------\n");
                 }
-                break;
-            }
-        }
+//                break;
+//            }
+//        }
         if (!found)
             printf("%s\n", "No such command or file");
     }
@@ -231,7 +484,7 @@ sh::sh(){
 }
 
 void sh::run() {
-    printf("%s", prompt);
+    printf("%s%s>", prompt, pwd);
     while(true)
     {
 //        printf("");
@@ -268,7 +521,7 @@ void sh::run() {
             putchar('\n');
             if(strlen(buf) == 0)
             {
-                printf("%s", prompt);
+                printf("%s%s>", prompt, pwd);
                 continue;
             }
             history_push(buf);
@@ -282,7 +535,7 @@ void sh::run() {
             }
             memset(buf, 0, buf_size);
             pos = 0;
-            printf("%s", prompt);
+            printf("%s%s>", prompt, pwd);
         }
         else if (in == 0)
         {
@@ -310,7 +563,7 @@ void sh::run() {
                     }
                     printf("%s\n", progs[i].name);
                 }
-            printf("%s", prompt);
+            printf("%s%s>", prompt, pwd);
             printf("%s", buf);
         }
         else {

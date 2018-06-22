@@ -8,7 +8,6 @@
 #include "../libc/stdlib.h"
 #include "../libc/ctype.h"
 
-#define DEBUG_PRINTF
 void real_world_cls()
 {
     sys_dbg_bochs_putc('\033');

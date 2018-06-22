@@ -5,6 +5,7 @@
 #include "debug_printf.h"
 #include "../kernel/tty.h"
 #include "../proc/sys_proc.h"
+#include "../fs/sys_uio.h"
 
 HHOS_info_t HHOS_info;
 
@@ -50,22 +51,22 @@ void blue_screen(int_frame *r)
 {
 
     tty blue_tty(true);
-    blue_tty.set_color(MAKE_COLOR(VGA_BLUE, VGA_WHITE));
-    asm volatile("cli\n\t"
-                 "movw $0x18, %ax\n\t"
-                 "movw %ax, %gs"
-                 );
-    for(int i = 0; i < 1999; ++i)
-        tty_debug_printf(blue_tty ," ");
-    blue_tty.set_x(0);
-    blue_tty.set_y(0);
-    tty_debug_printf(blue_tty,"  #          ##\n");
-    tty_debug_printf(blue_tty," ###        #  \n");
-    tty_debug_printf(blue_tty,"  #        #   \n");
-    tty_debug_printf(blue_tty,"     ##### #   \n");
-    tty_debug_printf(blue_tty,"  #        #   \n");
-    tty_debug_printf(blue_tty," ###        #  \n");
-    tty_debug_printf(blue_tty,"  #          ##\n");
+//    blue_tty.set_color(MAKE_COLOR(VGA_BLUE, VGA_WHITE));
+//    asm volatile("cli\n\t"
+//                 "movw $0x18, %ax\n\t"
+//                 "movw %ax, %gs"
+//                 );
+//    for(int i = 0; i < 1999; ++i)
+//        tty_debug_printf(blue_tty ," ");
+//    blue_tty.set_x(0);
+//    blue_tty.set_y(0);
+//    tty_debug_printf(blue_tty,"  #          ##\n");
+//    tty_debug_printf(blue_tty," ###        #  \n");
+//    tty_debug_printf(blue_tty,"  #        #   \n");
+//    tty_debug_printf(blue_tty,"     ##### #   \n");
+//    tty_debug_printf(blue_tty,"  #        #   \n");
+//    tty_debug_printf(blue_tty," ###        #  \n");
+//    tty_debug_printf(blue_tty,"  #          ##\n");
     if(r == nullptr)
     {
         tty_debug_printf(blue_tty, "Function not implemented");
@@ -215,6 +216,34 @@ void sys_read_hard_disk(uint32_t segment, uint32_t address, uint16_t logical_sta
     debug_printf("Read block OK\n");
 }
 
+void sys_write_hard_disk(uint32_t segment, uint32_t address, uint16_t logical_start_sector, uint8_t secotr_cnt)
+{
+    ide_request buf;
+    debug_printf("Requested to write %d blocks from address %u to lba %d\n", (int)secotr_cnt, address, (int) logical_start_sector);
+    for (int i = logical_start_sector; i < logical_start_sector + secotr_cnt; ++i) {
+        asm volatile(
+        "cld\n\t"
+        "movl $0x200, %%ecx\n\t"
+        "push %%es\n\t"
+        "movw %0, %%es\n\t"
+        "movl %2, %%edi\n\t"
+        "movl %1, %%esi\n\t"
+        "rep movsb\n\t"
+        "pop %%es\n\t"
+        :
+        :"r"(segment), "r"(address), "r"(buf.buf)
+        :"%esi", "%edi", "%ecx"
+        );
+        address += 0x200;
+        buf.prepare_write(i);
+        ide_rw(&buf);
+#ifdef IDE_TEST
+        ide_print_blk(&buf);
+#endif
+    }
+    debug_printf("Write block OK\n");
+}
+
 //extern "C" void interrupt_33h_c() {
 //    const char* l11 = " _____      _     _____  _____ ";
 //    const char* l12 = "|_   _|    | |   |____ ||____ |";
@@ -295,11 +324,14 @@ void system_call_c(int_frame* tf)
     }
     else if (ah == 8)
     {
-        uint32_t blk = *(uint32_t*)(current_proc->tf->user_esp+4);
-        debug_printf("sys_exec: +4 : 0x%x = %d\n", (current_proc->tf->user_esp+4), *(int*)(current_proc->tf->user_esp+4));
-        debug_printf("sys_exec: +8 : 0x%x = %d\n", (current_proc->tf->user_esp+8), *(int*)(current_proc->tf->user_esp+8));
-        debug_printf("sys_exec: Exec program in block %d\n", blk);
-        tf->eax = sys_exec(blk);
+        const char *path = *(const char **)(current_proc->tf->user_esp+4);
+        debug_printf("system_call: exec : %s\n", path);
+        tf->eax = sys_exec(path);
+//        uint32_t blk = *(uint32_t*)(current_proc->tf->user_esp+4);
+//        debug_printf("sys_exec: +4 : 0x%x = %d\n", (current_proc->tf->user_esp+4), *(int*)(current_proc->tf->user_esp+4));
+//        debug_printf("sys_exec: +8 : 0x%x = %d\n", (current_proc->tf->user_esp+8), *(int*)(current_proc->tf->user_esp+8));
+//        debug_printf("sys_exec: Exec program in block %d\n", blk);
+//        tf->eax = sys_exec(blk);
     }
     else if (ah == 9)
     {
@@ -330,9 +362,49 @@ void system_call_c(int_frame* tf)
     {
         void* addr = *(void **)(current_proc->tf->user_esp+0);
         size_t length = *(size_t *)(current_proc->tf->user_esp+4);
-        debug_printf("sys_munmap: +0 : 0x%x = 0x%x\n", (current_proc->tf->user_esp+0), *(uint32_t *)(current_proc->tf->user_esp+0));
-        debug_printf("sys_munmap: +4 : 0x%x = 0x%x\n", (current_proc->tf->user_esp+4), *(uint32_t *)(current_proc->tf->user_esp+4));
+        debug_printf("system_call munmap: +0 : 0x%x = 0x%x\n", (current_proc->tf->user_esp+0), *(uint32_t *)(current_proc->tf->user_esp+0));
+        debug_printf("system_call munmap: +4 : 0x%x = 0x%x\n", (current_proc->tf->user_esp+4), *(uint32_t *)(current_proc->tf->user_esp+4));
         tf->eax = sys_munmap(addr, length);
+    }
+    else if (ah == 15)
+    {
+        const char *path = *(const char **)(current_proc->tf->user_esp+0);
+        uint32_t mode = *(uint32_t *)(current_proc->tf->user_esp+4);
+        debug_printf("system_call open: +0 : 0x%x = 0x%x\n", (current_proc->tf->user_esp+0), *(uint32_t *)(current_proc->tf->user_esp+0));
+        debug_printf("system_call open: +4 : 0x%x = 0x%x\n", (current_proc->tf->user_esp+4), *(uint32_t *)(current_proc->tf->user_esp+4));
+        tf->eax = sys_open(path, mode);
+    }
+    else if (ah == 16)
+    {
+        int fildes = *(int*)(current_proc->tf->user_esp+0);
+        void *buf = *(void **)(current_proc->tf->user_esp+4);
+        size_t nbyte = *(size_t *)(current_proc->tf->user_esp+8);
+        tf->eax = sys_read(fildes, buf, nbyte);
+    }
+    else if (ah == 17)
+    {
+        int fildes = *(int*)(current_proc->tf->user_esp+0);
+        void *buf = *(void **)(current_proc->tf->user_esp+4);
+        size_t nbyte = *(size_t *)(current_proc->tf->user_esp+8);
+        tf->eax = sys_write(fildes, buf, nbyte);
+    }
+    else if (ah == 18)
+    {
+        int arg = *(uint32_t*)(current_proc->tf->user_esp+0);
+        tf->eax = sys_close(arg);
+    }
+    else if (ah == 19)
+    {
+        int arg = *(uint32_t*)(current_proc->tf->user_esp+0);
+        stat* buf = *(stat**)(current_proc->tf->user_esp+4);
+        tf->eax = sys_fstat(arg, buf);
+    }
+    else if (ah == 20)
+    {
+        int fildes = *(int*)(current_proc->tf->user_esp+0);
+        int offset = *(int*)(current_proc->tf->user_esp+4);
+        int whence = *(int*)(current_proc->tf->user_esp+8);
+        tf->eax = sys_lseek(fildes, offset, whence);
     }
     else if (ah == 28)
     {
