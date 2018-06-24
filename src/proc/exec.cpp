@@ -8,6 +8,7 @@
 #include "../kernel_lib/ram.h"
 #include "elf.h"
 #include "../fs/sys_uio.h"
+#include "../libc/stdio.h"
 
 void print_elfhdr(struct elf32hdr *eh){
     debug_printf("print_elfhdr:\n");
@@ -169,7 +170,14 @@ int sys_do_exec(const char* path){
     kvm_init(pgdir);
 
     int fd = sys_open(path, 0);
-    sys_read(fd, binary_image_buf, 80 * 512);
+    stat f_st;
+    sys_fstat(fd, &f_st);
+    auto f_sz = f_st.size;
+    if(f_sz > 128 * 512)
+    {
+        printf("exec: file is too big (%u bytes > 128 * 512 bytes) to load\n", f_sz);
+    }
+    sys_read(fd, binary_image_buf, f_sz);
 //    sys_read_hard_disk(SEL_KERN_DATA, (uint32_t)(char*)(binary_image_buf), n, 40);
 //    uint32_t p = 0;
 //    p += sizeof(elf32hdr);
@@ -178,7 +186,7 @@ int sys_do_exec(const char* path){
     print_elfhdr(&eh);
 
     if (eh.magic != ELF_MAGIC){
-        debug_printf("exec: bad\n");
+        printf("exec: bad executable file\n");
         if (pgdir){
             uvm_free(pgdir);
         }
@@ -197,21 +205,21 @@ int sys_do_exec(const char* path){
             continue;
         }
         if (ph.memsz < ph.filesz){
-            debug_printf("exec: bad\n");
+            printf("exec: bad executable file\n");
             if (pgdir){
                 uvm_free(pgdir);
             }
             return -1;
         }
         if ((sz = uvm_alloc(pgdir, sz, ph.vaddr + ph.memsz)) == 0){
-            debug_printf("exec: bad\n");
+            printf("exec: can not alloc user space\n");
             if (pgdir){
                 uvm_free(pgdir);
             }
             return -1;
         }
         if (uvm_load(pgdir, ph.vaddr, binary_image_buf, ph.off, ph.filesz) < 0){
-            debug_printf("exec: bad\n");
+            printf("exec: load executable to user space\n");
             if (pgdir){
                 uvm_free(pgdir);
             }
@@ -226,7 +234,7 @@ int sys_do_exec(const char* path){
     /* build user stack */
     sz = USER_BASE;
     if ((sz = uvm_alloc(pgdir, sz, sz + USER_STACK_SIZE)) == 0){
-        debug_printf("exec: bad\n");
+        printf("exec: can not alloc user stack\n");
         if (pgdir){
             uvm_free(pgdir);
         }
@@ -234,7 +242,7 @@ int sys_do_exec(const char* path){
     }
     sp = sz;
     if (vmm_get_mapping(pgdir, sz - USER_STACK_SIZE, &pa) == 0){  // sz is no mapped
-        debug_printf("exec: bad\n");
+        printf("exec: can not map user stack\n");
         if (pgdir){
             uvm_free(pgdir);
         }

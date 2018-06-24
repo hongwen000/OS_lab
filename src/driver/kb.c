@@ -32,195 +32,195 @@ static inline void sys_outw(uint16_t port, uint16_t data)
 #define bochs_break()       \
         sys_outw(0x8A00,0x8A00);    \
         sys_outw(0x8A00,0x08AE0);
-static inline void sys_dbg_bochs_putc(char c){
-//    sys_outb(0xe9, (uint8_t)c);
-}
-static inline int debug_putchar( int ch )
-{
-    //echo -e "\e[1;31m This is red text! \e[0m"
-    sys_dbg_bochs_putc('\e');
-    sys_dbg_bochs_putc('[');
-    sys_dbg_bochs_putc('1');
-    sys_dbg_bochs_putc(';');
-    sys_dbg_bochs_putc('3');
-    sys_dbg_bochs_putc('1');
-    sys_dbg_bochs_putc('m');
-    sys_dbg_bochs_putc(ch);
-    sys_dbg_bochs_putc('\e');
-    sys_dbg_bochs_putc('[');
-    sys_dbg_bochs_putc('0');
-    sys_dbg_bochs_putc('m');
-    return ch;
-}
-static inline size_t strlen(const char* _str)
-{
-    const char* str = _str;
-    size_t len = 0;
-    while(_str && *(_str++))
-    {
-        len++;
-    }
-    return len;
-}
-static inline void* memcpy(void* _dst, const void* _src, size_t n)
-{
-    unsigned char* dst = (unsigned char*)_dst;
-    const unsigned char* src = (const unsigned char*)_src;
-    while (n--)
-    {
-        *(dst++) = *(src++);
-    }
-    return _dst;
-}
-static inline char *strcpy(char* _dst, const char* _src)
-{
-    size_t len = strlen(_src);
-    memcpy((void*)(_dst), (const void *)(_src), len);
-    _dst[len] = '\0';
-    return _dst;
-}
-static inline int debug_puts(const char* string)
-{
-    size_t len = strlen(string);
-    for(size_t i = 0; i < len; ++i)
-    {
-        debug_putchar(*(string + i));
-    }
-    return 0;
-}
-typedef __builtin_va_list va_list;
-#define va_start(ap, last) __builtin_va_start(ap, last)
+//static inline void sys_dbg_bochs_putc(char c){
+////    sys_outb(0xe9, (uint8_t)c);
+//}
+//static inline int debug_putchar( int ch )
+//{
+//    //echo -e "\e[1;31m This is red text! \e[0m"
+//    sys_dbg_bochs_putc('\e');
+//    sys_dbg_bochs_putc('[');
+//    sys_dbg_bochs_putc('1');
+//    sys_dbg_bochs_putc(';');
+//    sys_dbg_bochs_putc('3');
+//    sys_dbg_bochs_putc('1');
+//    sys_dbg_bochs_putc('m');
+//    sys_dbg_bochs_putc(ch);
+//    sys_dbg_bochs_putc('\e');
+//    sys_dbg_bochs_putc('[');
+//    sys_dbg_bochs_putc('0');
+//    sys_dbg_bochs_putc('m');
+//    return ch;
+//}
+//static inline size_t strlen(const char* _str)
+//{
+//    const char* str = _str;
+//    size_t len = 0;
+//    while(_str && *(_str++))
+//    {
+//        len++;
+//    }
+//    return len;
+//}
+//static inline void* memcpy(void* _dst, const void* _src, size_t n)
+//{
+//    unsigned char* dst = (unsigned char*)_dst;
+//    const unsigned char* src = (const unsigned char*)_src;
+//    while (n--)
+//    {
+//        *(dst++) = *(src++);
+//    }
+//    return _dst;
+//}
+//static inline char *strcpy(char* _dst, const char* _src)
+//{
+//    size_t len = strlen(_src);
+//    memcpy((void*)(_dst), (const void *)(_src), len);
+//    _dst[len] = '\0';
+//    return _dst;
+//}
+//static inline int debug_puts(const char* string)
+//{
+//    size_t len = strlen(string);
+//    for(size_t i = 0; i < len; ++i)
+//    {
+//        debug_putchar(*(string + i));
+//    }
+//    return 0;
+//}
+//typedef __builtin_va_list va_list;
+//#define va_start(ap, last) __builtin_va_start(ap, last)
+//
+//#define va_arg(ap, type) __builtin_va_arg(ap, type)
+//
+//#define va_end(ap) __builtin_va_end(ap)
+//static inline void reverse(char* buffer)
+//{
+//    char ch;
+//    size_t len = strlen(buffer);
+//    for(size_t i = 0; i < len / 2; ++i)
+//    {
+//        ch = *(buffer + i);
+//        *(buffer + i) = *(buffer + len - 1 - i);
+//        *(buffer + len - 1 - i)  = ch;
+//    }
+//}
+//static inline void itoa(char* buffer, int num, int base, int captial)
+//{
+//    const char* num_char_upper = "0123456789ABCDEF";
+//    const char* num_char_lower = "0123456789abcdef";
+//    if(num < 0)
+//    {
+//        *(buffer++) = '-';
+//        num = -num;
+//    }
+//    char *p = buffer;
+//    int mod = 0;
+//    while(1)
+//    {
+//        mod = num % base;
+//        num /= base;
+//        *(p++) = captial ? num_char_upper[mod] : num_char_lower[mod];
+//        if(num == 0) break;
+//    }
+//    *p = '\0';
+//    reverse(buffer);
+//}
+//static inline int debug_vsprintf( char* buffer, const char* format, va_list vlist )
+//{
+//    size_t len_fmt = strlen(format);
+//    const char* p_fmt = format;
+//    char* p_buf = buffer;
+//    while(len_fmt--)
+//    {
+//        if(*p_fmt != '%')
+//        {
+//            *(p_buf++) = *(p_fmt++);    //非控制字符
+//            continue;
+//        }
+//        else
+//        {
+//            //此时p_fmt = '%'
+//            char specifier = *(++p_fmt); //%后面一个字符是specifier
+//            ++p_fmt;                     //记录specifier并跳过
+//            switch (specifier)
+//            {
+//                case 'c':
+//                {
+//                    /*
+//                    依据C语言标准
+//                    If you pass an integral value with conversion rank
+//                    smaller than that of int (e. g. char, bool or short)
+//                     to a function taking a variable number of arguments,
+//                     it will be converted to int
+//                    */
+//                    *(p_buf++) = va_arg(vlist, int);
+//                    break;
+//                }
+//                case 's':
+//                {
+//                    const char * str = va_arg(vlist, char*);
+//                    strcpy(p_buf, str);
+//                    p_buf += strlen(str);               //p应当永远指向有意义的字符后面一位
+//                    break;
+//                }
+//                case 'd':
+//                case 'i':
+//                {
+//                    int num = va_arg(vlist, int);
+//                    itoa(p_buf, num, 10, 0);
+//                    p_buf += strlen(p_buf);             //同理
+//                    break;
+//                }
+//                case 'o':
+//                {
+//                    unsigned int num = va_arg(vlist, int);
+//                    itoa(p_buf, num, 8, 0);
+//                    p_buf += strlen(p_buf);             //同理
+//                    break;
+//                }
+//                case 'x':
+//                {
+//                    unsigned int num = va_arg(vlist, int);
+//                    itoa(p_buf, num, 16, 0);
+//                    p_buf += strlen(p_buf);             //同理
+//                    break;
+//                }
+//                case 'X':
+//                {
+//                    unsigned int num = va_arg(vlist, int);
+//                    itoa(p_buf, num, 16, 1);
+//                    p_buf += strlen(p_buf);             //同理
+//                    break;
+//                }
+//                case 'u':
+//                {
+//                    unsigned int num = va_arg(vlist, int);
+//                    itoa(p_buf, num, 10, 0);
+//                    p_buf += strlen(p_buf);             //同理
+//                    break;
+//                }
+//                default:
+//                {
+//                    break;
+//                }
+//            }
+//        }
+//    }
+//    *p_buf = '\0';
+//    return p_buf - buffer;
+//}
 
-#define va_arg(ap, type) __builtin_va_arg(ap, type)
-
-#define va_end(ap) __builtin_va_end(ap)
-static inline void reverse(char* buffer)
-{
-    char ch;
-    size_t len = strlen(buffer);
-    for(size_t i = 0; i < len / 2; ++i)
-    {
-        ch = *(buffer + i);
-        *(buffer + i) = *(buffer + len - 1 - i);
-        *(buffer + len - 1 - i)  = ch;
-    }
-}
-static inline void itoa(char* buffer, int num, int base, int captial)
-{
-    const char* num_char_upper = "0123456789ABCDEF";
-    const char* num_char_lower = "0123456789abcdef";
-    if(num < 0)
-    {
-        *(buffer++) = '-';
-        num = -num;
-    }
-    char *p = buffer;
-    int mod = 0;
-    while(1)
-    {
-        mod = num % base;
-        num /= base;
-        *(p++) = captial ? num_char_upper[mod] : num_char_lower[mod];
-        if(num == 0) break;
-    }
-    *p = '\0';
-    reverse(buffer);
-}
-static inline int debug_vsprintf( char* buffer, const char* format, va_list vlist )
-{
-    size_t len_fmt = strlen(format);
-    const char* p_fmt = format;
-    char* p_buf = buffer;
-    while(len_fmt--)
-    {
-        if(*p_fmt != '%')
-        {
-            *(p_buf++) = *(p_fmt++);    //非控制字符
-            continue;
-        }
-        else
-        {
-            //此时p_fmt = '%'
-            char specifier = *(++p_fmt); //%后面一个字符是specifier
-            ++p_fmt;                     //记录specifier并跳过
-            switch (specifier)
-            {
-                case 'c':
-                {
-                    /*
-                    依据C语言标准
-                    If you pass an integral value with conversion rank
-                    smaller than that of int (e. g. char, bool or short)
-                     to a function taking a variable number of arguments,
-                     it will be converted to int
-                    */
-                    *(p_buf++) = va_arg(vlist, int);
-                    break;
-                }
-                case 's':
-                {
-                    const char * str = va_arg(vlist, char*);
-                    strcpy(p_buf, str);
-                    p_buf += strlen(str);               //p应当永远指向有意义的字符后面一位
-                    break;
-                }
-                case 'd':
-                case 'i':
-                {
-                    int num = va_arg(vlist, int);
-                    itoa(p_buf, num, 10, 0);
-                    p_buf += strlen(p_buf);             //同理
-                    break;
-                }
-                case 'o':
-                {
-                    unsigned int num = va_arg(vlist, int);
-                    itoa(p_buf, num, 8, 0);
-                    p_buf += strlen(p_buf);             //同理
-                    break;
-                }
-                case 'x':
-                {
-                    unsigned int num = va_arg(vlist, int);
-                    itoa(p_buf, num, 16, 0);
-                    p_buf += strlen(p_buf);             //同理
-                    break;
-                }
-                case 'X':
-                {
-                    unsigned int num = va_arg(vlist, int);
-                    itoa(p_buf, num, 16, 1);
-                    p_buf += strlen(p_buf);             //同理
-                    break;
-                }
-                case 'u':
-                {
-                    unsigned int num = va_arg(vlist, int);
-                    itoa(p_buf, num, 10, 0);
-                    p_buf += strlen(p_buf);             //同理
-                    break;
-                }
-                default:
-                {
-                    break;
-                }
-            }
-        }
-    }
-    *p_buf = '\0';
-    return p_buf - buffer;
-}
-
-static inline int debug_sprintf( char *buffer, const char *format, ... )
-{
-    int ret;
-    va_list va;
-    va_start(va, format);
-    ret = debug_vsprintf(buffer, format, va);
-    va_end(va);
-    return ret;
-}
-static char debug_printbuf[80*25];
+//static inline int debug_sprintf( char *buffer, const char *format, ... )
+//{
+//    int ret;
+//    va_list va;
+//    va_start(va, format);
+//    ret = debug_vsprintf(buffer, format, va);
+//    va_end(va);
+//    return ret;
+//}
+//static char debug_printbuf[80*25];
 //TODO 关于这个返回值
 //static inline int debug_printf( const char* format, ... )
 //{

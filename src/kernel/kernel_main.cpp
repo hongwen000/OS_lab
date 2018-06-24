@@ -114,8 +114,8 @@ extern "C" void kernel_main()
     asm volatile("sti");
 //    sys_write_hard_disk(SEL_KERN_DATA, (uint32_t)&write_buf[0], 0, 1);
 //    asm volatile("int $0x97");
-//    auto fs_info = FS_read_info(fs_buf);
-//    Show_FS_Info(fs_info);
+    auto fs_info = FS_read_info(fs_buf);
+    Show_FS_Info(fs_info);
 //    FileInfo_t fp;
 //    Read_Print_File("/SH.ELF", &fp, fs_info, &sectorBuffer);
 //    bochs_break();
