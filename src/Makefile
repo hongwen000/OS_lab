@@ -179,6 +179,7 @@ user_bin = $(build_dir)/usr/help.bin   \
            $(build_dir)/usr/usr2.elf \
            $(build_dir)/usr/usr3.elf \
            $(build_dir)/usr/usr4.elf \
+           $(build_dir)/usr/edit.elf \
            $(build_dir)/usr/test.txt \
 #           $(build_dir)/usr/user1.elf  \
 #           $(build_dir)/usr/user2.elf  \

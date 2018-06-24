@@ -31,6 +31,6 @@ port_e9_hack: enabled=1
 # disk image
  ata0: enabled=1, ioaddr1=0x1f0, ioaddr2=0x3f0, irq=14
 # 10MB disk, format by mkf
- ata0-master: type=disk, path="build/hard_disk.img", mode=flat, cylinders=20, heads=16, spt=63
+ ata0-master: type=disk, path="build/hard_disk.img", mode=flat, cylinders=81, heads=16, spt=63
  ata0-slave: type=none
 debug_symbols: file=build/kernel/kernel.map

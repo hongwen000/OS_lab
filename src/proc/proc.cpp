@@ -122,15 +122,15 @@ void scheduler(){
                 continue;
             }
 
-            debug_printf("scheduler: proc `%s`(PID: %d) will run\n", pp->name, pp->pid);
+//            debug_printf("scheduler: proc `%s`(PID: %d) will run\n", pp->name, pp->pid);
 
             uvm_switch(pp);
             pp->state = P_RUNNING;
 
             current_proc = pp;
-            debug_puts(">>>> context switch\n");
+//            debug_puts(">>>> context switch\n");
             sys_context_switch(&cpu_context, pp->context);
-            debug_printf("<<<< return form proc `%s`(PID: %d)\n", pp->name, pp->pid);
+//            debug_printf("<<<< return form proc `%s`(PID: %d)\n", pp->name, pp->pid);
             asm volatile("sti");
         }
     }

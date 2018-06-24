@@ -119,7 +119,7 @@ int sh::sh_exec(const sh::cmd &input_cmd)
                         putchar(file_info.filename[i]);
                     }
 //                    bochs_break();
-                    printf(" %u bytes\n", file_info.FileSize);
+                    printf(" %u bytes %s\n", file_info.FileSize, file_info.LongFilename);
 //                    printf("Here 5\n");
 //                    printf("");
                 }
@@ -162,15 +162,24 @@ int sh::sh_exec(const sh::cmd &input_cmd)
                     {
                         lseek(fd, -0x20, SEEK_CUR);
                         uint8_t ch;
-                        for(size_t i = 0; i < 8; ++i)
-                        {
-                            auto fn = inputs[input_cmd.start+2];
-                            if(i < strlen(fn) && fn[i] != '.')
-                            {
+                        size_t ext = 0;
+                        bool before_ext = true;
+                        for (size_t i = 0; i < 8; ++i) {
+                            auto fn = inputs[input_cmd.start + 2];
+                            if (i < strlen(fn) && fn[i] != '.' && before_ext) {
                                 ch = fn[i];
+                            } else {
+                                if (before_ext && i + 1 < strlen(fn)) ext = i + 1;
+                                before_ext = false;
+                                ch = ' ';
                             }
-                            else
-                            {
+                            write(fd, &ch, 1);
+                        }
+                        for (size_t i = 0; i < 3; ++i) {
+                            auto fn = inputs[input_cmd.start + 2] + ext;
+                            if (ext && i < strlen(fn)) {
+                                ch = fn[i];
+                            } else {
                                 ch = ' ';
                             }
                             write(fd, &ch, 1);
@@ -562,14 +571,14 @@ void sh::run() {
             printf("KEY DOWN PRESSED\n");
             continue;
         }
-        if (in == C('C'))
-        {
-            printf("Ctrl-C PRESSED\n");
-            continue;
-        }
         if (in == C('D'))
         {
-            printf("Ctrl-D PRESSED\n");
+            putchar(TTY_MOVE_CURSOR_FORWARD);
+            continue;
+        }
+        if (in == C('A'))
+        {
+            putchar(TTY_MOVE_CURSOR_BACK);
             continue;
         }
         if (in == '\b')

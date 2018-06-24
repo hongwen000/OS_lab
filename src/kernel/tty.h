@@ -82,6 +82,30 @@ public:
     {
         switch(c)
         {
+            case TTY_MOVE_CURSOR_BACK:
+            {
+                if(cur_y == 0 && cur_x == 0)
+                {
+                    break;
+                }
+                else if (cur_y == 0 && cur_x != 0)
+                {
+                    cur_y = 80 - 1;
+                    cur_x--;
+                    break;
+                }
+                else
+                {
+                    cur_y--;
+                    break;
+                }
+            }
+            case TTY_MOVE_CURSOR_FORWARD:
+            {
+                cur_x = (cur_y == 79) ? cur_x + 1 : cur_x;
+                cur_y = (cur_y + 1) % 80;
+                break;
+            }
             case '\t':
             {
                 for(int i = 0; i < 4; ++i) putchar(' ');
