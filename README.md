@@ -1,5 +1,5 @@
 # OS_lab
-本操作系统是2018年凌应标老师的操作系统实验课课程作业。
+本操作系统是2018年凌应标老师的中山大学操作系统实验课课程作业。
 
 This OS is the course project of Operating Systems Laboratory in SYSU taught by Professor Lin Yingbiao.
 
