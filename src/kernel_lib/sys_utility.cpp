@@ -92,8 +92,9 @@ void blue_screen(int_frame *r)
 
 extern "C" int sys_getchar()
 {
-    unsigned char ch = kb_buf_out();
-//    debug_printf("DEBUG: sys_getchar got %c (%d)\n", ch, (int) ch);
+    unsigned char ch = 0;
+    ch = kb_buf_out();
+    // debug_printf("DEBUG: sys_getchar got %c (%d)\n", ch, (int) ch);
     return ch;
 }
 

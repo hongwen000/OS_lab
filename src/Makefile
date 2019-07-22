@@ -193,7 +193,8 @@ user_bin = $(build_dir)/usr/help.bin   \
 write_usr_progs: $(user_bin)
 	hdiutil attach $(hard_disk_file)
 	cp $(build_dir)/usr/*.elf $(build_dir)/usr/*.txt /Volumes/NEW
-	hdiutil detach /dev/disk2
+	sleep 1
+	hdiutil detach /dev/disk3
 
 floppyfile = $(build_dir)/disk.img
 hard_disk_file = $(build_dir)/hard_disk.img
@@ -204,10 +205,11 @@ clean_disk:
 	rm -f $(hard_disk_file)
 	bximage $(hard_disk_file) -hd=40M -imgmode=flat -mode=create -q
 	hdiutil attach -imagekey diskimage-class=CRawDiskImage -nomount $(hard_disk_file)
-	newfs_msdos -F32 -v NEW disk2
-	hdiutil detach /dev/disk2
+	newfs_msdos -F32 -v NEW disk3
+	sleep 1
+	hdiutil detach /dev/disk3
 
-write_kernel: clean_disk kernel_img $(bootloader_bin)
+write_kernel: kernel_img clean_disk $(bootloader_bin)
 	dd if=$(bootloader_bin) of=$(floppyfile) conv=notrunc
 	dd if=$(kernel_bin) of=$(floppyfile) bs=512 seek=1 conv=notrunc
 

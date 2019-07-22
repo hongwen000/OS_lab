@@ -6,8 +6,8 @@
 megs: 32
 
 # filename of ROM images
-romimage: file=/usr/local/Cellar/bochs/2.6.9_1/share/bochs/BIOS-bochs-latest
-vgaromimage: file=/usr/local/Cellar/bochs/2.6.9_1/share/bochs/VGABIOS-lgpl-latest
+romimage: file=/usr/local/Cellar/bochs/2.6.9_2/share/bochs/BIOS-bochs-latest
+vgaromimage: file=/usr/local/Cellar/bochs/2.6.9_2/share/bochs/VGABIOS-lgpl-latest
 vga: extension=vbe
 
 # what disk images will be used
@@ -24,7 +24,7 @@ mouse: type=ps2, enabled=1
 #mouse: enabled=0
 
 # enable key mapping, using US layout as default.
-keyboard: keymap=/usr/local/Cellar/bochs/2.6.9_1/share/bochs/keymaps/sdl2-pc-us.map
+keyboard: keymap=/usr/local/Cellar/bochs/2.6.9_2/share/bochs/keymaps/sdl2-pc-us.map
 
 #clock: sync=both
 port_e9_hack: enabled=1

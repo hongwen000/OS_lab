@@ -170,6 +170,9 @@ int sys_do_exec(const char* path){
     kvm_init(pgdir);
 
     int fd = sys_open(path, 0);
+    if(fd == -1) {
+        printf("exec: unable to open %s\n", path);
+    }
     stat f_st;
     sys_fstat(fd, &f_st);
     auto f_sz = f_st.size;

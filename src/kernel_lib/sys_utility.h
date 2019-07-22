@@ -45,9 +45,12 @@ extern "C"{
     extern "C" void interrupt_timer_c();
     void system_call_c(int_frame* tf);
     extern uint32_t HHOS_timer_ticks;
-    #define bochs_break()       \
+    #define bochs_break()           \
+    {                               \
         sys_outw(0x8A00,0x8A00);    \
-        sys_outw(0x8A00,0x08AE0);
+        sys_outw(0x8A00,0x08AE0);   \
+    }
+
 #ifdef __cplusplus
 }
 #endif

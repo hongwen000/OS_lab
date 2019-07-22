@@ -44,6 +44,8 @@
 extern "C"{
 #endif
 unsigned char kb_buf_out();
+void kb_handler();
+void kb_init();
 
 #ifdef __cplusplus
 }
