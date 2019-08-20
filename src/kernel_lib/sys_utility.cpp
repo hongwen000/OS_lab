@@ -435,9 +435,9 @@ void interrupt_timer_c()
     wakeup(&HHOS_timer_ticks);
 
     if (HHOS_timer_ticks % 1000 == 0){
-//        debug_printf("timer_handler: timer alive, trick: %d\n", HHOS_timer_ticks);
+       debug_printf("timer_handler: timer alive, trick: %d\n", HHOS_timer_ticks);
     }
 
     if(HHOS_timer_ticks % 50 == 0)
-        sched();
+        go_back_scheduler();
 }

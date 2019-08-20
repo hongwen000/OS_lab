@@ -21,26 +21,41 @@ STRIP = $(GCC_PREFIX)strip
 
 all:
 	#make clean
-	make write_all_progs
+	make make_system
 
+floppyfile = $(build_dir)/disk.img
+hard_disk_file = $(build_dir)/hard_disk.img
+
+prepare_empty_floppy:
+	@mkdir -p build
+	dd if=/dev/zero of=$(floppyfile) bs=512 count=2880
+
+prepare_empty_hard_disk:
+	@mkdir -p build
+	rm -f $(hard_disk_file)
+	bximage $(hard_disk_file) -hd=40M -imgmode=flat -mode=create -q
+	hdiutil attach -imagekey diskimage-class=CRawDiskImage -nomount $(hard_disk_file)
+	echo "disk number is" $(available_disk_number)
+	newfs_msdos -F32 -v NEW disk$(available_disk_number)
+	sleep 1
+	hdiutil detach /dev/disk$(available_disk_number)
+
+clean_disk: prepare_empty_floppy prepare_empty_hard_disk
+#	@mkdir -p build
+#	dd if=/dev/zero of=$(floppyfile) bs=512 count=2880
+#	rm -f $(hard_disk_file)
+#	bximage $(hard_disk_file) -hd=40M -imgmode=flat -mode=create -q
+#	hdiutil attach -imagekey diskimage-class=CRawDiskImage -nomount $(hard_disk_file)
+#	echo "disk number is" $(available_disk_number)
+#	newfs_msdos -F32 -v NEW disk$(available_disk_number)
+#	sleep 1
+#	hdiutil detach /dev/disk$(available_disk_number)
 
 GCC_PREFIX = /opt/cross/gcc-i386/bin/i386-elf-
 
 OBJDUMP = $(GCC_PREFIX)objdump
 
-CC = $(GCC_PREFIX)gcc
-CFLAGS =  	-m32 -march=i486 \
-			-nostdlib -ffreestanding \
-			-lgcc \
-			-fno-builtin -O0 -fno-omit-frame-pointer \
-			-Wall -Wno-format -Wno-unused -Wno-write-strings -Werror \
-			-fno-tree-ch -fno-stack-protector \
-			-std=gnu11  -g \
-			-I . -I include
-
-CXX = $(GCC_PREFIX)g++
-
-CXXFLAGS =  -m32 -march=i386 \
+C_CXX_COMMON_FLAGS =  -m32 -march=i386 \
 			-nostdlib -ffreestanding \
 			-lgcc \
 			-fno-builtin -O0 -fno-omit-frame-pointer \
@@ -48,6 +63,17 @@ CXXFLAGS =  -m32 -march=i386 \
 			-fno-tree-ch -fno-stack-protector \
 			-std=c++17  -g \
 			-I . -I include
+
+CC = $(GCC_PREFIX)gcc
+
+CFLAGS = 	$(C_CXX_COMMON_FLAGS) \
+			-std=gnu11
+
+CXX = $(GCC_PREFIX)g++
+
+
+CXXFLAGS = $(C_CXX_COMMON_FLAGS) \
+		   -std=c++17
 
 LD  = $(GCC_PREFIX)ld
 
@@ -190,30 +216,24 @@ user_bin = $(build_dir)/usr/help.bin   \
 #	$(foreach user_prog, $(user_bin), $(call DO_write, $(user_prog)))
 #	cp hard_disk.img $(hard_disk_file)
 
+available_disk_number = `echo "0+"$$(ls /dev |  sort | gsed -n "s/^disk\([0-9]\)*/\1/p" | tail -n 1) | bc`
+
 write_usr_progs: $(user_bin)
 	hdiutil attach $(hard_disk_file)
 	cp $(build_dir)/usr/*.elf $(build_dir)/usr/*.txt /Volumes/NEW
 	sleep 1
-	hdiutil detach /dev/disk3
+	hdiutil detach /dev/disk$(available_disk_number)
 
-floppyfile = $(build_dir)/disk.img
-hard_disk_file = $(build_dir)/hard_disk.img
 
-clean_disk:
-	@mkdir -p build
-	dd if=/dev/zero of=$(floppyfile) bs=512 count=2880
-	rm -f $(hard_disk_file)
-	bximage $(hard_disk_file) -hd=40M -imgmode=flat -mode=create -q
-	hdiutil attach -imagekey diskimage-class=CRawDiskImage -nomount $(hard_disk_file)
-	newfs_msdos -F32 -v NEW disk3
-	sleep 1
-	hdiutil detach /dev/disk3
-
-write_kernel: kernel_img clean_disk $(bootloader_bin)
+write_kernel: kernel_img $(bootloader_bin)
 	dd if=$(bootloader_bin) of=$(floppyfile) conv=notrunc
 	dd if=$(kernel_bin) of=$(floppyfile) bs=512 seek=1 conv=notrunc
 
-write_all_progs: write_kernel write_usr_progs
+write_to_disk: write_kernel write_usr_progs
+
+make_system: 
+	make clean_disk
+	make write_to_disk
 
 
 
@@ -235,11 +255,11 @@ endif
 QEMUOPTS = -fda $(floppyfile) -hda $(hard_disk_file) -smp $(CPUS) -m 32 $(QEMUEXTRA)
 
 #执行qemu虚拟机
-qemu: write_all_progs
+qemu: make_system
 	$(QEMU) -serial mon:stdio $(QEMUOPTS)
 
 #执行qemu命令行界面
-qemu-nox: write_all_progs
+qemu-nox: make_system
 	$(QEMU) -nographic $(QEMUOPTS)
 
 #生成gdb启动脚本
@@ -248,12 +268,12 @@ qemu-nox: write_all_progs
 	sed "s/localhost:1234/localhost:$(GDBPORT)/" < gdbinit.part >> $@
 
 #qemu连接gdb
-qemu-gdb: .gdbinit write_all_progs 
+qemu-gdb: .gdbinit make_system 
 	@echo "*** Now run 'gdb'." 1>&2
 	$(QEMU) -serial mon:stdio $(QEMUOPTS) -S $(QEMUGDB)
 
 #qemu命令行界面连接gdb
-qemu-nox-gdb: .gdbinit write_all_progs 
+qemu-nox-gdb: .gdbinit make_system 
 	@echo "*** Now run 'gdb'." 1>&2
 	$(QEMU) -nographic $(QEMUOPTS) -S $(QEMUGDB)
 
@@ -262,7 +282,7 @@ gdb: .gdbinit
 	/opt/cross/gcc-i386/bin/i386-elf-gdb -n -x .gdbinit
 
 #启动bochs虚拟机
-bochs: write_all_progs
+bochs: make_system
 	export FLOPPYFILE=$(floppyfile) && bochs -qf bochsrc -rc bochsinit
 
 #清理

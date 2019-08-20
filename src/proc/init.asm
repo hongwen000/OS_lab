@@ -10,10 +10,11 @@ align 4
 __init_start:
     nop
     ;fork
-    mov ah, 7
+    mov ah, 4
     int 0x98    ; a free process is necessary
     cmp eax, 0
     jz child
+    ; Because currently kernel is not reentrant, there must be a running process
     jmp $
 
 child:

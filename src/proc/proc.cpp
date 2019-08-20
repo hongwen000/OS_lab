@@ -10,7 +10,8 @@
 static PCB ptable[MAX_PROC];
 static PCB *initproc = nullptr;
 PCB *current_proc = nullptr;
-context_t *cpu_context;
+// A pointer to some where of kernel stack, maintaining the context of scheduler
+context_t *scheduler_context;
 static uint32_t cur_pid = 0;
 extern void pic_init();
 void fork_ret(){
@@ -109,7 +110,7 @@ void proc_init(){
 }
 
 //the entity of `context` is on stack
-extern "C" void sys_context_switch(context_t** p_p_context, context_t* p_context);
+extern "C" void sys_context_switch(context_t** p_p_old_context, context_t* p_new_context);
 void scheduler(){
     PCB *pp;
 
@@ -118,33 +119,43 @@ void scheduler(){
     for (;;){
         for (pp = &ptable[0]; pp < &ptable[MAX_PROC]; pp++){
             asm volatile("cli");
+            if(pp->state == P_UNUSED)
+            {
+                debug_printf("scheduler: PCB %d unused\n", pp - &ptable[0]);
+            }
+            else
+            {
+                debug_printf("scheduler: PCB %d, name `%s`(PID: %d), status: %d\n", pp - &ptable[0], pp->name, pp->pid, pp->state);
+            }
             if (pp->state != P_RUNNABLE){
                 continue;
             }
 
-//            debug_printf("scheduler: proc `%s`(PID: %d) will run\n", pp->name, pp->pid);
+            debug_printf("scheduler: proc `%s`(PID: %d) will run\n", pp->name, pp->pid);
 
             uvm_switch(pp);
             pp->state = P_RUNNING;
 
             current_proc = pp;
-//            debug_puts(">>>> context switch\n");
-            sys_context_switch(&cpu_context, pp->context);
-//            debug_printf("<<<< return form proc `%s`(PID: %d)\n", pp->name, pp->pid);
+            debug_puts(">>>> context switch\n");
+            sys_context_switch(&scheduler_context, pp->context);
+            debug_printf("<<<< return form proc `%s`(PID: %d)\n", pp->name, pp->pid);
             asm volatile("sti");
         }
     }
 }
 
-void sched(){
+// yeild cpu and go to scheduler
+void go_back_scheduler(){
     if (current_proc == nullptr) return;
     if (current_proc->state == P_RUNNABLE)
-        debug_puts("sched: no runable\n");
+        debug_puts("go_back_scheduler: no runable\n");
 
     if (current_proc->state == P_RUNNING){
         current_proc->state = P_RUNNABLE;
     }
-    sys_context_switch(&current_proc->context, cpu_context);
+    sys_context_switch(&current_proc->context, scheduler_context);
+    // next statement is -->  debug_printf("<<<< return form proc `%s`(PID: %d)\n", pp->name, pp->pid);
 }
 
 void sys_do_sleep(void *sleep_event){
@@ -157,7 +168,7 @@ void sys_do_sleep(void *sleep_event){
     current_proc->state = P_SLEEPING;
     asm volatile("sti");
 
-    sched();
+    go_back_scheduler();
 
     // wake up
     current_proc->sleep_event = nullptr;
@@ -263,8 +274,8 @@ void sys_do_exit(){
     asm volatile("sti");
 
 
-    sched();
-    debug_puts("exit: return form sched");
+    go_back_scheduler();
+    debug_puts("exit: return form go_back_scheduler");
     bochs_break();
 }
 int sys_do_fork(){

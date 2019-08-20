@@ -21,7 +21,6 @@ typedef __builtin_va_list va_list;
 #include <stdarg.h>
 #endif
 
-//#define USE_BOCHS_DEBUG_OUTPUT
 
 using size_t = unsigned long;
 using uint8_t = unsigned char;
@@ -70,8 +69,8 @@ using pde_t = uint32_t;
 /* page talbe entry */
 using pte_t = uint32_t;
 #define offsetof(TYPE, MEMBER) __builtin_offsetof (TYPE, MEMBER)
-//#define DEBUG_PRINTF
-//#define COLORIZE_DEBUG_PRINTF
+#define DEBUG_PRINTF
+#define COLORIZE_DEBUG_PRINTF
 #define TTY_MOVE_CURSOR_BACK      129
 #define TTY_MOVE_CURSOR_FORWARD   130
 #endif

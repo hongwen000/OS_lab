@@ -66,13 +66,13 @@ struct PCB {
     int killed;                  // If non-zero, have been killed
 //    struct file *ofile[NOFILE];  // Open files
     struct inode *cwd;           // Current directory
-    char name[16];               // Process name (debugging)
+    char name[256];               // Process name (debugging)
     PCB* next;
     void* brk;
 };
 
 extern PCB *current_proc;
-extern context_t *cpu_context;
+extern context_t *scheduler_context;
 void proc_init();
 void scheduler();
 int sys_do_fork();
@@ -82,6 +82,6 @@ int sys_do_wait();
 void wakeup(void *sleep_event);
 void wakeup_one(void *sleep_event, PCB* pp);
 void sys_do_sleep(void *sleep_event);
-void sched();
+void go_back_scheduler();
 
 #endif //HHOS_PROC_H

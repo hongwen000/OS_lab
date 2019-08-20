@@ -265,7 +265,7 @@ int sys_do_exec(const char* path){
     debug_printf("exec: prepare for new process `%s`\n", "");
 
     asm volatile("cli");
-    strcpy(current_proc->name, "");
+    strcpy(current_proc->name, path);
 
     old_pgdir = current_proc->pgdir;
     current_proc->pgdir = pgdir;

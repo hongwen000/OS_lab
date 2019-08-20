@@ -16,7 +16,7 @@ void real_world_cls()
 #ifdef COLORIZE_DEBUG_PRINTF
 static int debug_putchar( int ch )
 {
-    //echo -e "\e[1;31m This is red text! \e[0m"
+    // echo -e "\e[1;31m This is red text! \e[0m"
     sys_dbg_bochs_putc('\e');
     sys_dbg_bochs_putc('[');
     sys_dbg_bochs_putc('1');

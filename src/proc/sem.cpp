@@ -35,7 +35,7 @@ int sys_do_v(int sem_id) {
         wakeup_one(&sem[sem_id], sem[sem_id].head);
         sem[sem_id].head = current_proc->next;
         //假设一个信号量仅被一个进程进行v操作，那么这样能够保证强信号量
-//        sched();
+//        go_back_scheduler();
     }
     return 0;
 }
