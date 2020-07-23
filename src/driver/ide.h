@@ -23,6 +23,8 @@
 /* Command */
 #define IDE_CMD_READ 0x20
 #define IDE_CMD_WRITE 0x30
+#define IDE_CMD_READ_MULTIPLE 0xc4
+#define IDE_CMD_WRITE_MULTIPLE 0xc5
 
 /* Port */
 #define IDE_PORT_DATA       0x1f0   // word data register (Read-Write)
@@ -48,6 +50,7 @@ extern "C" void sys_ide_handler();
 #define B_BUSY  0x1 // buffer is locked
 #define B_VALID 0x2 // has been read form disk
 #define B_DIRTY 0x4 // need to be written to disk
+#define ATA_DEV_CONTROL_nIEN (1 << 1)
 struct ide_request
 {
     ide_request() = default;
@@ -62,6 +65,7 @@ struct ide_request
     char buf[IDE_BUF_SIZE];
 };
 
+void ide_init();
 void ide_test();
 void ide_rw(ide_request*);
 #ifdef IDE_TEST

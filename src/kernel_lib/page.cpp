@@ -50,20 +50,27 @@ void vmm_init(){
 //页表目录/虚拟地址/物理地址/flags
 void vmm_map(pde_t *pgdir, uint32_t va, uint32_t pa, uint32_t flags){
     if(va >= USER_BASE)
+    {
         debug_printf("vmm_map: 1. Try to map ram %x to %x\n", pa, va);
+    }
     uint32_t pde_idx = PDE_INDEX(va);
     uint32_t pte_idx = PTE_INDEX(va);
 
     pte_t *pte = (pte_t *)(pgdir[pde_idx] & PAGE_MASK);
     if(va >= USER_BASE)
+    {
         debug_printf("vmm_map: 2. pte of USER va 0x%x is at 0x%x\n", va, pte);
+    }
 
     if (!pte){
-        if (va >= USER_BASE){
+        if (va >= USER_BASE)
+        {
             pte = (pte_t *)ram_alloc();
             debug_printf("vmm_map: 2.5it is used for storing page entry\n");
             pgdir[pde_idx] = (uint32_t)pte | PTE_P | flags;
-        } else {
+        }
+        else
+        {
             pte = (pte_t *)(pgd_kern[pde_idx] & PAGE_MASK);
             pgdir[pde_idx] = (uint32_t)pte | PTE_P | flags;
             return;
@@ -72,7 +79,9 @@ void vmm_map(pde_t *pgdir, uint32_t va, uint32_t pa, uint32_t flags){
 
     pte[pte_idx] = (pa & PAGE_MASK) | PTE_P | flags;
     if(va >= USER_BASE)
+    {
         debug_printf("vmm_map: 3.wrote page table: pte = 0x%x, pte_idx = %u, &pte[pte_idx] = 0x%x, pte[pte_idx] = 0x%x\n", pte, pte_idx, &(pte[pte_idx]), pte[pte_idx]);
+    }
 
 }
 int vmm_get_mapping(pde_t *pgdir, uint32_t va, uint32_t *pa){

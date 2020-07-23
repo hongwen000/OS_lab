@@ -2,6 +2,7 @@
 // Created by 李新锐 on 20/05/2018.
 //
 #include "sh.h"
+// #include "../driver/ide.h"
 #include "../fs/fat32.h"
 #include "../fs/sys_uio.h"
 
@@ -400,12 +401,12 @@ int sh::sh_exec(const sh::cmd &input_cmd)
 //        read_rtc();
 //        printf("%s\n", sys_internal_time_str);
 //    }
-#ifdef IDE_TEST
-    else if (is_command(input_cmd, "ide"))
-    {
-        ide_test();
-    }
-#endif
+// #ifdef IDE_TEST
+//     else if (is_command(input_cmd, "ide"))
+//     {
+//         ide_test();
+//     }
+// #endif
     else {
         bool found = false;
 //        for(size_t i = 0; i < prog_cnt; ++i)

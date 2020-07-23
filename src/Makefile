@@ -37,7 +37,7 @@ prepare_empty_hard_disk:
 	hdiutil attach -imagekey diskimage-class=CRawDiskImage -nomount $(hard_disk_file)
 	echo "disk number is" $(available_disk_number)
 	newfs_msdos -F32 -v NEW disk$(available_disk_number)
-	sleep 1
+	sleep 0.3
 	hdiutil detach /dev/disk$(available_disk_number)
 
 clean_disk: prepare_empty_floppy prepare_empty_hard_disk
@@ -221,7 +221,7 @@ available_disk_number = `echo "0+"$$(ls /dev |  sort | gsed -n "s/^disk\([0-9]\)
 write_usr_progs: $(user_bin)
 	hdiutil attach $(hard_disk_file)
 	cp $(build_dir)/usr/*.elf $(build_dir)/usr/*.txt /Volumes/NEW
-	sleep 1
+	sleep 0.3
 	hdiutil detach /dev/disk$(available_disk_number)
 
 
@@ -252,7 +252,7 @@ CPUS := 1
 endif
 
 #qemu执行参数
-QEMUOPTS = -fda $(floppyfile) -hda $(hard_disk_file) -smp $(CPUS) -m 32 $(QEMUEXTRA)
+QEMUOPTS = -d int,pcall,guest_errors,in_asm -drive file=$(floppyfile),index=0,if=floppy,format=raw -drive file=$(hard_disk_file),index=0,media=disk,format=raw -smp $(CPUS) -m 32 $(QEMUEXTRA) -boot order=ab
 
 #执行qemu虚拟机
 qemu: make_system

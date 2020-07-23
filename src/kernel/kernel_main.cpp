@@ -13,10 +13,12 @@
 #include "../kernel_lib/debug_printf.h"
 #include "../fs/fat32.h"
 #include "../fs/sys_uio.h"
+#include "../driver/ide.h"
 
 extern "C" void interrupt_timer();
 extern "C" void interrupt_kb();
 extern "C" void interrupt_ide();
+extern "C" void interrupt_ide_slave();
 extern "C" void interrupt_90h();
 extern "C" void interrupt_91h();
 extern "C" void interrupt_97h();
@@ -101,6 +103,8 @@ extern "C" void kernel_main()
     idt_install(ISR_IRQ0 + IRQ_KB, (uint32_t)interrupt_kb, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
     print_ok("Keyboard");
     idt_install(ISR_IRQ0 + IRQ_IDE, (uint32_t)interrupt_ide, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
+    idt_install(ISR_IRQ0 + IRQ_IDE_SLAVE, (uint32_t)interrupt_ide_slave, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
+    ide_init();
     print_ok("IDE Disk");
     idt_install(0x99, (uint32_t)interrupt_99h, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_KERN);
     idt_install(0x97, (uint32_t)interrupt_97h, SEL_KCODE << 3, GATE_INT, IDT_PR | IDT_DPL_USER);
@@ -112,6 +116,12 @@ extern "C" void kernel_main()
     set_pit_freq();
 
     asm volatile("sti");
+    // ide_request buffer;  // used for test
+    // buffer.dev = 0;
+    // buffer.lba= 0;
+    // buffer.cmd = B_BUSY;
+    // ide_rw(&buffer);
+    // ide_test();
 //    sys_write_hard_disk(SEL_KERN_DATA, (uint32_t)&write_buf[0], 0, 1);
 //    asm volatile("int $0x97");
     auto fs_info = FS_read_info(fs_buf);

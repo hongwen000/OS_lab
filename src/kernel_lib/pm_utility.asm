@@ -39,12 +39,52 @@ default_fault%1:
         push 0 ; fake error code
     %endif
     push %1    ; int no.
-    jmp fault_irq_default_isr
+    ; jmp fault_irq_default_isr
+    hlt
 %endmacro
 
 %assign i 0
 %rep 32
     m_fault i
+    %assign i i + 1
+%endrep
+
+; ***** exception int 0 - int 31
+%macro no_fault 1
+[global nothing_fault%1]
+nothing_fault%1:
+    cli
+    ; see the int_frame struct
+    ; int 8,10-14,17,30 have error code,
+    ; int fact int 9 exception happen
+    ; on outdataed techhnology, don't care it
+    %if %1 != 17 && %1 != 30 && (%1 < 8 || %1 > 14)
+        push 0 ; fake error code
+    %endif
+    push %1    ; int no.
+    pusha
+    push ds
+    push es
+    push fs
+    push gs
+    mov eax, esp
+    push eax
+    ; call blue_screen
+	mov al,0x20
+	out 0x20,al
+	out 0xA0,al
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popa
+	sti
+	iret
+%endmacro
+
+%assign i 0
+%rep 32
+    no_fault i
     %assign i i + 1
 %endrep
 

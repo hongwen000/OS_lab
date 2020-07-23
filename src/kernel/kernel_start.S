@@ -21,9 +21,9 @@ kernel_start:
 
 
 ; mov the kernel to 0x100000
-[extern kernstart]
+[extern kernstart] ; defined in linker script
 [extern kernend]
-    mov eax, kernend        ; defined in linker script
+    mov eax, kernend        
     mov ecx, kernstart
     sub eax, ecx
     mov ecx, eax
@@ -186,7 +186,31 @@ interrupt_kb:
 interrupt_ide:
     cli
     __ISR_BEGIN_SAFE_ASM__
-    call sys_ide_handler
+    ; call sys_ide_handler
+	mov al,0x20
+	out 0x20,al
+	out 0xA0,al
+	__ISR_LEAVE_SAFE_ASM__
+	sti
+	iret
+
+[global interrupt_ide_slave]
+interrupt_ide_slave:
+    cli
+    __ISR_BEGIN_SAFE_ASM__
+	mov al,0x20
+	out 0x20,al
+	out 0xA0,al
+	__ISR_LEAVE_SAFE_ASM__
+	sti
+	iret
+
+[global interrupt_nothing]
+[extern interrupt_nothing_c]
+interrupt_nothing:
+    cli
+    __ISR_BEGIN_SAFE_ASM__
+    call interrupt_nothing_c
 	mov al,0x20
 	out 0x20,al
 	out 0xA0,al

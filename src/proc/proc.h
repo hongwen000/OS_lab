@@ -57,7 +57,7 @@ struct PCB {
     uint32_t text_size;                     // Size of process memory (bytes)
     pde_t* pgdir;                // Page table
     char *kern_stack;                // Bottom of kernel stack for this process
-    enum procstate state;        // Process state
+    enum procstate state = P_UNUSED;        // Process state
     int pid;                     // Process ID
     PCB *parent;         // Parent process
     int_frame *tf;        // Trap frame for current syscall

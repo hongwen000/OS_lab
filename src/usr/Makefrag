@@ -23,6 +23,7 @@ $(build_dir)/usr/%.elf: $(build_dir)/usr/%.o $(build_dir)/libc/cstart.o
 	#$(LD) $(LDFLAGS) -Tusr/linker.ld --oformat binary  $(build_dir)/libc/cstart.o  $< -lc -o $@
 	$(LD) $(LDFLAGS) -Tusr/linker.ld $(build_dir)/libc/cstart.o $< -lc -o $@
 	$(OBJDUMP) -S $@ > $@.dump
+	cp $@ $@.debug
 	$(STRIP) $@
 
 $(build_dir)/usr/%.txt: usr/%.txt

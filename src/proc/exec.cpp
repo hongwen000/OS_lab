@@ -130,7 +130,7 @@ int sys_do_exec(uint32_t n){
 
     debug_printf("exec: prepare for new process `%s`\n", "");
 
-    asm volatile("cli");
+    // asm volatile("cli");
     strcpy(current_proc->name, "");
 
     old_pgdir = current_proc->pgdir;
@@ -146,7 +146,7 @@ int sys_do_exec(uint32_t n){
     uvm_free(old_pgdir);
     old_pgdir  = 0;
     old_pgdir ++;
-    asm volatile("sti");
+    // asm volatile("sti");
 
     return 0;
 
@@ -264,7 +264,7 @@ int sys_do_exec(const char* path){
 
     debug_printf("exec: prepare for new process `%s`\n", "");
 
-    asm volatile("cli");
+    // asm volatile("cli");
     strcpy(current_proc->name, path);
 
     old_pgdir = current_proc->pgdir;
@@ -280,7 +280,7 @@ int sys_do_exec(const char* path){
     uvm_free(old_pgdir);
     old_pgdir  = 0;
     old_pgdir ++;
-    asm volatile("sti");
+    // asm volatile("sti");
 
     return 0;
 

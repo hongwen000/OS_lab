@@ -13,28 +13,56 @@
 #endif
 
 static ide_request* ide_req_que = nullptr;
+bool ide_disk_detected = false;
+
+
 int ide_wait(int check)
 {
-    int timeout = 20000;
+    #ifdef IDE_TEST
+    printf("ide_wait: check = %d\n", check);
+    #endif
     int r;
-    while ((r = sys_inb(IDE_PORT_STATUS)) & IDE_BSY)
+    for(int i = 0; i < 4; ++i)
     {
-        --timeout;
-        if (timeout == 0)
-            bochs_break();
+        while ((r = sys_inb(IDE_PORT_STATUS)) & IDE_BSY)
+        {
+        }
     }
     if (check && (r & (IDE_DF | IDE_ERR)))
     {
+        #ifdef IDE_TEST
+        printf("ide_wait: error\n");
+        #endif
         return -1;
     }
     return 0;
 }
+
+void ide_init()
+{
+    ide_wait(0);
+    sys_outb(IDE_PORT_CURRENT, 0xe0 | (1<<4));
+    for(int i = 0; i < 1000; ++i)
+    {
+        if(sys_inb(IDE_PORT_STATUS) != 0)
+        {
+            ide_disk_detected = 1;
+            break;
+        }
+    }
+    sys_outb(IDE_PORT_CURRENT, 0xe0 | (0<<4));
+}
 void ide_deal_req(struct ide_request* b)
 {
+    #ifdef IDE_TEST
+    printf("ide_deal_req: b->lba=%d\n", b->lba);
+    #endif
     ide_wait(false);
-    uint32_t ide_block_n = b->lba * (IDE_BUF_SIZE / IDE_BLOCK_SIZE);
+    uint32_t block_per_buffer = (IDE_BUF_SIZE / IDE_BLOCK_SIZE);
+    uint32_t ide_block_n = b->lba * block_per_buffer;
     //Base address of primary channel control port
     sys_outb(IDE_PORT_ALTSTATUS, 0);
+    sys_outb(IDE_PORT_SECT_COUNT, IDE_BUF_SIZE / IDE_BLOCK_SIZE);
     sys_outb(IDE_PORT_LBA0, ide_block_n & 0xff);
     sys_outb(IDE_PORT_LBA1, (ide_block_n >> 8) & 0xff);
     sys_outb(IDE_PORT_LBA2, (ide_block_n >> 16) & 0xff);
@@ -44,18 +72,22 @@ void ide_deal_req(struct ide_request* b)
 #ifdef IDE_TEST
         printf("ide_start: write blk-%d\n", b->lba);
 #endif
-        sys_outb(IDE_PORT_CMD, IDE_CMD_WRITE);
+        sys_outb(IDE_PORT_CMD, block_per_buffer == 1 ? IDE_CMD_WRITE : IDE_CMD_WRITE_MULTIPLE);
         sys_outsl(IDE_PORT_DATA, b->buf, IDE_BUF_SIZE/4);
-    } else {
+    } 
+    else {
 #ifdef IDE_TEST
         printf("ide_start: read blk-%d\n", b->lba);
 #endif
-        sys_outb(IDE_PORT_CMD, IDE_CMD_READ);
+        sys_outb(IDE_PORT_CMD, block_per_buffer == 1 ? IDE_CMD_READ : IDE_CMD_READ_MULTIPLE);
+        ide_wait(true);
+        sys_insl(IDE_PORT_DATA, b->buf, IDE_BUF_SIZE/4);
     }
 }
 
 void sys_ide_handler()
 {
+    sys_outb(IDE_PORT_ALTSTATUS, ATA_DEV_CONTROL_nIEN);
     struct ide_request *b = ide_req_que;
     if (b == nullptr)
         return;
@@ -66,13 +98,20 @@ void sys_ide_handler()
     }
     b->cmd |= B_VALID;
     b->cmd &= ~B_DIRTY;
+    wakeup(b);
 #ifdef IDE_TEST
-    printf("ide_handler: blk-%d VALID \n", b->lba);
+    printf("sys_ide_handler: blk-%d, flags: ", b->lba);
+    if (b->cmd & B_BUSY) printf("B_BUSY ");
+    if (b->cmd & B_DIRTY) printf("B_DIRTY ");
+    if (b->cmd & B_VALID) printf("B_VALID ");
+    printf("\n");
 #endif
     if (ide_req_que)
     {
         ide_deal_req(ide_req_que);
     }
+    sys_outb(IDE_PORT_ALTSTATUS, 0x0);
+
 }
 
 void ide_rw(ide_request* b)
@@ -93,14 +132,20 @@ void ide_rw(ide_request* b)
 #endif
     }
 #ifdef IDE_TEST
-    printf("%d\n", b->lba);
+    printf("%d ", b->lba);
+    if (b->cmd & B_BUSY) printf("B_BUSY ");
+    if (b->cmd & B_DIRTY) printf("B_DIRTY ");
+    if (b->cmd & B_VALID) printf("B_VALID ");
+    printf("\n");
 #endif
     *pp = b;
     if (ide_req_que == b)
-        ide_deal_req(b);
-    while ((b->cmd & (B_VALID|B_DIRTY)) != B_VALID)
     {
-        asm volatile("sti\n\thlt");
+        ide_deal_req(b);
+    }
+    // while ((b->cmd & (B_VALID|B_DIRTY)) != B_VALID)
+    {
+    //     sys_do_sleep(b);
     }
 }
 
@@ -108,10 +153,10 @@ void ide_rw(ide_request* b)
 
 void ide_print_blk(ide_request *b){
     printf("ide_print_blk: blk-%d, flags: ", b->lba);
-    if (b->cmd & B_BUSY) //printl("B_BUSY ");
-        if (b->cmd & B_DIRTY) //printl("B_DIRTY");
-            if (b->cmd & B_VALID) //printl("B_VALID");
-                printf("\n");
+    if (b->cmd & B_BUSY) printf("B_BUSY ");
+    if (b->cmd & B_DIRTY) printf("B_DIRTY ");
+    if (b->cmd & B_VALID) printf("B_VALID ");
+    printf("\n");
     int i,j;
     for (i = 0; i < IDE_BUF_SIZE/16; i += 32){
         for (j = i; j < i + 32; j++){

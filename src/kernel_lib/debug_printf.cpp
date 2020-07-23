@@ -53,7 +53,11 @@ int debug_puts(const char* string)
     auto len = strlen(string);
     for(size_t i = 0; i < len; ++i)
     {
+        #ifdef DEBUG_FOR_QEMU
+        sys_current_tty_putchar(*(string + i));
+        #else
         debug_putchar(*(string + i));
+        #endif
     }
     return 0;
 }

@@ -84,9 +84,21 @@ void blue_screen(int_frame *r)
 //    tty_debug_printf(blue_tty,"CS:EIP: %d:0x%x\n", r->cs, r->eip);
 //    tty_debug_printf(blue_tty,"System will halt");
 
-//    printf("Error code: %d\n", r->err_code);
-//    printf("CS:EIP: %d:0x%x\n", r->cs, r->eip);
-//    printf("System will halt");
+   if(r == nullptr)
+   {
+       printf("Function not implemented");
+   }
+   if (r->int_no < ISR_IRQ0 && r->int_no >= 0)
+   {
+       printf("Encountered x86 Exception %d : %s\n", r->int_no, fault_msg[r->int_no]);
+   }
+   else
+   {
+       printf("Encountered untreated interrupt %d\n", r->int_no);
+   }
+   printf("Error code: %d\n", r->err_code);
+   printf("CS:EIP: %d:0x%x\n", r->cs, r->eip);
+   printf("System will halt");
 
 }
 
@@ -194,10 +206,10 @@ char sys_get_scancode()
     return sys_inb(0x60);
 }
 
+ide_request buf;
 void sys_read_hard_disk(uint32_t segment, uint32_t address, uint16_t logical_start_sector, uint8_t secotr_cnt)
 {
-    ide_request buf;
-    debug_printf("Requested to read %d blocks from lba %d to address %u\n", (int)secotr_cnt, (int) logical_start_sector, address);
+    printf("Requested to read %d blocks from lba %d to address %u\n", (int)secotr_cnt, (int) logical_start_sector, address);
     for (int i = logical_start_sector; i < logical_start_sector + secotr_cnt; ++i) {
         buf.reset(i);
         ide_rw(&buf);
@@ -224,7 +236,6 @@ void sys_read_hard_disk(uint32_t segment, uint32_t address, uint16_t logical_sta
 
 void sys_write_hard_disk(uint32_t segment, uint32_t address, uint16_t logical_start_sector, uint8_t secotr_cnt)
 {
-    ide_request buf;
     debug_printf("Requested to write %d blocks from address %u to lba %d\n", (int)secotr_cnt, address, (int) logical_start_sector);
     for (int i = logical_start_sector; i < logical_start_sector + secotr_cnt; ++i) {
         asm volatile(
@@ -266,6 +277,11 @@ void sys_write_hard_disk(uint32_t segment, uint32_t address, uint16_t logical_st
 //}
 
 extern PCB* current_proc;
+
+extern "C" void interrupt_nothing_c() {
+    debug_printf("INT!");
+}
+
 extern "C" void interrupt_97h_c() {
 
     debug_printf(">>>>>>> syscall number: %d, form `%s`(PID: %d)\n", current_proc->tf->eax, current_proc->name, current_proc->pid);
@@ -434,9 +450,9 @@ void interrupt_timer_c()
 
     wakeup(&HHOS_timer_ticks);
 
-    if (HHOS_timer_ticks % 1000 == 0){
+    // if (HHOS_timer_ticks % 1000 == 0){
        debug_printf("timer_handler: timer alive, trick: %d\n", HHOS_timer_ticks);
-    }
+    // }
 
     if(HHOS_timer_ticks % 50 == 0)
         go_back_scheduler();

@@ -46,6 +46,7 @@ extern "C" void isr_init();
 #define IRQ_TIMER   0
 #define IRQ_KB      1
 #define IRQ_IDE     14
+#define IRQ_IDE_SLAVE     15
 
 void irq_handler(struct int_frame *r);
 void irq_install(uint8_t irq, void (*handler)(struct int_frame *r));

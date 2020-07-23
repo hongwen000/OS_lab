@@ -18,12 +18,12 @@ __init_start:
     jmp $
 
 child:
-    push (shell - $$) + 0xc0002000   ; path
-    ;push 192
-    push 0
-    mov ah, 8
-    int 0x98
-    add esp, 8
+    ;push (shell - $$) + 0xc0002000   ; path
+    ;;push 192
+    ;push 0
+    ;mov ah, 8
+    ;int 0x98
+    ;add esp, 8
     jmp $
 
 shell:
